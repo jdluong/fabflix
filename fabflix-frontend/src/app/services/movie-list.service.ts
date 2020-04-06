@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Movie } from '../models/Movie';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 @Injectable({
   providedIn: 'root'
@@ -10,13 +9,13 @@ export class MovieListService {
   constructor() { }
 
   getTop20Movies():Movie[] {
-    let movieList:Movie[];
+    let movieList:Movie[] = [];
     for (let i = 0; i < 20; i++) {
       movieList[i] = {
         id: 'id${i}',
-        title: 'movie${i}',
+        title: 'movie'+i,
         year: i,
-        director: 'director${i}',
+        director: 'director'+i,
         genres: ['genre0', 'genre1', 'genre2', 'genre3'],
         stars: [
                 {id: 'starId0', name: 'starName0', birthYear: 1997},

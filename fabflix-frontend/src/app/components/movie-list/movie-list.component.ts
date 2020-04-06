@@ -9,12 +9,27 @@ import { MovieListService } from 'src/app/services/movie-list.service';
 })
 export class MovieListComponent implements OnInit {
 
-  top20Movies: Movie[];
+  topMovies: Movie[];
+  numMovies: number = 20;
 
   constructor(private movieListService: MovieListService) { }
 
   ngOnInit() {
-    this.top20Movies = this.movieListService.getTop20Movies();
+    this.topMovies = this.movieListService.getTop20Movies();
+    console.log(this.topMovies);
+  }
+
+  get3GenresNames(m:Movie):string[] {
+    return m.genres.slice(0,3);
+  }
+  
+  get3StarsNames(m:Movie):string[] {
+    let starsNames:string[] = [];
+    for (let i = 0; i < 3; i++) {
+      starsNames.push(m.stars[i].name);
+    }
+
+    return starsNames;
   }
 
 }

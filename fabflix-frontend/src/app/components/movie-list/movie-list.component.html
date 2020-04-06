@@ -12,12 +12,21 @@
             </tr>
         </thead>
         <tbody>
-            <app-movie-list-item 
-                *ngFor = "let m of top20Movies; index as rank" 
-                [m] = "m"
-                [rank] = "rank"
-            >
-            </app-movie-list-item>
+            <tr *ngFor = "let m of topMovies; index as rank">
+                <th scope="row">{{ rank + 1}}</th>
+                <td>
+                    <a>{{ m.title }}</a>
+                </td>
+                <td>{{ m.year }}</td>
+                <td>{{ m.director }}</td>
+                <td>
+                    <a *ngFor = "let genreName of get3GenresNames(m)"> {{ genreName }} </a>
+                </td>
+                <td>
+                    <a *ngFor = "let starName of get3StarsNames(m)"> {{ starName }} </a>
+                </td>
+                <td>{{ m.rating }}</td>
+            </tr>
         </tbody>
     </table>
 </div>
