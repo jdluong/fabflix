@@ -26,4 +26,13 @@ public class Star {
     {
         return this.birthYear;
     }
+
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "Star{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", birthYear=" + birthYear +
+                '}';
+    }
 }
