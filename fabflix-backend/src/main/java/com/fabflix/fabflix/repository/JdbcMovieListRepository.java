@@ -8,7 +8,6 @@ import com.fabflix.fabflix.Star;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,7 +21,7 @@ public class JdbcMovieListRepository implements MovieListRepository {
         return jdbcTemplate.query(
                 "SELECT * FROM ratings ORDER BY rating DESC LIMIT 20",
                 (rs, rowNum) ->
-                    new Rating(rs.getString("movieId"), rs.getDouble("rating"), rs.getInt("numVotes")));
+                        new Rating(rs.getString("movieId"), rs.getDouble("rating"), rs.getInt("numVotes")));
     }
 
     @Override
@@ -39,7 +38,7 @@ public class JdbcMovieListRepository implements MovieListRepository {
     {
         return jdbcTemplate.query(
                 "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = \"" +
-                movieId + "\" LIMIT 3) AS g2 ON g.id = g2.genreId",
+                        movieId + "\" LIMIT 3) AS g2 ON g.id = g2.genreId",
                 (rs, rowNum) ->
                         new Genre(rs.getInt("id"), rs.getString("name")));
     }
