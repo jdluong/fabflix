@@ -6,11 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
+import java.util.Vector;
+
 
 @SpringBootApplication
 public class FabflixApplication implements CommandLineRunner {
@@ -21,7 +23,7 @@ public class FabflixApplication implements CommandLineRunner {
 
     @Autowired
     @Qualifier("jdbcMovieListRepository")
-    private MovieListRepository movieRepository;
+    private MovieListRepository movieListRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(FabflixApplication.class, args);
@@ -34,31 +36,43 @@ public class FabflixApplication implements CommandLineRunner {
     }
 
     void runJDBC() {
-        // find all
-        log.info("[FIND_TOP_TWENTY] {}", movieRepository.findTopTwenty());
+        log.info("Getting Ratings of Top 20 Movies...\n");
+        List<Rating> ratings = movieListRepository.findTopTwenty();
+
+        log.info("\nResults:\n");
+        for (Rating r : ratings)
+            System.out.println(r.toString());
+
+        log.info("\nGetting Top 20 Movies...\n");
+        List<Movie> movies = movieListRepository.getTopTwentyList();
+
+        log.info("\nResults:\n");
+        for (Movie m : movies)
+            System.out.println(m.toString());
+
+        log.info("\nGetting genres of Top 20 Movies...\n");
+        Vector<List<Genre>> genres = new Vector<List<Genre>>(20);
+
+        for (Movie m : movies)
+            genres.add(movieListRepository.getGenreById(m.getId()));
+
+        int i = 0;
+        log.info("\nResults:\n");
+        for (List<Genre> genreList : genres) {
+            System.out.println();
+            for (Genre g : genreList)
+                System.out.println("Movie " + genres.indexOf(genreList) + " " + g.toString());
+        }
+
+//        log.info("\nGetting stars of Top 20 Movies...\n");
+//        Vector<List<Star>> stars = new Vector<List<Star>>(20);
 //
-//        // find by id
-//        log.info("[FIND_BY_ID] :2L");
-//        Book book = bookRepository.findById(2L).orElseThrow(IllegalArgumentException::new);
-//        log.info("{}", book);
+//        for (Movie m : movies)
+//            stars.add(movieListRepository.getStarById(m.getId()));
 //
-//        // find by name (like) and price
-//        log.info("[FIND_BY_NAME_AND_PRICE] : like '%Java%' and price <= 10");
-//        log.info("{}", bookRepository.findByNameAndPrice("Java", new BigDecimal(10)));
-//
-//        // get name (string) by id
-//        log.info("[GET_NAME_BY_ID] :1L = {}", bookRepository.getNameById(1L));
-//
-//        // update
-//        log.info("[UPDATE] :2L :99.99");
-//        book.setPrice(new BigDecimal("99.99"));
-//        log.info("rows affected: {}", bookRepository.update(book));
-//
-//        // delete
-//        log.info("[DELETE] :3L");
-//        log.info("rows affected: {}", bookRepository.deleteById(3L));
-//
-//        // find all
-//        log.info("[FIND_ALL] {}", bookRepository.findAll());
+//        log.info("Results:\n");
+//        for (List<Star> starList : stars)
+//            for (Star s : starList)
+//                System.out.println("Star " + starList.indexOf(s) + " " + s.toString());
     }
 }

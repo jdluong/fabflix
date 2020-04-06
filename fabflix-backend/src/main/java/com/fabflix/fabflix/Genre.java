@@ -19,4 +19,12 @@ public class Genre {
     {
         return this.name;
     }
+
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "Genre{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
