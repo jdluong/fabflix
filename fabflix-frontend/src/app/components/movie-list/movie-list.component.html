@@ -1,0 +1,23 @@
+<div>
+    <table class = "table">
+        <thead>
+            <tr>
+                <th scope = "col">Rank</th>
+                <th scope = "col">Title</th>
+                <th scope = "col">Year</th>
+                <th scope = "col">Director</th>
+                <th scope = "col">Genres</th>
+                <th scope = "col">Stars</th>
+                <th scope = "col">Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            <app-movie-list-item 
+                *ngFor = "let m of top20Movies; index as rank" 
+                [m] = "m"
+                [rank] = "rank"
+            >
+            </app-movie-list-item>
+        </tbody>
+    </table>
+</div>
