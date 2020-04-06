@@ -26,4 +26,13 @@ public class Rating {
     {
         return this.numVotes;
     }
+
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "Rating{" +
+                "movieId='" + movieId + '\'' +
+                ", rating=" + rating +
+                ", numVotes=" + numVotes +
+                '}';
+    }
 }

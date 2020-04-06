@@ -35,4 +35,14 @@ public class Movie {
     {
         return this.director;
     }
+
+    @java.lang.Override
+    public java.lang.String toString() {
+        return "Movie{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", year=" + year +
+                ", director='" + director + '\'' +
+                '}';
+    }
 }
