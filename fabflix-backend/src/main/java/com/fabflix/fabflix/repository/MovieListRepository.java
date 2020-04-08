@@ -24,4 +24,7 @@ public interface MovieListRepository {
     Movie getMovieById(String movieId);
 
     List<MovieWithDetails> getTopTwentyListWithDetails();
+
+    // get movies by star id
+    List<Movie> getMoviesByStarId(String starId);
 }
