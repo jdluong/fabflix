@@ -1,15 +1,17 @@
 package com.fabflix.fabflix.repository;
 
+import java.util.ArrayList;
 import java.util.List;
-import com.fabflix.fabflix.Movie;
-import com.fabflix.fabflix.Genre;
-import com.fabflix.fabflix.Rating;
-import com.fabflix.fabflix.Star;
+
+import com.fabflix.fabflix.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @Repository
 public class JdbcMovieListRepository implements MovieListRepository {
     @Autowired
@@ -24,6 +26,10 @@ public class JdbcMovieListRepository implements MovieListRepository {
                         new Rating(rs.getString("movieId"), rs.getDouble("rating"), rs.getInt("numVotes")));
     }
 
+    @RequestMapping(
+            value = "api/getTopTwentyList",
+            method = RequestMethod.GET
+    )
     @Override
     public List<Movie> getTopTwentyList()
     {
@@ -33,23 +39,84 @@ public class JdbcMovieListRepository implements MovieListRepository {
                         new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
     }
 
+    @RequestMapping(
+            value = "api/getTopTwentyListWithDetails",
+            method = RequestMethod.GET
+    )
     @Override
-    public List<Genre> getGenreById(String movieId)
+    public List<MovieWithDetails> getTopTwentyListWithDetails() {
+        List<Movie> top20 = getTopTwentyList();
+        List<MovieWithDetails>  top20WithDetails = new ArrayList<MovieWithDetails>();
+        for (Movie m: top20) {
+            MovieWithDetails movieWithDetails = new MovieWithDetails(m, getGenreById(m.getId()), getStarById(m.getId()), getRatingById(m.getId()));
+            top20WithDetails.add(movieWithDetails);
+        }
+
+        return top20WithDetails;
+    }
+
+    @RequestMapping(
+            value = "api/getGenresByMovieId/{movieId}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public List<Genre> getGenreById(@PathVariable String movieId)
     {
+//        return jdbcTemplate.query(
+//                "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = \"" +
+//                        movieId + "\" LIMIT 3) AS g2 ON g.id = g2.genreId",
+//                (rs, rowNum) ->
+//                        new Genre(rs.getInt("id"), rs.getString("name")));
         return jdbcTemplate.query(
                 "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = \"" +
-                        movieId + "\" LIMIT 3) AS g2 ON g.id = g2.genreId",
+                        movieId + "\") AS g2 ON g.id = g2.genreId",
                 (rs, rowNum) ->
                         new Genre(rs.getInt("id"), rs.getString("name")));
     }
 
+    @RequestMapping(
+            value = "api/getStarsByMovieId/{movieId}",
+            method = RequestMethod.GET
+    )
     @Override
-    public List<Star> getStarById(String movieId)
+    public List<Star> getStarById(@PathVariable String movieId)
     {
+//        return jdbcTemplate.query(
+//                "SELECT s.id, s.name FROM stars AS s INNER JOIN (SELECT starId FROM stars_in_movies WHERE movieId = \"" +
+//                        movieId + "\" LIMIT 3) AS s2 ON s.id = s2.starId",
+//                (rs, rowNum) ->
+//                        new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
         return jdbcTemplate.query(
-                "SELECT s.id, s.name FROM stars AS s INNER JOIN (SELECT starId FROM stars_in_movies WHERE movieId = \"" +
-                        movieId + "\" LIMIT 3) AS s2 ON s.id = s2.starId",
+                "SELECT s.id, s.name, IFNULL(s.birthYear,0) as birthYear FROM stars s, stars_in_movies sim WHERE (s.id = sim.starId) AND (sim.movieId = \"" +
+                        movieId + "\")",
                 (rs, rowNum) ->
                         new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
+
     }
+
+    @RequestMapping(
+            value = "api/getRatingByMovieId/{movieId}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public Rating getRatingById(@PathVariable String movieId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT r.movieId, r.rating, r.numVotes FROM ratings AS r, movies AS m WHERE (r.movieId = m.id) AND (m.id = \"" +
+                        movieId + "\")",
+                (rs, rowNum) ->
+                        new Rating(rs.getString("movieId"), rs.getDouble("rating"), rs.getInt("numVotes")));
+    }
+
+    @RequestMapping(
+            value = "api/getMovieByMovieId/{movieId}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public Movie getMovieById(@PathVariable String movieId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT id, title, year, director FROM movies WHERE (id = \"" + movieId + "\")",
+                (rs, rowNum) ->
+                        new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+    }
+
 }
