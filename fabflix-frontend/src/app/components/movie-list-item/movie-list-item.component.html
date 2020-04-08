@@ -3,7 +3,9 @@
     <td>{{ m.title }}</td>
     <td>{{ m.year }}</td>
     <td>{{ m.director }}</td>
-    <td>{{ m.genres.slice(0,4) }}</td>
-    <td>{{ m.stars.slice(0,4) }}</td>
-    <td>{{ m.rating }}</td>
+    <td>
+        <a *ngFor = "let genre of genres">{{ genre.name }}</a>
+    </td>
+    <td>{{ stars }}</td>
+    <td>{{ rating }}</td>
 </tr>

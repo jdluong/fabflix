@@ -15,17 +15,17 @@
             <tr *ngFor = "let m of topMovies; index as rank">
                 <th scope="row">{{ rank + 1}}</th>
                 <td>
-                    <a>{{ m.title }}</a>
+                    <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a>
                 </td>
-                <td>{{ m.year }}</td>
-                <td>{{ m.director }}</td>
+                <td>{{ m.movie.year }}</td>
+                <td>{{ m.movie.director }}</td>
                 <td>
-                    <a *ngFor = "let genreName of get3GenresNames(m)"> {{ genreName }} </a>
+                    <a *ngFor = "let genre of m.genres.slice(0,3)"> {{ genre.name }} | </a>
                 </td>
                 <td>
-                    <a *ngFor = "let starName of get3StarsNames(m)"> {{ starName }} </a>
+                    <a *ngFor = "let star of m.stars.slice(0,3)"> {{ star.name }} |</a>
                 </td>
-                <td>{{ m.rating }}</td>
+                <td>{{ m.rating.rating }}</td>
             </tr>
         </tbody>
     </table>

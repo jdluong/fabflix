@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 import java.util.Vector;
 
-
 @SpringBootApplication
 public class FabflixApplication implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(FabflixApplication.class);
@@ -53,16 +52,16 @@ public class FabflixApplication implements CommandLineRunner {
         log.info("\nGetting genres of Top 20 Movies...\n");
         Vector<List<Genre>> genres = new Vector<List<Genre>>(20);
 
-        for (Movie m : movies)
-            genres.add(movieListRepository.getGenreById(m.getId()));
+//        for (Movie m : movies)
+//            genres.add(movieListRepository.getGenreById(m.getId()));
 
-        int i = 0;
-        log.info("\nResults:\n");
-        for (List<Genre> genreList : genres) {
-            System.out.println();
-            for (Genre g : genreList)
-                System.out.println("Movie " + genres.indexOf(genreList) + " " + g.toString());
-        }
+//        int i = 0;
+//        log.info("\nResults:\n");
+//        for (List<Genre> genreList : genres) {
+//            System.out.println();
+//            for (Genre g : genreList)
+//                System.out.println("Movie " + genres.indexOf(genreList) + " " + g.toString());
+//        }
 
 //        log.info("\nGetting stars of Top 20 Movies...\n");
 //        Vector<List<Star>> stars = new Vector<List<Star>>(20);

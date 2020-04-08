@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
 import { Movie } from 'src/app/models/Movie';
-import { MovieListService } from 'src/app/services/movie-list.service';
+import { MovieService } from 'src/app/services/movie.service';
+import { Genre } from 'src/app/models/Genre';
+import { Star } from 'src/app/models/Star';
+import { MovieWithDetails } from 'src/app/models/MovieWithDetails';
 
 @Component({
   selector: 'app-movie-list',
@@ -9,27 +14,20 @@ import { MovieListService } from 'src/app/services/movie-list.service';
 })
 export class MovieListComponent implements OnInit {
 
-  topMovies: Movie[];
+  topMovies: MovieWithDetails[];
   numMovies: number = 20;
 
-  constructor(private movieListService: MovieListService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private movieService: MovieService
+   ) { }
 
   ngOnInit() {
-    this.topMovies = this.movieListService.getTop20Movies();
-    console.log(this.topMovies);
-  }
-
-  get3GenresNames(m:Movie):string[] {
-    return m.genres.slice(0,3);
-  }
-  
-  get3StarsNames(m:Movie):string[] {
-    let starsNames:string[] = [];
-    for (let i = 0; i < 3; i++) {
-      starsNames.push(m.stars[i].name);
-    }
-
-    return starsNames;
+    this.movieService.getTopTwentyListWithDetails().subscribe(
+      data => {
+        this.topMovies = data;
+      });
   }
 
 }
