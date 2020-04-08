@@ -1,10 +1,8 @@
 package com.fabflix.fabflix.repository;
 
 import java.util.List;
-import com.fabflix.fabflix.Movie;
-import com.fabflix.fabflix.Genre;
-import com.fabflix.fabflix.Rating;
-import com.fabflix.fabflix.Star;
+
+import com.fabflix.fabflix.*;
 
 public interface MovieListRepository {
     // find top 20 movie ratings
@@ -18,4 +16,12 @@ public interface MovieListRepository {
 
     // get 3 stars in movie
     List<Star> getStarById(String movieId);
+
+    // get rating of movie
+    Rating getRatingById(String movieId);
+
+    // get movie
+    Movie getMovieById(String movieId);
+
+    List<MovieWithDetails> getTopTwentyListWithDetails();
 }
