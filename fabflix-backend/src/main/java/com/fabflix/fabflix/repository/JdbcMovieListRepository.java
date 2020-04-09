@@ -119,4 +119,13 @@ public class JdbcMovieListRepository implements MovieListRepository {
                         new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
     }
 
+    @Override
+    public List<Movie> getMoviesByStarId(@PathVariable String starId) {
+        return jdbcTemplate.query(
+                "SELECT m.id, m.title, m.year, m.director FROM movies AS m INNER JOIN (SELECT movieId FROM stars_in_movies WHERE starId = \""
+                + starId + "\") AS m2 ON m.id = m2.movieId",
+                (rs, rowNum) ->
+                        new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+    }
+
 }
