@@ -13,7 +13,7 @@ import { Rating } from '../models/Rating';
 })
 export class MovieService {
 
-  private url:string = "http://localhost:8080/fabflix_backend_war/api/";
+  private url:string = "http://localhost:8080/fabflix-backend/api/";
 
   constructor(private http: HttpClient) {}
 
