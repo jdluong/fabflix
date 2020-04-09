@@ -8,6 +8,7 @@ import { Movie } from 'src/app/models/Movie';
 import { GenerateBaseOptions } from 'rxjs/internal/observable/generate';
 import { Genre } from 'src/app/models/Genre';
 import { Star } from 'src/app/models/Star';
+import { Rating } from 'src/app/models/Rating';
 
 @Component({
   selector: 'app-single-movie',
@@ -19,6 +20,7 @@ export class SingleMovieComponent implements OnInit {
   movie: Movie;
   genres: Genre[];
   stars: Star[]
+  rating: Rating;
 
   constructor(
     private route: ActivatedRoute,
@@ -41,7 +43,9 @@ export class SingleMovieComponent implements OnInit {
     this.movieService.getStarsByMovieId(movieId).subscribe(
       data => this.stars = data
     );
-
+    this.movieService.getRatingbyMovieId(movieId).subscribe(
+      data => this.rating = data
+    );
   }
 
 }
