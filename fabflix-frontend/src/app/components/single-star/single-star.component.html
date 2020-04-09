@@ -1,1 +1,15 @@
-<p>single-star works!</p>
+<div>
+    <p><b>Name</b></p>
+    <br>
+    <p>{{ star.name }}</p>
+    <br>
+    <p><b<>Birth Year</b></p>
+    <p>{{ star.birthYear </p>
+    <br>
+    <p><b<>Movies</b></p>
+    <ul *ngFor="let movie of movies">
+        <li><a [routerLink]="['/movie/', movie.id]">{{ movie.title }}</a></li>
+    </ul>
+    <br>
+    <button type="button" class="btn-light btn-outline-dark"><a [routerLink] = "['/movie-list']">Back to list</a></button>
+</div>

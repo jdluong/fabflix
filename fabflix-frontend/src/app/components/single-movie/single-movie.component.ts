@@ -29,11 +29,6 @@ export class SingleMovieComponent implements OnInit {
   ngOnInit() {
 
     let movieId:string;
-
-    // this.route.paramMap.pipe(
-    //   switchMap((params: ParamMap) =>
-    //     params.get('movieId'))).
-    //     subscribe( data => { console.log(data) });
     movieId = this.route.snapshot.paramMap.get('movieId');
 
     this.movieService.getMovie(movieId).subscribe(
@@ -43,9 +38,9 @@ export class SingleMovieComponent implements OnInit {
     this.movieService.getGenresByMovieId(movieId).subscribe(
       data => this.genres = data
     );
-    // this.movieService.getStarsByMovieId(movieId, {'limit': false}).subscribe(
-    //   data => this.stars = data
-    // );
+    this.movieService.getStarsByMovieId(movieId).subscribe(
+      data => this.stars = data
+    );
 
   }
 
