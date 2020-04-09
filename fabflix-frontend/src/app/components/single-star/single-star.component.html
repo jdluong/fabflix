@@ -1,9 +1,9 @@
 <div>
-    <p>Name</p>
+    <p><strong>Name</strong></p>
     <p>{{ star.name }}</p>
-    <p>Birth Year</p>
+    <p><strong>Birth Year</strong></p>
     <p>{{ star.birthYear }}</p>
-    <p>Movies</p>
+    <p><strong>Movies</strong></p>
     <ul *ngFor="let movie of movies">
         <li><a [routerLink]="['/movie/', movie.id]">{{ movie.title }}</a></li>
     </ul>

@@ -1,15 +1,15 @@
 <div>
-    <p>Title</p>
+    <p><strong>Title</strong></p>
     <p>{{ movie.title }}</p>
-    <p>Genres</p>
+    <p><strong>Genres</strong></p>
     <ul *ngFor="let genre of genres">
         <li>{{ genre.name }}</li>
     </ul>
-    <p>Stars</p>
+    <p><strong>Stars</strong></p>
     <ul *ngFor="let star of stars">
         <li><a [routerLink]="['/star/', star.id]">{{ star.name }}</a></li>
     </ul>
-    <p>Rating</p>
+    <p><strong>Rating</strong></p>
     <p>{{ rating.rating }}</p>
     <br>
     <button type="button" class="btn-light btn-outline-dark"><a [routerLink] = "['/movie-list']">Back to list</a></button>
