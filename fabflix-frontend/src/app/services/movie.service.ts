@@ -37,4 +37,8 @@ export class MovieService {
     return this.http.get<Star[]>(this.url+"getStarsByMovieId/"+movieId);
   }
 
+  public getStar(starId:string):Observable<Star> {
+    return this.http.get<Star>(this.url+"getStarByMovieId/"+starId);
+  }
+
 }

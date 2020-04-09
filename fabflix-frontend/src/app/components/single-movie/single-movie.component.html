@@ -1,3 +1,17 @@
-<p> {{ movie.title }}</p>
-<p> {{ genres }}</p>
-<a [routerLink] = "['/movie-list']">Back to movie list</a>
+<div>
+    <p><b>Title</b></p>
+    <br>
+    <p>{{ movie.title }}</p>
+    <br>
+    <p><b<>Genres</b></p>
+    <ul *ngFor="let genre of genres">
+        <li>{{ genre.name }}</li>
+    </ul>
+    <br>
+    <p><b<>Stars</b></p>
+    <ul *ngFor="let star of stars">
+        <li><a [routerLink]="['/star/', star.id]">{{ star.name }}</a></li>
+    </ul>
+    <br>
+    <button type="button" class="btn-light btn-outline-dark"><a [routerLink] = "['/movie-list']">Back to list</a></button>
+</div>
