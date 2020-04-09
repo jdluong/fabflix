@@ -3,6 +3,7 @@ package com.fabflix.fabflix.repository;
 import java.util.List;
 
 import com.fabflix.fabflix.*;
+import org.springframework.web.bind.annotation.PathVariable;
 
 public interface MovieListRepository {
     // find top 20 movie ratings
@@ -27,4 +28,7 @@ public interface MovieListRepository {
 
     // get movies by star id
     List<Movie> getMoviesByStarId(String starId);
+
+    //get star by star id
+    Star getStarByStarId(String starId);
 }

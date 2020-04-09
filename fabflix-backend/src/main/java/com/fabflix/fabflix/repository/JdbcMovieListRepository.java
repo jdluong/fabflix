@@ -119,6 +119,10 @@ public class JdbcMovieListRepository implements MovieListRepository {
                         new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
     }
 
+    @RequestMapping(
+            value = "api/getMoviesByStarId/{starId}",
+            method = RequestMethod.GET
+    )
     @Override
     public List<Movie> getMoviesByStarId(@PathVariable String starId) {
         return jdbcTemplate.query(
@@ -126,6 +130,19 @@ public class JdbcMovieListRepository implements MovieListRepository {
                 + starId + "\") AS m2 ON m.id = m2.movieId",
                 (rs, rowNum) ->
                         new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+    }
+
+    @RequestMapping(
+            value = "api/getStarByStarId/{starId}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public Star getStarByStarId(@PathVariable String starId) {
+        return jdbcTemplate.queryForObject(
+                "SELECT id, name, IFNULL(birthYear,0) AS birthYear FROM stars WHERE (id = \""
+                + starId + "\")",
+                (rs, rowNum) ->
+                        new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
     }
 
 }

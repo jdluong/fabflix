@@ -20,10 +20,14 @@
                 <td>{{ m.movie.year }}</td>
                 <td>{{ m.movie.director }}</td>
                 <td>
-                    <a *ngFor = "let genre of m.genres.slice(0,3)"> {{ genre.name }} | </a>
+                    <div *ngFor = "let genre of m.genres.slice(0,3)">
+                        <a>{{ genre.name }}</a>
+                    </div>
                 </td>
                 <td>
-                    <a *ngFor = "let star of m.stars.slice(0,3)"> {{ star.name }} |</a>
+                    <div *ngFor = "let star of m.stars.slice(0,3)">
+                        <a [routerLink]="['/star/', star.id]">{{ star.name }}</a>
+                    </div>
                 </td>
                 <td>{{ m.rating.rating }}</td>
             </tr>

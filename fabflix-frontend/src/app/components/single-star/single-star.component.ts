@@ -28,9 +28,9 @@ export class SingleStarComponent implements OnInit {
       data => {this.star = data;
               console.log(this.star)}
     );
-    // this.movieService.getGenresByMovieId(movieId).subscribe(
-    //   data => this.genres = data
-    // );
+    this.movieService.getMoviesByStarId(starId).subscribe(
+      data => this.movies = data
+    );
 
   }
   
