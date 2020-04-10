@@ -23,7 +23,12 @@
             <li><a [routerLink]="['/star/', star.id]">{{ star.name }}</a></li>
         </ul>
         <p class = "heading"><strong>Rating</strong></p>
-        <p>{{ rating.rating }}</p>
+        <div *ngIf = "!rating">
+            <p>N/A</p>
+        </div>
+        <div *ngIf = "rating">
+            <p>{{ rating.rating }}</p>
+        </div>
         <br>
         <button type="button" class="btn-light btn-outline-dark"><a [routerLink] = "['/movie-list']">Back to list</a></button>
     </div>
