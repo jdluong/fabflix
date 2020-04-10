@@ -2,6 +2,7 @@
 cs122b-spring20-team-69 created by GitHub Classroom
 
 ## VIDEO
+Link: https://youtu.be/j0mx1oNTue0
 
 ## DEPLOYMENT
 1) Clone this Git repo
