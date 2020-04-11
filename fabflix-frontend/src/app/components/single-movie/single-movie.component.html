@@ -1,15 +1,15 @@
 <title>{{ movie.title }}</title>
-<link rel="stylesheet" href="single-movie.component.css">
+<!-- <link rel="stylesheet" href="single-movie.component.css">
 
-<meta name="viewport" content="width=device-width", initial-scale=1.0">
+<meta name="viewport" content="width=device-width", initial-scale="1.0"> -->
 
-<style>
+<!-- <style>
     @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital@1&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
-</style>
+</style> -->
 
 <body>
-    <p class = "title">FABFLIX</p>
+    <!-- <p class = "title">FABFLIX</p> -->
 
     <div class = "content">
         <p class = "heading"><strong>Title</strong></p>
@@ -23,7 +23,12 @@
             <li><a [routerLink]="['/star/', star.id]">{{ star.name }}</a></li>
         </ul>
         <p class = "heading"><strong>Rating</strong></p>
-        <p>{{ rating.rating }}</p>
+        <div *ngIf = "!rating">
+            <p>N/A</p>
+        </div>
+        <div *ngIf = "rating">
+            <p>{{ rating.rating }}</p>
+        </div>
         <br>
         <button type="button" class="btn-light btn-outline-dark"><a [routerLink] = "['/movie-list']">Back to list</a></button>
     </div>
