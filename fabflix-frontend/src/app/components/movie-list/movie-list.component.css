@@ -9,6 +9,7 @@
     font-size:1.5em;
     font-weight: bold;
     text-align: left;
+    caption-side: top;
     margin: 10px 0;
 }
 
