@@ -1,7 +1,5 @@
 package com.fabflix.fabflix;
 
-import java.util.List;
-
 public class Movie {
     private String id;
     private String title;
