@@ -31,4 +31,7 @@ public interface MovieListRepository {
 
     //get star by star id
     Star getStarByStarId(String starId);
+
+    // get/authenticate user for login
+    Customer authenticateCustomer(String username, String password);
 }
