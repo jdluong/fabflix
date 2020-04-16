@@ -6,10 +6,16 @@ body {
     background: #232426;
 }
 
+.heading {
+    font-size:1.5em;
+    font-weight: bold;
+    text-align: left;
+    margin: 10px 0;
+}
+
 .content {
-    font-family: 'Abel', sans-serif;
     border: 1.5px solid #232426;
-    width : 35%;
+    width : 15%;
     min-height: 40%;
     border-radius: 5px 5px 0 0;
     padding: 10px 15px;
@@ -23,20 +29,20 @@ body {
     transform: translateX(-50%) translateY(-50%);
 }
 
-.heading {
-    font-size:1.5em;
-    font-weight: bold;
-    text-align: left;
-    margin: 10px 0;
-}
-
 ul {
-    list-style-type: circle;
+    list-style-type: none;
+    padding-left: 0%;
+    padding-bottom: 15px;
 }
 
-button {
+.back-button {
     font-size:0.8em;
     position: absolute;
-    bottom:   15px;
+    bottom: 15px;
     border-radius: 20px;
+}
+
+a {
+    color: steelblue;
+    text-decoration: none;
 }

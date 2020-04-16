@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>FABFLIX</title>
+        <link rel="stylesheet" href="genre-list.component.css">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital@1&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+        </style>
+    </head>
+
+    <body>
+        <div class="content">
+            <p class="heading">Browse by Genre</p>
+            <ul *ngFor="let genre of genres">
+                <li>
+                    <a href="#"">{{ genre.name }}</a>
+                </li>
+            </ul>
+            <br>
+            <button type="button" class="back-button"><a [routerLink] = "['/movie-list']">Back to search</a></button>
+        </div>
+    </body>
+</html>
