@@ -5,7 +5,7 @@ import java.util.List;
 import com.fabflix.fabflix.*;
 import org.springframework.web.bind.annotation.PathVariable;
 
-public interface MovieListRepository {
+public interface MovieRepository {
     // find top 20 movie ratings
     List<Rating> findTopTwenty();
 
