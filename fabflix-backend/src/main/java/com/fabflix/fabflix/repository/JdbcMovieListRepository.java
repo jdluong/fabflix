@@ -5,13 +5,15 @@ import java.util.List;
 
 import com.fabflix.fabflix.*;
 
+import org.apache.catalina.startup.UserConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/"})
+// @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/"})
+// @CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieListRepository implements MovieListRepository {
     @Autowired
