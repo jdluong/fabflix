@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>FABFLIX</title>
+        <link rel="stylesheet" href="single-genre.component.css">
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital@1&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+        </style>
+    </head>
+
+    <body>
+        <div>
+            <p class="title">FABFLIX</p>
+            <table class="table">
+                <caption>
+                    Browse by Genre: {{ genre.name }}
+                    <button class="return" type="button" href="#">Back to Search</button>
+                </caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Year</th>
+                        <th scope="col">Director</th>
+                        <th scope="col">Genres</th>
+                        <th scope="col">Stars</th>
+                        <th scope="col">Rating</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- TODO need to configure for genre -->
+                    <tr *ngFor = "let m of topMovies; index as rank">
+                        
+                        <td>
+                            <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a>
+                        </td>
+                        <td>{{ m.movie.year }}</td>
+                        <td>{{ m.movie.director }}</td>
+                        <td>
+                            <div *ngFor = "let genre of m.genres.slice(0,3)">
+                                <a>{{ genre.name }}</a>
+                            </div>
+                        </td>
+                        <td>
+                            <div *ngFor = "let star of m.stars.slice(0,3)">
+                                <a [routerLink]="['/star/', star.id]">{{ star.name }}</a>
+                            </div>
+                        </td>
+                        <td>{{ m.rating.rating }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="navigation">
+            <button class="prev" type="button" href="#">Previous</button>
+            <button class="next" type="button" href="#">Next</button>
+        </div>
+    </body>
+</html>

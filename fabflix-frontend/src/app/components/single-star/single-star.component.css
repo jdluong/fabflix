@@ -1,7 +1,9 @@
-.title {
-    font-family: 'Exo 2', sans-serif;
-    font-size: 3em;
-    margin: 15px 0;
+* {
+    font-family: 'Abel', sans-serif;
+}
+
+body {
+    background: #232426;
 }
 
 .content {
@@ -9,12 +11,16 @@
     border: 1.5px solid #232426;
     width : 35%;
     min-height: 40%;
-    margin-left: auto;
-    margin-right: auto;
     border-radius: 5px 5px 0 0;
     padding: 10px 15px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    position: relative;
+    position: absolute;
+    background: #ffffff;
+    top: 50%;
+    left: 50%;
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
 }
 
 .heading {
@@ -29,8 +35,8 @@ ul {
 }
 
 button {
-    font-family: 'Abel', sans-serif;
     font-size:0.8em;
     position: absolute;
     bottom:   15px;
+    border-radius: 20px;
 }
