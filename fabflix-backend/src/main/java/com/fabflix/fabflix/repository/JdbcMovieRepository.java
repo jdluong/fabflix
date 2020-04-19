@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 // @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/"})
 // @CrossOrigin(origins = {"*"})
 @Repository
-public class JdbcMovieListRepository implements MovieListRepository {
+public class JdbcMovieRepository implements MovieRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
