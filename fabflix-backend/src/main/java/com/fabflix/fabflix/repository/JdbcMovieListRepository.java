@@ -147,4 +147,13 @@ public class JdbcMovieListRepository implements MovieListRepository {
                         new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
     }
 
+    @Override
+    public Customer getCustomer(@PathVariable String username, @PathVariable String password) {
+            return jdbcTemplace.queryForObject(
+                    "SELECT id, firstName, lastName, ccId, address, email, password FROM customers WHERE (email = \""
+                    + username + "\" " + "AND password = \"" + password + "\")",
+                    (rs, rowNum) ->
+                        new Customer(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("ccId"), rs.getString("address"),
+                                     rs.getString("email"), rs.getString("password")));
+    }
 }
