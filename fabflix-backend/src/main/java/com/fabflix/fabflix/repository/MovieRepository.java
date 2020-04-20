@@ -13,10 +13,16 @@ public interface MovieRepository {
     List<Movie> getTopTwentyList();
 
     // get 3 genres of movie
-    List<Genre> getGenreById(String movieId);
+    List<Genre> get3GenresByMovieId(String movieId);
+
+    // get all genres of movie
+    List<Genre> getAllGenresByMovieId(String movieId);
 
     // get 3 stars in movie
-    List<Star> getStarById(String movieId);
+    List<Star> get3StarsByMovieId(String movieId);
+
+    // get all stars in movie
+    List<Star> getAllStarsByMovieId(String movieId);
 
     // get rating of movie
     Rating getRatingById(String movieId);
@@ -34,4 +40,9 @@ public interface MovieRepository {
 
     // get/authenticate user for login
     Customer authenticateCustomer(String username, String password);
+
+    // ****************
+    // SEARCH AND BROWSE FUNCTIONS
+
+
 }
