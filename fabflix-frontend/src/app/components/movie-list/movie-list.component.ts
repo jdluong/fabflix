@@ -6,6 +6,7 @@ import { MovieService } from 'src/app/services/movie.service';
 import { Genre } from 'src/app/models/Genre';
 import { Star } from 'src/app/models/Star';
 import { MovieWithDetails } from 'src/app/models/MovieWithDetails';
+import { BrowseService } from 'src/app/services/browse.service';
 
 @Component({
   selector: 'app-movie-list',
@@ -14,20 +15,32 @@ import { MovieWithDetails } from 'src/app/models/MovieWithDetails';
 })
 export class MovieListComponent implements OnInit {
 
-  topMovies: MovieWithDetails[];
-  numMovies: number = 20;
+  movies: MovieWithDetails[];
+  params: any;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private browseService: BrowseService
    ) { }
 
   ngOnInit() {
-    this.movieService.getTopTwentyListWithDetails().subscribe(
-      data => {
-        this.topMovies = data;
+
+    this.route.queryParams
+      .subscribe(params => 
+      {
+        this.params = params;
+        console.log(this.params.id); 
       });
+    
+    if (this.params.by == 'genre' || this.params.by == 'title') {
+      this.browseService.browseBy(this.params).subscribe(
+        data => {
+          this.movies = data;
+        });
+    }
+    
   }
 
 }

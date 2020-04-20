@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/"})
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"})
 // @CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
@@ -212,7 +212,7 @@ public class JdbcMovieRepository implements MovieRepository {
             return getMoviesByGenre(id, perPage, page, sortBy1, order1, sortBy2, order2);
         }
         else {
-            return getMoviesByStartsWith(startsWith, perPage, page, sortBy1, order1, sortBy2, order2);
+            return getMoviesByTitle(startsWith, perPage, page, sortBy1, order1, sortBy2, order2);
         }
     }
 
@@ -245,7 +245,7 @@ public class JdbcMovieRepository implements MovieRepository {
     }
 
     @Override
-    public List<MovieWithDetails> getMoviesByStartsWith(String startsWith, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2) {
+    public List<MovieWithDetails> getMoviesByTitle(String startsWith, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2) {
         List<Movie> movies = new ArrayList<>();
         if (sortBy1 == null) {
             if (startsWith.equals("*")) {

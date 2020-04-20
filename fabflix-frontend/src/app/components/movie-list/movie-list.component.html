@@ -15,7 +15,7 @@
         <caption>Top 20 Movies</caption>
         <thead>
             <tr>
-                <th scope = "col">Rank</th>
+                <th scope = "col"></th>
                 <th scope = "col">Title</th>
                 <th scope = "col">Year</th>
                 <th scope = "col">Director</th>
@@ -25,20 +25,20 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor = "let m of topMovies; index as rank">
-                <th scope="row">{{ rank + 1}}</th>
+            <tr *ngFor = "let m of movies; index as ind">
+                <th scope="row">{{ ind + 1}}</th>
                 <td>
                     <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a>
                 </td>
                 <td>{{ m.movie.year }}</td>
                 <td>{{ m.movie.director }}</td>
                 <td>
-                    <div *ngFor = "let genre of m.genres.slice(0,3)">
+                    <div *ngFor = "let genre of m.genres">
                         <a>{{ genre.name }}</a>
                     </div>
                 </td>
                 <td>
-                    <div *ngFor = "let star of m.stars.slice(0,3)">
+                    <div *ngFor = "let star of m.stars">
                         <a [routerLink]="['/star/', star.id]">{{ star.name }}</a>
                     </div>
                 </td>

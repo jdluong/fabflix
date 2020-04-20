@@ -57,7 +57,7 @@ public interface MovieRepository {
     public List<MovieWithDetails> getMoviesByGenre(int id, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
 
     // startsWith for getMoviesBrowseBy
-    public List<MovieWithDetails> getMoviesByStartsWith(String startsWith, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
+    public List<MovieWithDetails> getMoviesByTitle(String startsWith, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
 
 
 }

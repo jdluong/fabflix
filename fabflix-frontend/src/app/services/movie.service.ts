@@ -31,7 +31,7 @@ export class MovieService {
 
   // put everything below this in other service files?
   public getGenresByMovieId(movieId:string):Observable<Genre[]> {
-    return this.http.get<Genre[]>(this.url+"getGenresByMovieId/"+movieId);
+    return this.http.get<Genre[]>(this.url+"getAllGenresByMovieId/"+movieId);
   }
 
   public getRatingbyMovieId(movieId:string):Observable<Rating> {
@@ -39,7 +39,7 @@ export class MovieService {
   }
 
   public getStarsByMovieId(movieId:string):Observable<Star[]> {
-    return this.http.get<Star[]>(this.url+"getStarsByMovieId/"+movieId);
+    return this.http.get<Star[]>(this.url+"getAllStarsByMovieId/"+movieId);
   }
 
   public getStar(starId:string):Observable<Star> {
