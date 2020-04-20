@@ -5,7 +5,7 @@ import { MovieService } from 'src/app/services/movie.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styledUrls: [',/login.component.css']
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
   constructor (
