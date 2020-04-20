@@ -34,7 +34,7 @@
                 <td>{{ m.movie.director }}</td>
                 <td>
                     <div *ngFor = "let genre of m.genres">
-                        <a>{{ genre.name }}</a>
+                        <a [routerLink]="['/movie-list']" [queryParams]="{by: 'genre', id: genre.id}">{{ genre.name }}</a>
                     </div>
                 </td>
                 <td>
