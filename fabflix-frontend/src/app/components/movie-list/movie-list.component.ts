@@ -31,16 +31,18 @@ export class MovieListComponent implements OnInit {
       .subscribe(params => 
       {
         this.params = params;
-        console.log(this.params.id); 
+        this.initMovies(); 
       });
     
+  }
+
+  initMovies() {
     if (this.params.by == 'genre' || this.params.by == 'title') {
       this.browseService.browseBy(this.params).subscribe(
         data => {
           this.movies = data;
         });
     }
-    
   }
 
 }
