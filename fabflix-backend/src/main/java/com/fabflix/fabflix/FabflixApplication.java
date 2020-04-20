@@ -74,5 +74,5 @@ public class FabflixApplication implements CommandLineRunner {
 //        for (List<Star> starList : stars)
 //            for (Star s : starList)
 //                System.out.println("Star " + starList.indexOf(s) + " " + s.toString());
-    }
+//    }
 }

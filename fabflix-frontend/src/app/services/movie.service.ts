@@ -12,8 +12,8 @@ import { Rating } from '../models/Rating';
   providedIn: 'root'
 })
 export class MovieService {
-  // private url:string = "http://localhost:8080/fabflix_backend_war/api/";
-  private url:string = "http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/fabflix-backend/api/";
+  private url:string = "http://localhost:8080/fabflix_backend_war/api/";
+  // private url:string = "http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/fabflix-backend/api/";
 
   constructor(private http: HttpClient) {}
 
@@ -48,6 +48,10 @@ export class MovieService {
 
   public getMoviesByStarId(starId:string):Observable<Movie[]> {
     return this.http.get<Movie[]>(this.url+"getMoviesByStarId/"+starId);
+  }
+
+  public getAllGenres():Observable<Genre[]> {
+    return this.http.get<Genre[]>(this.url+"getAllGenres");
   }
 
 }

@@ -1,0 +1,10 @@
+<div class="content">
+    <p class="heading">Browse by Genre</p>
+    <ul *ngFor="let genre of genres">
+        <li>
+            <a href="#">{{ genre.name }}</a>
+        </li>
+    </ul>
+    <br>
+    <button type="button" class="back-button"><a [routerLink] = "['/movie-list']">Back to search</a></button>
+</div>
