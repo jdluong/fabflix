@@ -1,6 +1,7 @@
 package com.fabflix.fabflix;
 
-import com.fabflix.fabflix.repository.MovieListRepository;
+
+import com.fabflix.fabflix.repository.MovieRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class FabflixApplication implements CommandLineRunner {
     JdbcTemplate jdbcTemplate;
 
     @Autowired
-    @Qualifier("jdbcMovieListRepository")
-    private MovieListRepository movieListRepository;
+    @Qualifier("jdbcMovieRepository")
+    private MovieRepository movieListRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(FabflixApplication.class, args);
@@ -31,26 +32,26 @@ public class FabflixApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("FabflixApplication...");
-        runJDBC();
+//        runJDBC();
     }
-
-    void runJDBC() {
-        log.info("Getting Ratings of Top 20 Movies...\n");
-        List<Rating> ratings = movieListRepository.findTopTwenty();
-
-        log.info("\nResults:\n");
-        for (Rating r : ratings)
-            System.out.println(r.toString());
-
-        log.info("\nGetting Top 20 Movies...\n");
-        List<Movie> movies = movieListRepository.getTopTwentyList();
-
-        log.info("\nResults:\n");
-        for (Movie m : movies)
-            System.out.println(m.toString());
-
-        log.info("\nGetting genres of Top 20 Movies...\n");
-        Vector<List<Genre>> genres = new Vector<List<Genre>>(20);
+//
+//    void runJDBC() {
+//        log.info("Getting Ratings of Top 20 Movies...\n");
+//        List<Rating> ratings = movieListRepository.findTopTwenty();
+//
+//        log.info("\nResults:\n");
+//        for (Rating r : ratings)
+//            System.out.println(r.toString());
+//
+//        log.info("\nGetting Top 20 Movies...\n");
+//        List<Movie> movies = movieListRepository.getTopTwentyList();
+//
+//        log.info("\nResults:\n");
+//        for (Movie m : movies)
+//            System.out.println(m.toString());
+//
+//        log.info("\nGetting genres of Top 20 Movies...\n");
+//        Vector<List<Genre>> genres = new Vector<List<Genre>>(20);
 
 //        for (Movie m : movies)
 //            genres.add(movieListRepository.getGenreById(m.getId()));
