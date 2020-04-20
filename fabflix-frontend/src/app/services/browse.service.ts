@@ -13,6 +13,6 @@ export class BrowseService {
   constructor(private http: HttpClient) { }
 
   public browseBy(params:any):Observable<MovieWithDetails[]> {
-      this.http.get(this.url, {params: })
+      return this.http.get<MovieWithDetails[]>(this.url, {params: params});
   }
 }

@@ -25,4 +25,12 @@ export class BrowseByGenreComponent implements OnInit {
       });
   }
 
+  browseByGenre(genre: Genre) {
+    let params = {
+      by: 'genre',
+      id: genre.id
+    };
+    this.router.navigate(['/movie-list', params]);
+  }
+
 }

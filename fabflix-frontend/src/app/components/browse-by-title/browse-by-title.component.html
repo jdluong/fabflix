@@ -1,0 +1,25 @@
+<div class="content">
+    <p class="heading">Browse by Title</p>
+    <ul >
+        <li class="list-item-heading">
+            <p>By Number:</p>
+            <span *ngFor="let number of numbers">
+                <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: number}">{{ number }}</a>
+            </span>
+        </li>
+        <br>
+        <li class="list-item-heading">
+            <p>By Letter:</p>
+            <span *ngFor="let letter of letters">
+                <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: letter}">{{ letter }}</a>
+            </span>
+        </li>
+        <br>
+        <li class="list-item-heading">
+            <p>By Non-Alphanumeric:</p>
+            <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: '*'}">*</a>
+        </li>
+    </ul>
+    <br>
+    <button type="button" class="back-button"><a [routerLink] = "['/movie-list']">Back to search</a></button>
+</div>
