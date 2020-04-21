@@ -7,6 +7,7 @@ import { Genre } from 'src/app/models/Genre';
 import { Star } from 'src/app/models/Star';
 import { MovieWithDetails } from 'src/app/models/MovieWithDetails';
 import { BrowseService } from 'src/app/services/browse.service';
+import { QueryParams } from 'src/app/models/QueryParams';
 
 @Component({
   selector: 'app-movie-list',
@@ -28,9 +29,9 @@ export class MovieListComponent implements OnInit {
   ngOnInit() {
 
     this.route.queryParams
-      .subscribe(params => 
+      .subscribe(data => 
       {
-        this.params = params;
+        this.params = data;
         this.initMovies(); 
       });
     
@@ -43,6 +44,34 @@ export class MovieListComponent implements OnInit {
           this.movies = data;
         });
     }
+  }
+
+  navigateSort(value) {
+    if (value) {
+      let sortVals = value.split(" ", 4);
+      let sortParams = {
+                        sortBy1: sortVals[0],
+                        order1: sortVals[1],
+                        sortBy2: sortVals[2],
+                        order2: sortVals[3],
+                        page: 1
+                      };
+      this.params = {...this.params, ...sortParams};
+      this.router.navigate(['/movie-list'], { queryParams: this.params});
+    }
+    return false;
+  }
+
+  navigatePerPage(value) {
+    if (value) {
+      let pageParam = {
+                      perPage: value,
+                      page: 1
+                    };
+      this.params = {...this.params, ...pageParam};
+      this.router.navigate(['/movie-list'], { queryParams: this.params});
+    }
+    return false;
   }
 
 }
