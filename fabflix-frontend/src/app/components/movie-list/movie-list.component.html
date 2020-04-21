@@ -10,7 +10,30 @@
 
 <div>
     <!-- <p class = "title">FABFLIX</p> -->
-  
+    <select class="selectpicker" title="Sort by..." (change)="navigateSort($event.target.value)">
+        <option selected >Sort by...</option>
+        <optgroup label="Title first">
+            <option value="title asc rating desc">Title ^, Rating v</option>
+            <option value="title desc rating desc">Title v, Rating v</option>
+            <option value="title asc rating asc">Title ^, Rating ^</option>
+            <option value="title desc rating asc">Title v, Rating ^</option>
+        </optgroup>
+        <optgroup label="Rating first">
+            <option value="rating asc title desc">Rating ^, Title v</option>
+            <option value="rating desc title desc">Rating v, Title v</option>
+            <option value="rating asc title asc">Rating ^, Title ^</option>
+            <option value="rating desc title asc">Rating v, Title ^</option>
+        </optgroup>
+    </select>
+
+    <select class="selectpicker" title="Per page" (change)="navigatePerPage($event.target.value)">
+        <option selected >Items per page...</option>
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+    </select>
+
     <table class = "table">
         <caption>Top 20 Movies</caption>
         <thead>
