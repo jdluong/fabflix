@@ -2,7 +2,7 @@
     <p class="heading">Browse by Genre</p>
     <ul >
         <li *ngFor="let genre of genres">
-            <a [routerLink]="['/movie-list']" [queryParams]="{by: 'genre', id: genre.id}">
+            <a [routerLink]="['/movie-list']" [queryParams]="{by: 'genre', id: genre.id, page: 1, perPage: 25}">
                 {{ genre.name }}
             </a>
         </li>
