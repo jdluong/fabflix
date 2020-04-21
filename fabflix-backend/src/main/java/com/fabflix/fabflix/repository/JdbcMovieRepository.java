@@ -12,10 +12,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-// @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/"})
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"})
 // @CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -50,7 +51,7 @@ public class JdbcMovieRepository implements MovieRepository {
         List<Movie> top20 = getTopTwentyList();
         List<MovieWithDetails>  top20WithDetails = new ArrayList<MovieWithDetails>();
         for (Movie m: top20) {
-            MovieWithDetails movieWithDetails = new MovieWithDetails(m, getGenreById(m.getId()), getStarById(m.getId()), getRatingById(m.getId()));
+            MovieWithDetails movieWithDetails = new MovieWithDetails(m, get3GenresByMovieId(m.getId()), get3StarsByMovieId(m.getId()), getRatingById(m.getId()));
             top20WithDetails.add(movieWithDetails);
         }
 
@@ -58,39 +59,59 @@ public class JdbcMovieRepository implements MovieRepository {
     }
 
     @RequestMapping(
-            value = "api/getGenresByMovieId/{movieId}",
+            value = "api/get3GenresByMovieId/{movieId}",
             method = RequestMethod.GET
     )
     @Override
-    public List<Genre> getGenreById(@PathVariable String movieId)
+    public List<Genre> get3GenresByMovieId(@PathVariable String movieId)
     {
-//        return jdbcTemplate.query(
-//                "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = \"" +
-//                        movieId + "\" LIMIT 3) AS g2 ON g.id = g2.genreId",
-//                (rs, rowNum) ->
-//                        new Genre(rs.getInt("id"), rs.getString("name")));
         return jdbcTemplate.query(
                 "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = \"" +
-                        movieId + "\") AS g2 ON g.id = g2.genreId",
+                        movieId + "\") AS g2 ON g.id = g2.genreId ORDER BY g.name ASC LIMIT 3",
                 (rs, rowNum) ->
                         new Genre(rs.getInt("id"), rs.getString("name")));
     }
 
     @RequestMapping(
-            value = "api/getStarsByMovieId/{movieId}",
+            value = "api/getAllGenresByMovieId/{movieId}",
             method = RequestMethod.GET
     )
     @Override
-    public List<Star> getStarById(@PathVariable String movieId)
+    public List<Genre> getAllGenresByMovieId(@PathVariable String movieId)
     {
-//        return jdbcTemplate.query(
-//                "SELECT s.id, s.name FROM stars AS s INNER JOIN (SELECT starId FROM stars_in_movies WHERE movieId = \"" +
-//                        movieId + "\" LIMIT 3) AS s2 ON s.id = s2.starId",
-//                (rs, rowNum) ->
-//                        new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
         return jdbcTemplate.query(
-                "SELECT s.id, s.name, IFNULL(s.birthYear,0) as birthYear FROM stars s, stars_in_movies sim WHERE (s.id = sim.starId) AND (sim.movieId = \"" +
-                        movieId + "\")",
+                "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = \"" +
+                        movieId + "\") AS g2 ON g.id = g2.genreId ORDER BY g.name ASC",
+                (rs, rowNum) ->
+                        new Genre(rs.getInt("id"), rs.getString("name")));
+    }
+
+
+    @RequestMapping(
+            value = "api/get3StarsByMovieId/{movieId}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public List<Star> get3StarsByMovieId(@PathVariable String movieId)
+    {
+        return jdbcTemplate.query(
+                "SELECT s.id, s.name, IFNULL(s.birthYear,0) as birthYear FROM stars s, stars_in_movies sim, stars_in_movies sim1 WHERE (s.id = sim.starId) AND (sim.movieId = \"" +
+                        movieId + "\") AND (s.id = sim1.starId) GROUP BY s.id, s.name, s.birthYear ORDER BY count(*) DESC, s.name ASC LIMIT 3",
+                (rs, rowNum) ->
+                        new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
+
+    }
+
+    @RequestMapping(
+            value = "api/getAllStarsByMovieId/{movieId}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public List<Star> getAllStarsByMovieId(@PathVariable String movieId)
+    {
+        return jdbcTemplate.query(
+                "SELECT s.id, s.name, IFNULL(s.birthYear,0) as birthYear FROM stars s, stars_in_movies sim, stars_in_movies sim1 WHERE (s.id = sim.starId) AND (sim.movieId = \"" +
+                        movieId + "\") AND (s.id = sim1.starId) GROUP BY s.id, s.name, s.birthYear ORDER BY count(*) DESC, s.name ASC",
                 (rs, rowNum) ->
                         new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
 
@@ -129,7 +150,7 @@ public class JdbcMovieRepository implements MovieRepository {
     public List<Movie> getMoviesByStarId(@PathVariable String starId) {
         return jdbcTemplate.query(
                 "SELECT m.id, m.title, m.year, m.director FROM movies AS m INNER JOIN (SELECT movieId FROM stars_in_movies WHERE starId = \""
-                + starId + "\") AS m2 ON m.id = m2.movieId",
+                + starId + "\") AS m2 ON m.id = m2.movieId ORDER BY m.year DESC, m.title ASC",
                 (rs, rowNum) ->
                         new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
     }
@@ -147,13 +168,135 @@ public class JdbcMovieRepository implements MovieRepository {
                         new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
     }
 
+//    @Override
+//    public Customer getCustomer(@PathVariable String username, @PathVariable String password) {
+//            return jdbcTemplate.queryForObject(
+//                    "SELECT id, firstName, lastName, ccId, address, email, password FROM customers WHERE (email = \""
+//                    + username + "\" " + "AND password = \"" + password + "\")",
+//                    (rs, rowNum) ->
+//                        new Customer(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("ccId"), rs.getString("address"),
+//                                     rs.getString("email"), rs.getString("password")));
+//    }
+
+    @RequestMapping (
+            value = "api/getAllGenres",
+            method = RequestMethod.GET
+    )
     @Override
-    public Customer getCustomer(@PathVariable String username, @PathVariable String password) {
-            return jdbcTemplace.queryForObject(
-                    "SELECT id, firstName, lastName, ccId, address, email, password FROM customers WHERE (email = \""
-                    + username + "\" " + "AND password = \"" + password + "\")",
-                    (rs, rowNum) ->
-                        new Customer(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("ccId"), rs.getString("address"),
-                                     rs.getString("email"), rs.getString("password")));
+    public List<Genre> getAllGenres() {
+        return jdbcTemplate.query(
+                "SELECT id, name FROM genres ORDER BY name ASC",
+                (rs, rowNum) ->
+                        new Genre(rs.getInt("id"), rs.getString("name")));
     }
+
+    // *************** BROWSING ******************
+
+    @RequestMapping (
+            value = "api/browse",
+            method = RequestMethod.GET
+    )
+    @Override
+    public List<MovieWithDetails> getMoviesBrowseBy(
+            @RequestParam String by,
+            @RequestParam(required = false) Integer id,
+            @RequestParam(required = false) String startsWith,
+            @RequestParam(defaultValue = "25") int perPage,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(required = false) String sortBy1,
+            @RequestParam(required = false) String order1,
+            @RequestParam(required = false) String sortBy2,
+            @RequestParam(required = false) String order2) {
+
+        if (by.equals("genre")) {
+            return getMoviesByGenre(id, perPage, page, sortBy1, order1, sortBy2, order2);
+        }
+        else {
+            return getMoviesByTitle(startsWith, perPage, page, sortBy1, order1, sortBy2, order2);
+        }
+    }
+
+    @Override
+    public List<MovieWithDetails> getMoviesByGenre(int id, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2) {
+        List<Movie> movies = new ArrayList<>();
+        if (sortBy1 == null) {
+            movies = jdbcTemplate.query(
+                    "SELECT m.id, m.title, m.year, m.director FROM movies m, genres_in_movies gim WHERE (gim.genreId = \""
+                        + id + "\") AND (m.id = gim.movieId) ORDER BY m.id LIMIT " + perPage + " OFFSET " + (page-1)*perPage,
+                    (rs, rowNum) ->
+                            new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+        }
+        else {
+            movies = jdbcTemplate.query(
+                    "SELECT m.id, m.title, m.year, m.director FROM movies m, genres_in_movies gim, ratings r " +
+                            "WHERE (gim.genreId = " + id + ") AND (m.id = gim.movieId) AND (r.movieId = m.id) " +
+                            "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
+                            " LIMIT " + perPage + " OFFSET " + (page-1)*perPage ,
+                    (rs, rowNum) ->
+                            new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+        }
+        List<MovieWithDetails> moviesWithDetails = new ArrayList<>();
+        for (Movie m: movies) {
+            MovieWithDetails movieWithDetails = new MovieWithDetails(m, get3GenresByMovieId(m.getId()), get3StarsByMovieId(m.getId()), getRatingById(m.getId()));
+            moviesWithDetails.add(movieWithDetails);
+        }
+        return moviesWithDetails;
+
+    }
+
+    @Override
+    public List<MovieWithDetails> getMoviesByTitle(String startsWith, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2) {
+        List<Movie> movies = new ArrayList<>();
+        if (sortBy1 == null) {
+            if (startsWith.equals("*")) {
+                movies = jdbcTemplate.query(
+                        "SELECT id, title, year, director FROM movies WHERE title NOT regexp \"^[[:alnum:]]\" " +
+                                "ORDER BY id LIMIT " + perPage + " OFFSET " + (page - 1) * perPage,
+                        (rs, rowNum) ->
+                                new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+            }
+            else {
+                movies = jdbcTemplate.query(
+                        "SELECT id, title, year, director FROM movies WHERE title LIKE  \"" + startsWith + "%\" " +
+                                "ORDER BY id LIMIT " + perPage + " OFFSET " + (page - 1) * perPage,
+                        (rs, rowNum) ->
+                                new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+            }
+        }
+        else {
+            if (startsWith.equals("*")) {
+                movies = jdbcTemplate.query(
+                        "SELECT m.id, m.title, m.year, m.director FROM movies m, ratings r WHERE (m.id = r.movieId) AND title NOT regexp \"^[[:alnum:]]\"" +
+                                "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
+                                " LIMIT " + perPage + " OFFSET " + (page - 1) * perPage,
+                        (rs, rowNum) ->
+                                new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+            }
+            else {
+                movies = jdbcTemplate.query(
+                        "SELECT m.id, m.title, m.year, m.director FROM movies m, ratings r WHERE (m.id = r.movieId) AND title LIKE  \"" + startsWith + "%\" " +
+                                "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
+                                " LIMIT " + perPage + " OFFSET " + (page - 1) * perPage,
+                        (rs, rowNum) ->
+                                new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+            }
+        }
+        List<MovieWithDetails> moviesWithDetails = new ArrayList<>();
+        for (Movie m: movies) {
+            MovieWithDetails movieWithDetails = new MovieWithDetails(m, get3GenresByMovieId(m.getId()), get3StarsByMovieId(m.getId()), getRatingById(m.getId()));
+            moviesWithDetails.add(movieWithDetails);
+        }
+        return moviesWithDetails;
+
+    }
+
+
+        // ************* BROWSE ****************
+
+    // get number of movies by genreId
+    // params: #genreId
+    // ---------
+    // SELECT count(movieId)
+    // FROM genres_in_movies gim
+    // WHERE
 }
