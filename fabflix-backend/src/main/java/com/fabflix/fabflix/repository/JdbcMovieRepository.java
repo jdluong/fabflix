@@ -290,6 +290,34 @@ public class JdbcMovieRepository implements MovieRepository {
 
     }
 
+    @RequestMapping(
+            value = "api/browse/getNumOfMovies/genre/{genreId}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public int getNumOfMoviesByGenre(@PathVariable String genreId) {
+        return  jdbcTemplate.queryForObject(
+                "SELECT COUNT(movieId) FROM genres_in_movies WHERE (genreId = \"" + genreId + "\")",
+                        Integer.class);
+    }
+
+    @RequestMapping(
+            value = "api/browse/getNumOfMovies/title/{startsWith}",
+            method = RequestMethod.GET
+    )
+    public int getNumOfMoviesByTitle(@PathVariable String startsWith) {
+        if (startsWith.equals("*")) {
+            return  jdbcTemplate.queryForObject(
+                    "SELECT COUNT(id) FROM movies WHERE title NOT regexp \"^[[:alnum:]]\"",
+                    Integer.class);
+        }
+        else {
+            return  jdbcTemplate.queryForObject(
+                    "SELECT id, title, year, director FROM movies WHERE title LIKE  \"" + startsWith + "%\"",
+                    Integer.class);
+        }
+    }
+}
 
         // ************* BROWSE ****************
 
@@ -299,4 +327,3 @@ public class JdbcMovieRepository implements MovieRepository {
     // SELECT count(movieId)
     // FROM genres_in_movies gim
     // WHERE
-}
