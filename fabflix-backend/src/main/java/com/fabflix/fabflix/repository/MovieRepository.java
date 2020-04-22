@@ -42,9 +42,6 @@ public interface MovieRepository {
     // get all genres
     List<Genre> getAllGenres();
 
-    // get/authenticate user for login
-//    Customer authenticateCustomer(String username, String password);
-
     // ****************
     // SEARCH AND BROWSE FUNCTIONS
 
@@ -62,7 +59,8 @@ public interface MovieRepository {
     // get number of movies by genre
     public int getNumOfMoviesByGenre(@PathVariable String genreId);
 
-
+    // LOGIN FUNCTIONS
+    public boolean authenticate(String email, String password);
 
 
 }
