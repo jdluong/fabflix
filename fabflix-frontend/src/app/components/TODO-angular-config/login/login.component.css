@@ -21,7 +21,7 @@ body {
 }
 
 .user-icon {
-    background: url('user.png') no-repeat;
+    background: url('src/app/components/login/user.png') no-repeat;
     width: 60px;
     height: 60px;
     background-size: 100%;
