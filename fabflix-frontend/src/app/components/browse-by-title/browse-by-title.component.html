@@ -4,20 +4,20 @@
         <li class="list-item-heading">
             <p>By Number:</p>
             <span *ngFor="let number of numbers">
-                <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: number}">{{ number }}</a>
+                <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: number, page: 1, perPage: 25}">{{ number }}</a>
             </span>
         </li>
         <br>
         <li class="list-item-heading">
             <p>By Letter:</p>
             <span *ngFor="let letter of letters">
-                <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: letter}">{{ letter }}</a>
+                <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: letter, page: 1, perPage: 25}">{{ letter }}</a>
             </span>
         </li>
         <br>
         <li class="list-item-heading">
             <p>By Non-Alphanumeric:</p>
-            <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: '*'}">*</a>
+            <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: '*', page: 1}">*</a>
         </li>
     </ul>
     <br>

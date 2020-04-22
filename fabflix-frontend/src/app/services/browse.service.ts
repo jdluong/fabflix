@@ -15,4 +15,12 @@ export class BrowseService {
   public browseBy(params:any):Observable<MovieWithDetails[]> {
       return this.http.get<MovieWithDetails[]>(this.url, {params: params});
   }
+
+  public getNumOfMoviesByGenre(genreId:string):Observable<number> {
+      return this.http.get<number>(this.url+"/getNumOfMovies/genre/"+genreId);
+  }
+
+  public getNumOfMoviesByTitle(startsWith:string):Observable<number> {
+    return this.http.get<number>(this.url+"/getNumOfMovies/title/"+startsWith);
+  }
 }

@@ -17,6 +17,8 @@ export class MovieListComponent implements OnInit {
 
   movies: MovieWithDetails[];
   params: any;
+  maxPage: number;
+  pageNums = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -28,19 +30,88 @@ export class MovieListComponent implements OnInit {
   ngOnInit() {
 
     this.route.queryParams
-      .subscribe(params => 
+      .subscribe(data => 
       {
-        this.params = params;
-        console.log(this.params.id); 
+        this.params = data;
+        this.initMovies();
       });
     
+    this.initMaxPage();
+
+    this.initPageNums();
+    
+  }
+
+  initMovies() {
     if (this.params.by == 'genre' || this.params.by == 'title') {
       this.browseService.browseBy(this.params).subscribe(
         data => {
           this.movies = data;
         });
     }
-    
+  }
+
+
+  initMaxPage() {
+    if (this.params.by == 'genre') {
+      this.browseService.getNumOfMoviesByGenre(this.params.id).subscribe(
+        data => {
+          this.maxPage = Math.ceil(data/this.params.perPage);
+          console.log("maxPage: "+this.maxPage);
+          this.initPageNums();
+        });
+    }
+    else if (this.params.by == 'title') {
+      this.browseService.getNumOfMoviesByTitle(this.params.startsWith).subscribe(
+        data => {
+          this.maxPage = Math.ceil(data/this.params.perPage);
+          console.log("maxPage: "+this.maxPage);
+          this.initPageNums();
+        });
+    }
+  }
+
+  initPageNums() {
+    console.log("pagenums: " + this.pageNums);
+    console.log(this.maxPage);
+    for (let i = 0; i < this.maxPage; i++) {
+      this.pageNums.push(i+1);
+    }
+    console.log(this.pageNums);
+  }
+
+  selectSort(value) {
+    if (value) {
+      let sortVals = value.split(" ", 4);
+      let sortParams = {
+                        sortBy1: sortVals[0],
+                        order1: sortVals[1],
+                        sortBy2: sortVals[2],
+                        order2: sortVals[3],
+                        page: 1
+                      };
+      this.params = {...this.params, ...sortParams};
+      this.router.navigate(['/movie-list'], { queryParams: this.params});
+    }
+    return false;
+  }
+
+  selectPerPage(value) {
+    if (value) {
+      let pageParam = {
+                      perPage: value,
+                      page: 1
+                    };
+      this.params = {...this.params, ...pageParam};
+      this.router.navigate(['/movie-list'], { queryParams: this.params});
+    }
+    return false;
+  }
+
+  navigateToPage(pageNum:number) {
+    let pageParam = {page: pageNum};
+    this.params = {...this.params, ...pageParam};
+    this.router.navigate(['/movie-list'], { queryParams: this.params});
   }
 
 }

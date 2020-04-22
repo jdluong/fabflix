@@ -59,5 +59,10 @@ public interface MovieRepository {
     // startsWith for getMoviesBrowseBy
     public List<MovieWithDetails> getMoviesByTitle(String startsWith, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
 
+    // get number of movies by genre
+    public int getNumOfMoviesByGenre(@PathVariable String genreId);
+
+
+
 
 }
