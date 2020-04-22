@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/cs122b-spring20-team-69.iml" filepath="$PROJECT_DIR$/.idea/cs122b-spring20-team-69.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fabflix-backend/fabflix.iml" filepath="$PROJECT_DIR$/fabflix-backend/fabflix.iml" />
     </modules>
   </component>
 </project>

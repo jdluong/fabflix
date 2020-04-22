@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="fabflix:war">
+    <output-path>$PROJECT_DIR$/fabflix-backend/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>fabflix</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="fabflix-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="fabflix:war exploded" />
+    </root>
+  </artifact>
+</component>
