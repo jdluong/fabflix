@@ -317,6 +317,20 @@ public class JdbcMovieRepository implements MovieRepository {
                     Integer.class);
         }
     }
+
+    // ~~~~~~~~~ LOGIN FUNCTIONS
+    @RequestMapping(
+            value = "api/login/authenticate",
+            method = RequestMethod.POST
+    )
+    public boolean authenticate(@RequestParam("username") String email, @RequestParam("password") String password) {
+        int count = jdbcTemplate.queryForObject(
+                "SELECT * FROM customers WHERE email=\"" + email + "\" " +
+                        "AND password=\"" + password + "\"",
+                new Object[] {email, password}, Integer.class);
+
+        return (count != 0);
+    }
 }
 
         // ************* BROWSE ****************

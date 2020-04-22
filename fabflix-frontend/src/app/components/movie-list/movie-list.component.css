@@ -1,20 +1,29 @@
-.title {
-    font-family: 'Exo 2', sans-serif;
-    font-size: 3em;
-    margin: 15px 0;
+body {
+  background: #232426;
+  font-family: 'Abel', sans-serif;
 }
 
 .table caption {
-    font-family: 'Abel', sans-serif;
     font-size:1.5em;
     font-weight: bold;
     text-align: left;
     caption-side: top;
     margin: 10px 0;
+    color: #f3f3f3;
+}
+
+.selectpicker {
+  font-family: 'Abel', sans-serif;
+  font-size: 0.6em;
+  margin-left: 5px;
+  color: steelblue;
+}
+
+.selectpicker:nth-of-type(1) {
+  margin-left: 78.475%
 }
 
 .table {
-    font-family: 'Abel', sans-serif;
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
@@ -26,8 +35,8 @@
 }
 
 .table thead tr {
-    background-color: #232426;
-    color: #ffffff;
+    background-color: steelblue;
+    color: #f3f3f3;
     text-align: left;
     font-weight: bolder;
 }
@@ -41,10 +50,27 @@
     border-bottom: 1px solid #dddddd;
 }
 
+.table tbody tr:nth-of-type(odd) {
+  background-color:#ffffff;
+}
+
 .table tbody tr:nth-of-type(even) {
-    background-color:#f3f3f3;
+    background-color: #f3f3f3;
 }
 
 .table tbody tr:last-of-type {
     border-bottom: 2px solid #232426;
+}
+
+.page-div {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px 0;
+  width: 95%;
+}
+
+.page-div .btn {
+  font-size: 1.25em;
+  margin-left: 99.5%;
+  color: #f3f3f3;
 }

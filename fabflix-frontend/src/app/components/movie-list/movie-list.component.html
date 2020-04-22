@@ -1,76 +1,80 @@
 <title>Movie List</title>
-<!-- <link rel="stylesheet" href="movie-list.component.css">
+<!--<link rel="stylesheet" href="movie-list.component.css">-->
 
-<meta name="viewport" content="width=device-width", initial-scale="1.0"> -->
+<!--<style>-->
+<!--  @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital@1&display=swap');-->
+<!--  @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');-->
+<!--</style>-->
 
-<!-- <style>
-    @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital@1&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
-</style> -->
-
-<div>
+<body>
+  <div>
     <!-- <p class = "title">FABFLIX</p> -->
-    <select class="selectpicker" title="Sort by..." (change)="selectSort($event.target.value)">
-        <option selected >Sort by...</option>
-        <optgroup label="Title first">
+    <table class = "table">
+      <caption>
+        Top 20 Movies
+
+        <select class="selectpicker" title="Sort by..." (change)="selectSort($event.target.value)">
+          <option selected >Sort by...</option>
+          <optgroup label="Title first">
             <option value="title asc rating desc">Title ^, Rating v</option>
             <option value="title desc rating desc">Title v, Rating v</option>
             <option value="title asc rating asc">Title ^, Rating ^</option>
             <option value="title desc rating asc">Title v, Rating ^</option>
-        </optgroup>
-        <optgroup label="Rating first">
+          </optgroup>
+          <optgroup label="Rating first">
             <option value="rating asc title desc">Rating ^, Title v</option>
             <option value="rating desc title desc">Rating v, Title v</option>
             <option value="rating asc title asc">Rating ^, Title ^</option>
             <option value="rating desc title asc">Rating v, Title ^</option>
-        </optgroup>
-    </select>
+          </optgroup>
+        </select>
 
-    <select class="selectpicker" title="Per page" (change)="selectPerPage($event.target.value)">
-        <option selected >Items per page...</option>
-        <option value="10">10</option>
-        <option value="25">25</option>
-        <option value="50">50</option>
-        <option value="100">100</option>
-    </select>
-
-    <table class = "table">
-        <caption>Top 20 Movies</caption>
-        <thead>
-            <tr>
-                <th scope = "col"></th>
-                <th scope = "col">Title</th>
-                <th scope = "col">Year</th>
-                <th scope = "col">Director</th>
-                <th scope = "col">Genres</th>
-                <th scope = "col">Stars</th>
-                <th scope = "col">Rating</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor = "let m of movies; index as ind">
-                <th scope="row">{{ ind + 1 + ((params.page-1)*params.perPage)}}</th>
-                <td>
-                    <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a>
-                </td>
-                <td>{{ m.movie.year }}</td>
-                <td>{{ m.movie.director }}</td>
-                <td>
-                    <div *ngFor = "let genre of m.genres">
-                        <a [routerLink]="['/movie-list']" [queryParams]="{by: 'genre', id: genre.id, page: 1, perPage: 25}">{{ genre.name }}</a>
-                    </div>
-                </td>
-                <td>
-                    <div *ngFor = "let star of m.stars">
-                        <a [routerLink]="['/star/', star.id]">{{ star.name }}</a>
-                    </div>
-                </td>
-                <td>{{ m.rating.rating }}</td>
-            </tr>
-        </tbody>
+        <select class="selectpicker" title="Per page" (change)="selectPerPage($event.target.value)">
+          <option selected >Items per page...</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </caption>
+      <thead>
+      <tr>
+        <th scope = "col"></th>
+        <th scope = "col">Title</th>
+        <th scope = "col">Year</th>
+        <th scope = "col">Director</th>
+        <th scope = "col">Genres</th>
+        <th scope = "col">Stars</th>
+        <th scope = "col">Rating</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor = "let m of movies; index as ind">
+        <th scope="row">{{ ind + 1 + ((params.page-1)*params.perPage)}}</th>
+        <td>
+          <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a>
+        </td>
+        <td>{{ m.movie.year }}</td>
+        <td>{{ m.movie.director }}</td>
+        <td>
+          <div *ngFor = "let genre of m.genres">
+            <a [routerLink]="['/movie-list']" [queryParams]="{by: 'genre', id: genre.id, page: 1, perPage: 25}">{{ genre.name }}</a>
+          </div>
+        </td>
+        <td>
+          <div *ngFor = "let star of m.stars">
+            <a [routerLink]="['/star/', star.id]">{{ star.name }}</a>
+          </div>
+        </td>
+        <td>{{ m.rating.rating }}</td>
+      </tr>
+      </tbody>
     </table>
-    <span *ngFor="let pageNum of pageNums">
-        <a class='btn' (click)="navigateToPage(pageNum)">{{ pageNum}} </a>
-    </span>
-    
-</div>
+    <div class="page-div">
+      <span *ngFor="let pageNum of pageNums">
+<!--          <a class='btn' (click)="navigateToPage(pageNum)"> {{ pageNum }} </a>-->
+          <a align="right" class='btn' (click)="navigateToPage(pageNum)"> 2 </a>
+      </span>
+    </div>
+  </div>
+</body>
