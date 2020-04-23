@@ -13,10 +13,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"})
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
 // @CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
@@ -445,10 +446,13 @@ public class JdbcMovieRepository implements MovieRepository {
             method = RequestMethod.GET
     )
     @Override
-    public Map<String,Boolean> addToShoppingCart(@PathVariable String movieId, @PathVariable int quantity, HttpSession session) {
+    public Map<String,Boolean> addToCart(@PathVariable String movieId, @PathVariable int quantity, HttpSession session) {
+//        HttpSession session = request.getSession(true);
+        System.out.println("ID --- " + session.getId());
+        System.out.println("Max inactive interval --- " + session.getMaxInactiveInterval());
         if (session.getAttribute("cart") == null) {
             System.out.println("No items in cart yet");
-            Map<String,Integer> cart = new HashMap< String,Integer>();
+            Map<String,Integer> cart = new HashMap<String,Integer>();
             cart.put(movieId, 1);
             session.setAttribute("cart", cart);
             System.out.println("Cart contents: " + cart);
@@ -481,6 +485,7 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public Map<String,Integer> getCartContents(HttpSession session) {
+//        HttpSession session = request.getSession(true);
         if (session.getAttribute("cart") == null) {
             System.out.println("No items in cart");
 

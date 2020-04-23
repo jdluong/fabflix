@@ -8,6 +8,7 @@ import com.fabflix.fabflix.*;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public interface MovieRepository {
@@ -89,7 +90,7 @@ public interface MovieRepository {
     // SHOPPING
 
     // add quantity of movieId's to shopping cart
-    public Map<String,Boolean> addToShoppingCart(@PathVariable String movieId, @PathVariable int quantity, HttpSession session);
+    public Map<String,Boolean> addToCart(@PathVariable String movieId, @PathVariable int quantity, HttpSession session);
 
     // get cart contents
     public Map<String,Integer> getCartContents(HttpSession session);
