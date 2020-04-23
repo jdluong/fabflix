@@ -8,6 +8,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { BrowseByGenreComponent } from './components/browse-by-genre/browse-by-genre.component';
 import { BrowseByTitleComponent } from './components/browse-by-title/browse-by-title.component';
 import { LoginComponent } from './components/login/login.component';
+import { MainSearchBrowseComponent } from './components/main-search-browse/main-search-browse.component';
 
 const routes: Routes = [
   { path: 'movie-list', component: MovieListComponent },
@@ -15,10 +16,10 @@ const routes: Routes = [
   { path: 'star/:starId', component: SingleStarComponent },
   { path: 'genres', component: BrowseByGenreComponent },
   { path: 'titles', component: BrowseByTitleComponent },
-  { path: '', redirectTo: '/movie-list', pathMatch: 'full' },
-  { path: '**', component: PageNotFoundComponent },
   { path: 'login', component: LoginComponent },
-  { path: '', component: LoginComponent }
+  { path: 'search', component: MainSearchBrowseComponent },
+  { path: '', component: MainSearchBrowseComponent, pathMatch: 'full'},
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

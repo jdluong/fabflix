@@ -1,6 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
-.title {
-    font-family: 'Exo 2', sans-serif;
-    font-size: 3em;
-    margin: 15px 0;
+body {
+    margin: 0;
+    padding: 0;
+    background: #232426;
 }
+

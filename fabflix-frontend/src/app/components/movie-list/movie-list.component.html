@@ -8,11 +8,12 @@
 
 <body>
   <div>
-    <!-- <p class = "title">FABFLIX</p> -->
+    <p class = "title">FABFLIX</p>
     <table class = "table">
       <caption>
-        Top 20 Movies
-
+        
+        Searching By: efaefawfawefawefwaef
+        
         <select class="selectpicker" title="Sort by..." (change)="selectSort($event.target.value)">
           <option selected >Sort by...</option>
           <optgroup label="Title first">
@@ -37,6 +38,7 @@
           <option value="100">100</option>
         </select>
       </caption>
+
       <thead>
       <tr>
         <th scope = "col"></th>
@@ -50,7 +52,10 @@
       </thead>
       <tbody>
       <tr *ngFor = "let m of movies; index as ind">
-        <th scope="row">{{ ind + 1 + ((params.page-1)*params.perPage)}}</th>
+        <th scope="row">{{ ind + 1 + ((params.page-1)*params.perPage)}}
+          <br>
+          <button><i class="fas fa-shopping-cart"></i></button>
+        </th>
         <td>
           <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a>
         </td>
@@ -66,14 +71,19 @@
             <a [routerLink]="['/star/', star.id]">{{ star.name }}</a>
           </div>
         </td>
-        <td>{{ m.rating.rating }}</td>
+        <div *ngIf = "!m.rating.rating">
+          <td>N/A</td>
+      </div>
+      <div *ngIf = "m.rating.rating">
+          <td>{{ m.rating.rating }}</td>
+      </div>
       </tr>
       </tbody>
     </table>
     <div class="page-div">
       <span *ngFor="let pageNum of pageNums">
 <!--          <a class='btn' (click)="navigateToPage(pageNum)"> {{ pageNum }} </a>-->
-          <a align="right" class='btn' (click)="navigateToPage(pageNum)"> 2 </a>
+          <a class='btn' (click)="navigateToPage(pageNum)">{{ pageNum }}</a>
       </span>
     </div>
   </div>
