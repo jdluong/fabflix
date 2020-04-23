@@ -4,13 +4,13 @@
   font-family: 'Abel', sans-serif;
 }
 
-body {
+.body {
   background-color: #232426;
   padding-top: 30vh;
 }
 
 .form-container {
-  width: 250px;
+  width: 310px;
   height: auto;
   padding: 40px 30px;
   background-color: #ffffff;
