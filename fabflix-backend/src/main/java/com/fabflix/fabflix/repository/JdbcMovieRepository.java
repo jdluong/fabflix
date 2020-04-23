@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.fabflix.fabflix.*;
-
-import org.apache.catalina.startup.UserConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
@@ -427,16 +427,20 @@ public class JdbcMovieRepository implements MovieRepository {
 
     // ~~~~~~~~~ LOGIN FUNCTIONS
     @RequestMapping(
-            value = "api/login/authenticate",
-            method = RequestMethod.POST
+            value = "api/auth",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public boolean authenticate(@RequestParam("username") String email, @RequestParam("password") String password) {
-        int count = jdbcTemplate.queryForObject(
-                "SELECT * FROM customers WHERE email=\"" + email + "\" " +
-                        "AND password=\"" + password + "\"",
-                new Object[] {email, password}, Integer.class);
+    @Override
+    public @ResponseBody ResponseEntity authenticate(@RequestBody Map<String, String> user) {
+        String email = user.get("username");
+        String password = user.get("password");
 
-        return (count != 0);
+        Boolean userAuthenticated = jdbcTemplate.queryForObject(
+                "SELECT EXISTS(SELECT email FROM customers WHERE email=\"" + email + "\" " +
+                        "AND password=\"" + password + "\")", Boolean.class);
+
+        return ResponseEntity.ok(userAuthenticated);
     }
 
 
