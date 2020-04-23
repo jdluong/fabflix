@@ -16,6 +16,7 @@ const routes: Routes = [
   { path: 'star/:starId', component: SingleStarComponent },
   { path: 'genres', component: BrowseByGenreComponent },
   { path: 'titles', component: BrowseByTitleComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'search', component: MainSearchBrowseComponent },
   { path: '', component: MainSearchBrowseComponent, pathMatch: 'full'},
