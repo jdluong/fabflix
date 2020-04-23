@@ -1,4 +1,15 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #232426;
+}
+
 .title {
-  color: #f3f3f3;
-  background: #232426;
+    font-family: 'Exo 2', sans-serif;
+    font-size: 3.0em;
+    margin: 15px 0;
+    position: absolute;
+    top: 2%;
+    left: 43.5%;
+    color: #f3f3f3;
 }

@@ -37,7 +37,8 @@ ul {
 
 button {
     font-size:0.8em;
-    position: absolute;
+    position: relative;
+    margin-left: 5px;
     bottom:   15px;
     border-radius: 20px;
 }
