@@ -1,10 +1,11 @@
 package com.fabflix.fabflix.repository;
 
-import java.util.List;
-
 import com.fabflix.fabflix.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.Map;
 
 public interface MovieRepository {
     // find top 20 movie ratings
@@ -60,7 +61,5 @@ public interface MovieRepository {
     public int getNumOfMoviesByGenre(@PathVariable String genreId);
 
     // LOGIN FUNCTIONS
-    public boolean authenticate(String email, String password);
-
-
+    public ResponseEntity<Boolean> authenticate(Map<String, String> user);
 }

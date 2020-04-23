@@ -1,27 +1,25 @@
-<!DOCTYPE html>
-
 <html>
-<head>
-  <title>FABFLIX</title>
-  <link rel="stylesheet" href=" login.component.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital@1&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
-  </style>
-</head>
+<!--<head>-->
+<!--  <title>FABFLIX</title>-->
+<!--  <link rel="stylesheet" href=" login.component.css">-->
+<!--  <style>-->
+<!--    @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital@1&display=swap');-->
+<!--    @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');-->
+<!--  </style>-->
+<!--</head>-->
 
-<body>
-<form action="form" method="POST">
-  <div class="form-container">
-    <div class="user-icon"></div>
-    <ul class="list">
-      <li>Member Login</li>
-      <li><input type="text" id="username" name="username" [(ngModel)]="username" placeholder="Username"></li>
-      <li><input type="password" id="password" name="password" [(ngModel)]="password" placeholder="********"></li>
-      <li><input type="submit" name="submit" (click)=handleLogin() value="Submit"></li>
-    </ul>
-    <div class="alert" *ngIf='invalidLogin'>{{errorMessage}}</div>
-  </div>
-</form>
-</body>
+  <body>
+  <form action="form" method="POST">
+    <div class="form-container">
+      <div class="user-icon"></div>
+      <ul class="list">
+        <li>Member Login</li>
+        <li><input type="text" id="username" name="username" [(ngModel)]="username" placeholder="Username"></li>
+        <li><input type="password" id="password" name="password" [(ngModel)]="password" placeholder="********"></li>
+        <li><input type="submit" name="submit" (click)=handleLogin() value="Submit"></li>
+      </ul>
+      <div class="alert" *ngIf='invalidLogin'>{{errorMessage}}</div>
+    </div>
+  </form>
+  </body>
 </html>
