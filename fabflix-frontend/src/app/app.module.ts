@@ -14,6 +14,10 @@ import { LoginComponent } from './components/login/login.component';
 
 import { FormsModule } from '@angular/forms';
 import { HttpInterceptorService } from './services/httpInterceptor.service';
+import { MainSearchBrowseComponent } from './components/main-search-browse/main-search-browse.component';
+import { CartComponent } from './components/shopping/cart/cart.component';
+import { CheckoutComponent } from './components/shopping/checkout/checkout.component';
+import { PostPaymentComponent } from './components/shopping/post-payment/post-payment.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,11 @@ import { HttpInterceptorService } from './services/httpInterceptor.service';
     SingleStarComponent,
     BrowseByGenreComponent,
     BrowseByTitleComponent,
-    LoginComponent
+    LoginComponent,
+    MainSearchBrowseComponent,
+    CartComponent,
+    CheckoutComponent,
+    PostPaymentComponent
   ],
   imports: [
     BrowserModule,

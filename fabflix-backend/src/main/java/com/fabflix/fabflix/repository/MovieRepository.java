@@ -1,11 +1,13 @@
 package com.fabflix.fabflix.repository;
 
+import java.util.List;
+import java.util.Map;
+
 import com.fabflix.fabflix.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpSession;
 
 public interface MovieRepository {
     // find top 20 movie ratings
@@ -43,23 +45,53 @@ public interface MovieRepository {
     // get all genres
     List<Genre> getAllGenres();
 
+
     // ****************
-    // SEARCH AND BROWSE FUNCTIONS
+    // SEARCH FUNCTIONS
+
+    // endpoint that searches
+    List<MovieWithDetails> getMoviesSearch(
+            String title, Integer year, String director, String star, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2
+    );
+
+    // search for getMovies
+    List<MovieWithDetails> getMoviesBySearch(String searchQuery, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
+
+    // get number of movies by search
+    int getNumOfMoviesBySearch(String title, Integer year, String director, String star);
+
+    // ****************
+    // BROWSE FUNCTIONS
 
     // endpoint that directs to genre or startsWith functions
-    public List<MovieWithDetails> getMoviesBrowseBy(
+    List<MovieWithDetails> getMoviesBrowseBy(
             String by, Integer id, String startsWith, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2
     );
 
     // genres for getMoviesBrowseBy
-    public List<MovieWithDetails> getMoviesByGenre(int id, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
+    List<MovieWithDetails> getMoviesByGenre(int id, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
 
     // startsWith for getMoviesBrowseBy
-    public List<MovieWithDetails> getMoviesByTitle(String startsWith, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
+    List<MovieWithDetails> getMoviesByTitle(String startsWith, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
 
     // get number of movies by genre
-    public int getNumOfMoviesByGenre(@PathVariable String genreId);
+    int getNumOfMoviesByGenre(@PathVariable String genreId);
+
+    // get number of movies byt itle
+    int getNumOfMoviesByTitle(@PathVariable String startsWith);
 
     // LOGIN FUNCTIONS
-    public ResponseEntity<Boolean> authenticate(Map<String, String> user);
+    ResponseEntity<Boolean> authenticate(Map<String, String> user);
+
+    // ************
+    // SHOPPING
+
+    // add quantity of movieId's to shopping cart
+    Map<String,Boolean> addToShoppingCart(@PathVariable String movieId, @PathVariable int quantity, HttpSession session);
+
+    // get cart contents
+    Map<String,Integer> getCartContents(HttpSession session);
+
+    // empty cart contents
+    Map<String,Boolean> emptyCart(HttpSession session);
 }
