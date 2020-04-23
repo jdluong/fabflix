@@ -12,7 +12,7 @@ export class LoginComponent implements OnInit {
 
   username: string;
   password: string;
-  errorMessage = 'Invalid credentials.';
+  errorMessage = 'Invalid username/password.';
   successMessage: string;
   invalidLogin = false;
   loginSuccess = false;
@@ -27,14 +27,19 @@ export class LoginComponent implements OnInit {
   }
 
   handleLogin() {
-    this.authenticationService.authenticationService(this.username, this.password).subscribe((result) => {
-      this.invalidLogin = false;
-      this.loginSuccess = true;
-      this.successMessage = 'Login Successful.';
-      this.router.navigate(['/hello-world']);
-    }, () => {
-      this.invalidLogin = true;
-      this.loginSuccess = false;
+    this.authenticationService.authenticate(this.username, this.password).subscribe(result => {
+      if (result === true) {
+        this.authenticationService.registerSuccessfulLogin(this.username, this.password);
+        this.invalidLogin = false;
+        this.loginSuccess = true;
+        this.successMessage = 'Login Successful.';
+        this.router.navigate(['/movie-list']);
+      } else {
+        this.invalidLogin = true;
+        this.loginSuccess = false;
+      }
+    }, error => {
+      console.log(error);
     });
   }
 }

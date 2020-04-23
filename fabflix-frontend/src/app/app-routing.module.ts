@@ -10,15 +10,14 @@ import { BrowseByTitleComponent } from './components/browse-by-title/browse-by-t
 import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
+  { path: 'login', component: LoginComponent },
   { path: 'movie-list', component: MovieListComponent },
   { path: 'movie/:movieId', component: SingleMovieComponent },
   { path: 'star/:starId', component: SingleStarComponent },
   { path: 'genres', component: BrowseByGenreComponent },
   { path: 'titles', component: BrowseByTitleComponent },
-  { path: '', redirectTo: '/movie-list', pathMatch: 'full' },
-  { path: '**', component: PageNotFoundComponent },
-  { path: 'login', component: LoginComponent },
-  { path: '', component: LoginComponent }
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({
