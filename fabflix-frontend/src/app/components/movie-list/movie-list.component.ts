@@ -7,6 +7,7 @@ import { Genre } from 'src/app/models/Genre';
 import { Star } from 'src/app/models/Star';
 import { MovieWithDetails } from 'src/app/models/MovieWithDetails';
 import { BrowseService } from 'src/app/services/browse.service';
+import { SearchService } from 'src/app/services/search.service';
 
 @Component({
   selector: 'app-movie-list',
@@ -24,7 +25,8 @@ export class MovieListComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private movieService: MovieService,
-    private browseService: BrowseService
+    private browseService: BrowseService,
+    private searchService: SearchService
    ) { }
 
   ngOnInit() {
@@ -34,17 +36,20 @@ export class MovieListComponent implements OnInit {
       {
         this.params = data;
         this.initMovies();
+        this.initMaxPage();
       });
-    
-    this.initMaxPage();
-
-    this.initPageNums();
     
   }
 
   initMovies() {
     if (this.params.by == 'genre' || this.params.by == 'title') {
       this.browseService.browseBy(this.params).subscribe(
+        data => {
+          this.movies = data;
+        });
+    }
+    else {
+      this.searchService.search(this.params).subscribe(
         data => {
           this.movies = data;
         });
@@ -69,11 +74,18 @@ export class MovieListComponent implements OnInit {
           this.initPageNums();
         });
     }
+    else {
+      this.searchService.getNumOfMoviesBySearch(this.params).subscribe(
+        data => {
+          this.maxPage = Math.ceil(data/this.params.perPage);
+          this.initPageNums();
+        }
+      );
+    }
   }
 
   initPageNums() {
-    console.log("pagenums: " + this.pageNums);
-    console.log(this.maxPage);
+    this.pageNums = [];
     for (let i = 0; i < this.maxPage; i++) {
       this.pageNums.push(i+1);
     }
