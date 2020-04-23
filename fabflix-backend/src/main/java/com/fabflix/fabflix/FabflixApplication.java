@@ -1,6 +1,5 @@
 package com.fabflix.fabflix;
 
-
 import com.fabflix.fabflix.repository.MovieRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,9 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
-
-import java.util.List;
-import java.util.Vector;
 
 @SpringBootApplication
 public class FabflixApplication implements CommandLineRunner {
@@ -32,8 +28,27 @@ public class FabflixApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         log.info("FabflixApplication...");
-//        runJDBC();
+//        testLogging();
     }
+
+//    void testLogging() {
+//        log.info("Testing user login...\n");
+//        Vector<Boolean> testResults = new Vector<Boolean>(10);
+//
+//        boolean test1 = movieListRepository.authenticate("dyoung@gmail.com", "disney392"); // true
+//        boolean test2 = movieListRepository.authenticate("alexislaurenvu@gmail.com", "heybitch"); // false
+//        boolean test3 = movieListRepository.authenticate("neepeefi@izuboogh.com", "aelohtho"); // true
+//        boolean test4 = movieListRepository.authenticate("dumb@gmail.com", "poop"); // false
+//        boolean test5 = movieListRepository.authenticate("ben.bchu@gmail.com", "peace"); // true
+//        testResults.add(test1);
+//        testResults.add(test2);
+//        testResults.add(test3);
+//        testResults.add(test4);
+//        testResults.add(test5);
+//
+//        for (Boolean r : testResults)
+//            System.out.println(r);
+//    }
 //
 //    void runJDBC() {
 //        log.info("Getting Ratings of Top 20 Movies...\n");
