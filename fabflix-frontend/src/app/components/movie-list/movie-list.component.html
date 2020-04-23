@@ -14,6 +14,8 @@
         
         Searching By: efaefawfawefawefwaef
         
+        <a [routerLink]="['/cart']">View cart</a>
+
         <select class="selectpicker" title="Sort by..." (change)="selectSort($event.target.value)">
           <option selected >Sort by...</option>
           <optgroup label="Title first">
@@ -54,7 +56,7 @@
       <tr *ngFor = "let m of movies; index as ind">
         <th scope="row">{{ ind + 1 + ((params.page-1)*params.perPage)}}
           <br>
-          <button><i class="fas fa-shopping-cart"></i></button>
+          <button (click)="addToCart(m.movie.id)"><i class="fas fa-shopping-cart"></i></button>
         </th>
         <td>
           <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a>
