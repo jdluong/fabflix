@@ -9,6 +9,7 @@ import { BrowseByGenreComponent } from './components/browse-by-genre/browse-by-g
 import { BrowseByTitleComponent } from './components/browse-by-title/browse-by-title.component';
 import { LoginComponent } from './components/login/login.component';
 import { MainSearchBrowseComponent } from './components/main-search-browse/main-search-browse.component';
+import { CartComponent } from './components/shopping/cart/cart.component';
 
 const routes: Routes = [
   { path: 'movie-list', component: MovieListComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'titles', component: BrowseByTitleComponent },
   { path: 'login', component: LoginComponent },
   { path: 'search', component: MainSearchBrowseComponent },
+  { path: 'cart', component: CartComponent},
   { path: '', component: MainSearchBrowseComponent, pathMatch: 'full'},
   { path: '**', component: PageNotFoundComponent }
 ];
