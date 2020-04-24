@@ -8,12 +8,12 @@
 
 <body>
   <div>
-    <p class = "title">FABFLIX</p>
+    <p class="title">FABFLIX</p>
     <table class = "table">
       <caption>
-        
+
         Searching By: efaefawfawefawefwaef
-        
+
         <a [routerLink]="['/cart']">View cart</a>
 
         <select class="selectpicker" title="Sort by..." (change)="selectSort($event.target.value)">
@@ -56,7 +56,7 @@
       <tr *ngFor = "let m of movies; index as ind">
         <th scope="row">{{ ind + 1 + ((params.page-1)*params.perPage)}}
           <br>
-          <button (click)="addToCart(m.movie.id)"><i class="fas fa-shopping-cart"></i></button>
+          <button classs="cart" (click)="addToCart(m.movie.id)"><i class="fas fa-shopping-cart"></i></button>
         </th>
         <td>
           <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a>
