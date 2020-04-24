@@ -40,3 +40,9 @@ button {
     bottom:   15px;
     border-radius: 20px;
 }
+
+.viewCart {
+    position:absolute;
+    right: 25%;
+    bottom: 95%;
+}

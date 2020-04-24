@@ -6,6 +6,7 @@ import java.util.Map;
 import com.fabflix.fabflix.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -88,11 +89,24 @@ public interface MovieRepository {
     // SHOPPING
 
     // add quantity of movieId's to shopping cart
-    public Map<String,Boolean> addToCart(@PathVariable String movieId, @PathVariable int quantity, HttpSession session);
+    public Map<String,Integer> addToCart(String movieId,int quantity, HttpSession session);
+
+    // change quantity of movieId's in shopping cart
+    public Map<String,Integer> changeItemQuantity(String movieId,int quantity, HttpSession session);
 
     // get cart contents
-    Map<String,Integer> getCartContents(HttpSession session);
+    public Map<String,Integer> getCartContents(HttpSession session);
+
+    // delete movieId from shopping cart
+    public Map<String,Boolean> deleteItem(String movieId, HttpSession session);
 
     // empty cart contents
-    Map<String,Boolean> emptyCart(HttpSession session);
+    public Map<String,Boolean> emptyCart(HttpSession session);
+
+
+    // ***********
+    // various cACHING
+
+    public Map<String,Object> cacheSearchParams(HttpSession session, Map<String, Object> payload);
+    public Map<String,Object> getSearchParams(HttpSession session);
 }

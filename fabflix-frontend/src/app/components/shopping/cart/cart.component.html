@@ -1,3 +1,40 @@
-<ul>
-    <li>Cart contents: {{ this.cart }}</li>
-</ul>
+<body>
+    <p class = "title">FABFLIX</p>
+    <table class = "table">
+        <thead>
+            <tr>
+                <th scope="col" style="width:75px"><strong>CART</strong></th>
+                <th scope="col">Movie Title</th>
+                <th scope="col" style="width:50px">Quantity</th>
+                <th scope="col">Price</th>
+                <th scope="col">Subtotal</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            <tr *ngFor="let movieId of ids">
+                <td><button (click)="removeItem(movieId)"><i class="fas fa-trash"></i></button></td>
+                <td>{{ movieTitles.get(movieId) }}</td>
+                <td>
+                    <input 
+                        type="number" 
+                        #quantity 
+                        value="{{ cart[movieId] }}" 
+                        (keyup.enter)="updateQuantity(movieId, quantity.value)"
+                        (blur)="updateQuantity(movieId, quantity.value)">
+                </td>
+                <td>{{ 5 | currency }}</td>
+                <td>{{ cart[movieId]*5 | currency }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><strong>TOTAL:</strong></td>
+                <td>{{ calculateTotal() | currency }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <button class="btn btn-secondary searchButton">back to search</button>
+    <button class="btn btn-light checkout" [routerLink]="['/___']">checkout</button>
+</body>

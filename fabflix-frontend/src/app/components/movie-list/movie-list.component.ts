@@ -9,6 +9,7 @@ import { MovieWithDetails } from 'src/app/models/MovieWithDetails';
 import { BrowseService } from 'src/app/services/browse.service';
 import { SearchService } from 'src/app/services/search.service';
 import { ShoppingService } from 'src/app/services/shopping.service';
+import { ServerCacheService } from 'src/app/services/server-cache.service';
 
 @Component({
   selector: 'app-movie-list',
@@ -22,13 +23,15 @@ export class MovieListComponent implements OnInit {
   maxPage: number;
   pageNums = [];
 
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private movieService: MovieService,
     private browseService: BrowseService,
     private searchService: SearchService,
-    private shoppingService: ShoppingService
+    private shoppingService: ShoppingService,
+    private cacheService: ServerCacheService
    ) { }
 
   ngOnInit() {
@@ -64,7 +67,6 @@ export class MovieListComponent implements OnInit {
       this.browseService.getNumOfMoviesByGenre(this.params.id).subscribe(
         data => {
           this.maxPage = Math.ceil(data/this.params.perPage);
-          console.log("maxPage: "+this.maxPage);
           this.initPageNums();
         });
     }
@@ -72,7 +74,6 @@ export class MovieListComponent implements OnInit {
       this.browseService.getNumOfMoviesByTitle(this.params.startsWith).subscribe(
         data => {
           this.maxPage = Math.ceil(data/this.params.perPage);
-          console.log("maxPage: "+this.maxPage);
           this.initPageNums();
         });
     }
@@ -91,7 +92,6 @@ export class MovieListComponent implements OnInit {
     for (let i = 0; i < this.maxPage; i++) {
       this.pageNums.push(i+1);
     }
-    console.log(this.pageNums);
   }
 
   selectSort(value) {
@@ -126,14 +126,54 @@ export class MovieListComponent implements OnInit {
     console.log(movieId);
     this.shoppingService.addToCart(movieId, 1).subscribe(
       data => {
-        console.log(data);
       });
+  }
+
+  navigateToMovie(movieId:string) {
+    this.cacheService.cacheSearchParams(this.params);
+    this.router.navigate(['/movie/',{movieId:movieId}]);
   }
 
   navigateToPage(pageNum:number) {
     let pageParam = {page: pageNum};
     this.params = {...this.params, ...pageParam};
     this.router.navigate(['/movie-list'], { queryParams: this.params});
+  }
+
+  navigatePrevPage() {
+    let currPage = this.params.page;
+    let pageParam = {page: --currPage};
+    this.params = {...this.params, ...pageParam};
+    this.router.navigate(['/movie-list'], { queryParams: this.params});
+  }
+
+  navigateNextPage() {
+    let currPage = this.params.page;
+    let pageParam = {page: ++currPage};
+    this.params = {...this.params, ...pageParam};
+    this.router.navigate(['/movie-list'], { queryParams: this.params});
+  }
+
+  // for html/css
+  prevButtonDis() {
+    return (this.params.page == 1);
+  }
+
+  nextButtonDis() {
+    return (this.params.page == this.maxPage);
+  }
+
+  currPageDis(pageNum) {
+    return (this.params.page == pageNum);
+  }
+
+  currPageClass(pageNum) {
+    let classes = {
+      'btn': true,
+      'btn-secondary': (this.params.page == pageNum),
+      'disabled': (this.params.page == pageNum)
+    }
+    return classes;
   }
 
 }
