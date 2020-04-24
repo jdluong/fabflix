@@ -8,6 +8,7 @@ import { Star } from 'src/app/models/Star';
 import { MovieWithDetails } from 'src/app/models/MovieWithDetails';
 import { BrowseService } from 'src/app/services/browse.service';
 import { SearchService } from 'src/app/services/search.service';
+import { ShoppingService } from 'src/app/services/shopping.service';
 
 @Component({
   selector: 'app-movie-list',
@@ -26,7 +27,8 @@ export class MovieListComponent implements OnInit {
     private router: Router,
     private movieService: MovieService,
     private browseService: BrowseService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private shoppingService: ShoppingService
    ) { }
 
   ngOnInit() {
@@ -118,6 +120,14 @@ export class MovieListComponent implements OnInit {
       this.router.navigate(['/movie-list'], { queryParams: this.params});
     }
     return false;
+  }
+
+  addToCart(movieId:string) {
+    console.log(movieId);
+    this.shoppingService.addToCart(movieId, 1).subscribe(
+      data => {
+        console.log(data);
+      });
   }
 
   navigateToPage(pageNum:number) {
