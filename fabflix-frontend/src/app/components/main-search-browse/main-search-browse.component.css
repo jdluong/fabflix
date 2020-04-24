@@ -7,7 +7,7 @@
     font-size: 3.0em;
     margin: 15px 0;
     position: absolute;
-    top: 35.75%;
+    top: 36%;
     left: 50%;
     transform: translate(-50%, -50%);
     color: #f3f3f3;
@@ -34,26 +34,39 @@ body {
     transform: translate(-50%, -50%);
     background: #f3f3f3;
     height: 100px;
-    border-radius: 40px;
+    border-radius: 80px;
     padding: 10px;
+}
+
+.search-box:hover {
+  height: 180px;
+  width: 400px;
+  border-radius: 20px;
 }
 
 .search-box:hover > .search-text {
     top: 45%;
     background: #f3f3f3;
     width: 300px;
-    padding: 0 0px;
+    padding: 0 5px;
+}
+
+.search-box:hover > .search-text:nth-child(2) {
+  width: 125px;
 }
 
 .search-box:hover > .search-button {
+    width: 40px;
+    height: 40px;
     background: #232426;
+    font-size: medium;
 }
 
 .search-button {
     color: steelblue;
     float: right;
-    width: 40px;
-    height: 40px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     background: #f3f3f3;
     display: flex;
@@ -61,7 +74,11 @@ body {
     align-items: center;
     transition: 0.4s;
     text-decoration: none;
+    font-size: xx-large;
+    border-left: none;
+    border-top: none;
 }
+
 
 .search-text {
     border: none;
@@ -80,7 +97,7 @@ body {
 .links {
     margin: 15px 0;
     position: absolute;
-    top: 58.5%;
+    top: 60%;
     left: 50%;
     transform: translate(-50%, -50%);
     align-items: center;

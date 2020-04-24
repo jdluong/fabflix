@@ -1,3 +1,5 @@
+<script src="https://kit.fontawesome.com/285899525c.js" crossorigin="anonymous"></script>
+
 <body>
 <p class="title">FABFLIX</p>
 <div>
@@ -7,7 +9,7 @@
         <input class="search-text" type="text" [(ngModel)]="director" name="director" placeholder="Director (e.g., James Cameron)">
         <input class="search-text" type="text" [(ngModel)]="star" name="star" placeholder="Star (e.g., Daniel Radcliffe)">
         <button type="submit" class="search-button">
-            <i class="fas fa-shopping-cart"></i>
+            <fa-icon [icon]="searchIcon"></fa-icon>
         </button>
     </form>
 </div>
