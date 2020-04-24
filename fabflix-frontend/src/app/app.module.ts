@@ -18,6 +18,7 @@ import { MainSearchBrowseComponent } from './components/main-search-browse/main-
 import { CartComponent } from './components/shopping/cart/cart.component';
 import { CheckoutComponent } from './components/shopping/checkout/checkout.component';
 import { PostPaymentComponent } from './components/shopping/post-payment/post-payment.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { PostPaymentComponent } from './components/shopping/post-payment/post-pa
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule
   ],
   providers: [
     {

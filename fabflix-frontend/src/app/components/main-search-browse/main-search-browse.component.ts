@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchService } from 'src/app/services/search.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-main-search-browse',
@@ -13,10 +14,11 @@ export class MainSearchBrowseComponent implements OnInit {
   year:number;
   director:string;
   star:string;
+  searchIcon = faSearch;
 
-  constructor( 
+  constructor(
     private searchService: SearchService,
-    private router: Router 
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -38,7 +40,7 @@ export class MainSearchBrowseComponent implements OnInit {
     if (this.star) { searchParams = {...searchParams, ...{'star':this.star}};}
     let params = {...{'perPage': 25, 'page': 1}, ...searchParams};
     this.router.navigate(['/movie-list'], { queryParams: params});
-    
+
   }
 
 }
