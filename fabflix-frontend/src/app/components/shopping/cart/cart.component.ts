@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ShoppingService } from 'src/app/services/shopping.service';
 
 @Component({
   selector: 'app-cart',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CartComponent implements OnInit {
 
-  constructor() { }
+  cart:any;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private shoppingService: ShoppingService) { }
 
   ngOnInit() {
+    this.shoppingService.getCartContents().subscribe(
+      data => {
+        this.cart = data;
+        console.log(this.cart);
+      });
   }
 
 }
