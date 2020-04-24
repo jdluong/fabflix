@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ShoppingService } from 'src/app/services/shopping.service';
+import { Movie } from 'src/app/models/Movie';
+import { MovieService } from 'src/app/services/movie.service';
 
 @Component({
   selector: 'app-cart',
@@ -10,18 +12,59 @@ import { ShoppingService } from 'src/app/services/shopping.service';
 export class CartComponent implements OnInit {
 
   cart:any;
+  ids:any;
+  movieTitles:any;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private shoppingService: ShoppingService) { }
+    private shoppingService: ShoppingService,
+    private movieService: MovieService) { }
 
   ngOnInit() {
     this.shoppingService.getCartContents().subscribe(
       data => {
         this.cart = data;
         console.log(this.cart);
+        this.initMovies();
       });
+  }
+
+  initMovies() {
+    let map = new Map();
+    this.ids = [];
+    for (let key of Object.keys(this.cart)) {
+      this.ids.push(key);
+      this.movieService.getMovie(key).subscribe(
+        data => {
+          map.set(key, data.title);
+        });
+    }
+    this.movieTitles = map;
+    console.log(this.movieTitles);
+  }
+
+  calculateTotal() {
+    let total = 0;
+    for (let key of Object.keys(this.cart)) {
+      total += (this.cart[key]*5);
+    }
+    return total;
+  }
+
+  updateQuantity(movieId, quantity) {
+    this.shoppingService.changeItemQuantity(movieId, quantity).subscribe(
+      data => {
+        this.ngOnInit();
+      });
+  }
+
+  removeItem(movieId) {
+    this.shoppingService.removeItem(movieId).subscribe(
+      data => {
+        this.ngOnInit();
+      }
+    )
   }
 
 }

@@ -9,6 +9,7 @@ import { GenerateBaseOptions } from 'rxjs/internal/observable/generate';
 import { Genre } from 'src/app/models/Genre';
 import { Star } from 'src/app/models/Star';
 import { Rating } from 'src/app/models/Rating';
+import { ShoppingService } from 'src/app/services/shopping.service';
 
 @Component({
   selector: 'app-single-movie',
@@ -25,7 +26,8 @@ export class SingleMovieComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private shoppingService: ShoppingService
   ) { }
 
   ngOnInit() {
@@ -46,6 +48,14 @@ export class SingleMovieComponent implements OnInit {
     this.movieService.getRatingbyMovieId(movieId).subscribe(
       data => this.rating = data
     );
+  }
+  
+  addToCart(movieId:string) {
+    console.log(movieId);
+    this.shoppingService.addToCart(movieId, 1).subscribe(
+      data => {
+        console.log(data);
+      });
   }
 
 }

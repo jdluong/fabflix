@@ -11,10 +11,8 @@
     <p class="title">FABFLIX</p>
     <table class = "table">
       <caption>
-
-        Searching By: efaefawfawefawefwaef
-
-        <a [routerLink]="['/cart']">View cart</a>
+        <a [routerLink]="['/search']"><button class="button btn-secondary">Return to search</button></a>
+        <a [routerLink]="['/cart']"><button class="button btn-light checkout">View Cart</button></a>
 
         <select class="selectpicker" title="Sort by..." (change)="selectSort($event.target.value)">
           <option selected >Sort by...</option>
@@ -56,10 +54,11 @@
       <tr *ngFor = "let m of movies; index as ind">
         <th scope="row">{{ ind + 1 + ((params.page-1)*params.perPage)}}
           <br>
-          <button classs="cart" (click)="addToCart(m.movie.id)"><i class="fas fa-shopping-cart"></i></button>
+          <button class="cart" (click)="addToCart(m.movie.id)"><i class="fas fa-shopping-cart"></i></button>
         </th>
         <td>
-          <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a>
+          <!-- <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a> -->
+          <a (click)="navigateToMovie(m.movie.id)">{{ m.movie.title }}</a>
         </td>
         <td>{{ m.movie.year }}</td>
         <td>{{ m.movie.director }}</td>
@@ -83,9 +82,14 @@
       </tbody>
     </table>
     <div class="page-div">
+      <span>
+        <button class='btn btn-secondary' [disabled]="prevButtonDis()" (click)="navigatePrevPage()">Prev</button>
+      </span>
       <span *ngFor="let pageNum of pageNums">
-<!--          <a class='btn' (click)="navigateToPage(pageNum)"> {{ pageNum }} </a>-->
-          <a class='btn' (click)="navigateToPage(pageNum)">{{ pageNum }}</a>
+          <a [ngClass]="currPageClass(pageNum)" (click)="navigateToPage(pageNum)">{{ pageNum }}</a>
+      </span>
+      <span>
+        <button class='btn btn-secondary' [disabled]="nextButtonDis()" (click)="navigateNextPage()">Next</button>
       </span>
     </div>
   </div>

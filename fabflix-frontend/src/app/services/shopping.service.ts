@@ -13,12 +13,20 @@ export class ShoppingService {
   constructor(private http: HttpClient) { }
 
   public addToCart(movieId:string, quantity:number) {
-    console.log(this.url+"/addToCart/"+movieId+"/"+quantity)
-    return this.http.get(this.url+"/addToCart/"+movieId+"/"+quantity, {withCredentials: true});
+    // console.log(this.url+"/addToCart/"+movieId+"/"+quantity)
+    return this.http.get(this.url+"addToCart/"+movieId+"/"+quantity, {withCredentials: true});
   }
   
   public getCartContents() {
     return this.http.get(this.url+"getCartContents", {withCredentials:true});
+  }
+
+  public changeItemQuantity(movieId:string, quantity:number) {
+    return this.http.get(this.url+"changeItemQuantity/"+movieId+"/"+quantity, {withCredentials: true});
+  }
+
+  public removeItem(movieId:string) {
+    return this.http.delete(this.url+"deleteItem/"+movieId, {withCredentials: true});
   }
 
 }

@@ -3,6 +3,7 @@
 <body>
 <p class="title">FABFLIX</p>
 <div>
+    <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
     <form class="search-box" (ngSubmit)="onSubmit()" #searchForm="ngForm">
         <input class="search-text" type="text" [(ngModel)]="title" name="title" placeholder="Title (e.g., The Terminator)">
         <input class="search-text" type="number" [(ngModel)]="year" name="year" placeholder="Year (e.g., 1997)">

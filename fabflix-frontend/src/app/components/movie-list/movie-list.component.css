@@ -96,3 +96,20 @@ body {
   margin-top: 25px;
   color: orange;
 }
+
+button {
+  font-size:0.8em;
+  border-radius: 20px;
+}
+
+.searchButton {
+  position: absolute;
+  margin-left: 20px;
+  left:10%;
+  top:8%;
+}
+
+.checkout {
+  position:absolute;
+  left: 92%;
+}

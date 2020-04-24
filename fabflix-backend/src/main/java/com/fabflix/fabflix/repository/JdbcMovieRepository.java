@@ -439,7 +439,7 @@ public class JdbcMovieRepository implements MovieRepository {
         Boolean userAuthenticated = jdbcTemplate.queryForObject(
                 "SELECT EXISTS(SELECT email FROM customers WHERE email=\"" + email + "\" " +
                         "AND password=\"" + password + "\")", Boolean.class);
-
+        System.out.println("Logged in "+userAuthenticated);
         return ResponseEntity.ok(userAuthenticated);
     }
 
@@ -450,16 +450,80 @@ public class JdbcMovieRepository implements MovieRepository {
             method = RequestMethod.GET
     )
     @Override
-    public Map<String,Boolean> addToCart(@PathVariable String movieId, @PathVariable int quantity, HttpSession session) {
+    public Map<String,Integer> addToCart(@PathVariable String movieId, @PathVariable int quantity, HttpSession session) {
 //        HttpSession session = request.getSession(true);
         System.out.println("ID --- " + session.getId());
-        System.out.println("Max inactive interval --- " + session.getMaxInactiveInterval());
         if (session.getAttribute("cart") == null) {
             System.out.println("No items in cart yet");
             Map<String,Integer> cart = new HashMap<String,Integer>();
-            cart.put(movieId, 1);
+            cart.put(movieId, quantity);
             session.setAttribute("cart", cart);
             System.out.println("Cart contents: " + cart);
+
+            Map<String, Integer> json = new HashMap<String, Integer>();
+            json.put(movieId, quantity);
+            return json;
+        }
+        else {
+            Map<String,Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
+            Integer curr = cart.get(movieId);
+            if (curr == null) {
+                cart.put(movieId, quantity);
+            }
+            else {
+                cart.put(movieId, curr+quantity);
+            }
+            session.setAttribute("cart",cart);
+            System.out.println("Cart contents: " + session.getAttribute("cart"));
+
+            Map<String, Integer> json = new HashMap<String, Integer>();
+            json.put(movieId, quantity);
+            return json;
+        }
+    }
+
+    @RequestMapping(
+            value = "api/shopping/changeItemQuantity/{movieId}/{quantity}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public Map<String,Integer> changeItemQuantity(@PathVariable String movieId, @PathVariable int quantity, HttpSession session) {
+//        HttpSession session = request.getSession(true);
+        System.out.println("ID --- " + session.getId());
+        if (session.getAttribute("cart") == null) {
+            System.out.println("No items in cart yet");
+            Map<String,Integer> cart = new HashMap<String,Integer>();
+            cart.put(movieId, quantity);
+            session.setAttribute("cart", cart);
+            System.out.println("Cart contents: " + session.getAttribute("cart"));
+
+            Map<String, Integer> json = new HashMap<String, Integer>();
+            json.put(movieId, quantity);
+            return json;
+        }
+        else {
+            Map<String,Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
+            Integer curr = cart.get(movieId);
+            cart.put(movieId, quantity);
+            session.setAttribute("cart", cart);
+            System.out.println("Cart contents: " + session.getAttribute("cart"));
+
+            Map<String, Integer> json = new HashMap<String, Integer>();
+            json.put(movieId, quantity);
+            return json;
+        }
+    }
+
+    @RequestMapping(
+            value = "api/shopping/deleteItem/{movieId}",
+            method = RequestMethod.DELETE
+    )
+    @Override
+    public Map<String,Boolean> deleteItem(@PathVariable String movieId, HttpSession session) {
+//        HttpSession session = request.getSession(true);
+        System.out.println("ID --- " + session.getId());
+        if (session.getAttribute("cart") == null) {
+            System.out.println("No items in cart yet");
 
             Map<String, Boolean> json = new HashMap<String, Boolean>();
             json.put("success", true);
@@ -467,14 +531,12 @@ public class JdbcMovieRepository implements MovieRepository {
         }
         else {
             Map<String,Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
-            Integer curr = cart.get(movieId);
-            if (curr == null) {
-                cart.put(movieId, 1);
+            if (cart.get(movieId) == null) {
+                System.out.println("Item was not in cart to begin with");
             }
             else {
-                cart.put(movieId, curr+quantity);
+                cart.remove(movieId);
             }
-            session.setAttribute("cart",cart);
             System.out.println("Cart contents: " + session.getAttribute("cart"));
 
             Map<String, Boolean> json = new HashMap<String, Boolean>();
@@ -504,7 +566,7 @@ public class JdbcMovieRepository implements MovieRepository {
 
     @RequestMapping(
             value = "api/shopping/emptyCart",
-            method = RequestMethod.GET
+            method = RequestMethod.DELETE
     )
     @Override
     public Map<String,Boolean> emptyCart(HttpSession session) {
@@ -535,4 +597,38 @@ public class JdbcMovieRepository implements MovieRepository {
 //
 //    }
 
+    // *************** various caching stuff ******************
+    @RequestMapping(
+            value = "/api/cache/searchParams",
+            method = RequestMethod.POST
+    )
+    @Override
+    public Map<String,Object> cacheSearchParams(HttpSession session, @RequestBody Map<String, Object> payload) {
+        System.out.println("BEFORE CACHE PARAMS: "+session.getAttribute("searchParams"));
+        session.setAttribute("searchParams", payload);
+        System.out.println("AFTER CACHE PARAMS: "+session.getAttribute("searchParams"));
+
+        Map<String, Boolean> json = new HashMap<String, Boolean>();
+        json.put("success", true);
+        return payload;
+    }
+
+    @RequestMapping(
+            value = "/api/cache/searchParams",
+            method = RequestMethod.GET
+    )
+    @Override
+    public Map<String,Object> getSearchParams(HttpSession session) {
+        if (session.getAttribute("searchParams") == null) {
+            Map<String, Object> json = new HashMap<String,Object>();
+            return json;
+        }
+        else {
+            System.out.println("GETTING CACHE PARAMS: "+session.getAttribute("searchParams"));
+            return (Map<String,Object>) session.getAttribute("searchParams");
+        }
+    }
+
 }
+
+
