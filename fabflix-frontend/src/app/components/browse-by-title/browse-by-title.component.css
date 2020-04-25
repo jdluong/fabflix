@@ -52,3 +52,13 @@ a {
 .list-item-heading p {
     font-size: 1.15em;
 }
+
+.viewCart {
+    position:absolute;
+    font-size:0.8em;
+    margin-left: 5px;
+    bottom:   15px;
+    border-radius: 20px;;
+    right: 1%;
+    bottom: 95%;
+}

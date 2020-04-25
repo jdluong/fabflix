@@ -10,6 +10,7 @@ import { Genre } from 'src/app/models/Genre';
 import { Star } from 'src/app/models/Star';
 import { Rating } from 'src/app/models/Rating';
 import { ShoppingService } from 'src/app/services/shopping.service';
+import { ServerCacheService } from 'src/app/services/server-cache.service';
 
 @Component({
   selector: 'app-single-movie',
@@ -27,7 +28,8 @@ export class SingleMovieComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private movieService: MovieService,
-    private shoppingService: ShoppingService
+    private shoppingService: ShoppingService,
+    private cacheService: ServerCacheService
   ) { }
 
   ngOnInit() {
@@ -36,9 +38,9 @@ export class SingleMovieComponent implements OnInit {
     movieId = this.route.snapshot.paramMap.get('movieId');
 
     this.movieService.getMovie(movieId).subscribe(
-      data => {this.movie = data;
-              console.log(this.movie)}
-    );
+      data => {
+        this.movie = data;
+      });
     this.movieService.getGenresByMovieId(movieId).subscribe(
       data => this.genres = data
     );
@@ -49,12 +51,23 @@ export class SingleMovieComponent implements OnInit {
       data => this.rating = data
     );
   }
+
+  navigateToList() {
+    let params;
+    this.cacheService.getCachedSearchParams().subscribe(
+      data => {
+        params = data;
+        // console.log("In single-movie: ");
+        // console.log(params);
+        this.router.navigate(['/movie-list'], { queryParams: params });
+      });
+  }
   
   addToCart(movieId:string) {
-    console.log(movieId);
+    // console.log(movieId);
     this.shoppingService.addToCart(movieId, 1).subscribe(
       data => {
-        console.log(data);
+        // console.log(data);
       });
   }
 

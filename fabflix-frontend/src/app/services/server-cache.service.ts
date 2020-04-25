@@ -12,9 +12,7 @@ export class ServerCacheService {
   constructor(private http: HttpClient) { }
 
   public cacheSearchParams(params) {
-    const headers = new HttpHeaders()
-    headers.set('Content-Type', 'application/json');
-    console.log(params);
+    const searchParams = params;
     return this.http.post(this.url+"searchParams", params, {withCredentials:true});
   }
 

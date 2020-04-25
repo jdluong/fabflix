@@ -40,8 +40,15 @@ export class MovieListComponent implements OnInit {
       .subscribe(data => 
       {
         this.params = data;
-        this.initMovies();
-        this.initMaxPage();
+        // console.log("In movie-list: ");
+        // console.log(this.params);
+        if (this.params == {}){
+          this.router.navigate(['/search']);
+        }
+        else {
+          this.initMovies();
+          this.initMaxPage();
+        }
       });
     
   }
@@ -94,6 +101,9 @@ export class MovieListComponent implements OnInit {
     }
   }
 
+
+  // for search params update by select boxes
+
   selectSort(value) {
     if (value) {
       let sortVals = value.split(" ", 4);
@@ -122,17 +132,42 @@ export class MovieListComponent implements OnInit {
     return false;
   }
 
+  
+  // for add to cart button
+
   addToCart(movieId:string) {
-    console.log(movieId);
+    // console.log(movieId);
     this.shoppingService.addToCart(movieId, 1).subscribe(
       data => {
       });
   }
 
-  navigateToMovie(movieId:string) {
-    this.cacheService.cacheSearchParams(this.params);
-    this.router.navigate(['/movie/',{movieId:movieId}]);
+
+  // for caching search params after clicking on movie/star/cart
+
+  navigateToSearch() {
+    let params = {}; // empty searchParams in cache
+    this.cacheService.cacheSearchParams(params).subscribe();
+    this.router.navigate(['/search']);
   }
+
+  navigateToCart() {
+    this.cacheService.cacheSearchParams(this.params).subscribe();
+    this.router.navigate(['/cart']);
+  }
+
+  navigateToMovie(movieId:string) {
+    this.cacheService.cacheSearchParams(this.params).subscribe();
+    this.router.navigate(['/movie/', movieId]);
+  }
+
+  navigateToStar(starId:string) {
+    this.cacheService.cacheSearchParams(this.params).subscribe();
+    this.router.navigate(['/star/', starId]);
+  }
+
+
+  // for page nav at the bottom
 
   navigateToPage(pageNum:number) {
     let pageParam = {page: pageNum};
@@ -154,7 +189,9 @@ export class MovieListComponent implements OnInit {
     this.router.navigate(['/movie-list'], { queryParams: this.params});
   }
 
+
   // for html/css
+
   prevButtonDis() {
     return (this.params.page == 1);
   }

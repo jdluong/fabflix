@@ -11,8 +11,8 @@
     <p class="title">FABFLIX</p>
     <table class = "table">
       <caption>
-        <a [routerLink]="['/search']"><button class="button btn-secondary">Return to search</button></a>
-        <a [routerLink]="['/cart']"><button class="button btn-light checkout">View Cart</button></a>
+        <a [routerLink]="" (click)="navigateToSearch()"><button class="button btn-secondary">Return to search</button></a>
+        <a [routerLink]="" (click)="navigateToCart()"><button class="button btn-light checkout">View Cart</button></a>
 
         <select class="selectpicker" title="Sort by..." (change)="selectSort($event.target.value)">
           <option selected >Sort by...</option>
@@ -58,7 +58,7 @@
         </th>
         <td>
           <!-- <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a> -->
-          <a (click)="navigateToMovie(m.movie.id)">{{ m.movie.title }}</a>
+          <a [routerLink]="" (click)="navigateToMovie(m.movie.id)">{{ m.movie.title }}</a>
         </td>
         <td>{{ m.movie.year }}</td>
         <td>{{ m.movie.director }}</td>
@@ -69,7 +69,7 @@
         </td>
         <td>
           <div *ngFor = "let star of m.stars">
-            <a [routerLink]="['/star/', star.id]">{{ star.name }}</a>
+            <a [routerLink]="" (click)="navigateToStar(star.id)">{{ star.name }}</a>
           </div>
         </td>
         <div *ngIf = "!m.rating.rating">
