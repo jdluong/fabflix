@@ -10,16 +10,16 @@
                 <th scope="col">Subtotal</th>
             </tr>
         </thead>
-        
+
         <tbody>
             <tr *ngFor="let movieId of ids">
                 <td><button (click)="removeItem(movieId)"><i class="fas fa-trash"></i></button></td>
                 <td>{{ movieTitles.get(movieId) }}</td>
                 <td>
-                    <input 
-                        type="number" 
-                        #quantity 
-                        value="{{ cart[movieId] }}" 
+                    <input
+                        type="number"
+                        #quantity
+                        value="{{ cart[movieId] }}"
                         (keyup.enter)="updateQuantity(movieId, quantity.value)"
                         (blur)="updateQuantity(movieId, quantity.value)">
                 </td>
@@ -36,5 +36,5 @@
         </tbody>
     </table>
     <button class="btn btn-secondary searchButton" (click)="navigateToList()">Back to list</button>
-    <button class="btn btn-light checkout">checkout</button>
+    <button class="btn btn-light checkout" (click)=navigateToCheckout()>Checkout</button>
 </body>

@@ -1,1 +1,44 @@
-<p>checkout works!</p>
+<div class="body">
+  <div class="checkout-panel">
+    <div class="panel-body">
+      <div class="header">
+        <p class="title">Checkout</p>
+        <p class="cart-total">${{cartTotal | number:'1.2-2'}} <fa-icon class="cart" [icon]="cartIcon"></fa-icon></p>
+      </div>
+
+      <div class="input-fields">
+
+        <div class="column-1">
+          <label for="cardholder-fn">First Name</label>
+          <input type="text" id="cardholder-fn" [(ngModel)]="firstName"/>
+
+          <label for="cardholder-ln">Last Name</label>
+          <input type="text" id="cardholder-ln" [(ngModel)]="lastName"/>
+        </div>
+
+        <div class="column-2">
+          <label for="cardnumber">Card Number</label>
+          <input type="text" id="cardnumber" [(ngModel)]="cardNumber"/>
+
+          <div class="small-inputs">
+            <div>
+              <label for="date">Expiration Date</label>
+              <input type="date" id="date" [(ngModel)]="expiration"/>
+            </div>
+
+            <div class="incomplete" *ngIf='incomplete'>
+              <p>*All fields are required.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel-footer">
+      <button (click)=navigateToCart() class="btn back-btn">Back to Cart</button>
+      <button (click)=checkFields() class="btn next-btn">Place Order</button>
+    </div>
+  </div>
+</div>

@@ -63,6 +63,10 @@ export class CartComponent implements OnInit {
       });
   }
 
+  navigateToCheckout() {
+    this.router.navigate(['/checkout']);
+  }
+
   updateQuantity(movieId, quantity) {
     this.shoppingService.changeItemQuantity(movieId, quantity).subscribe(
       data => {

@@ -23,7 +23,6 @@ export class MovieListComponent implements OnInit {
   maxPage: number;
   pageNums = [];
 
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -37,7 +36,7 @@ export class MovieListComponent implements OnInit {
   ngOnInit() {
 
     this.route.queryParams
-      .subscribe(data => 
+      .subscribe(data =>
       {
         this.params = data;
         // console.log("In movie-list: ");
@@ -50,7 +49,7 @@ export class MovieListComponent implements OnInit {
           this.initMaxPage();
         }
       });
-    
+
   }
 
   initMovies() {
@@ -132,7 +131,7 @@ export class MovieListComponent implements OnInit {
     return false;
   }
 
-  
+
   // for add to cart button
 
   addToCart(movieId:string) {

@@ -1,11 +1,7 @@
 package com.fabflix.fabflix.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.fabflix.fabflix.*;
+import com.fabflix.fabflix.repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +9,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
@@ -432,16 +431,33 @@ public class JdbcMovieRepository implements MovieRepository {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     @Override
-    public @ResponseBody ResponseEntity authenticate(@RequestBody Map<String, String> user) {
+    public @ResponseBody ResponseEntity authenticate(@RequestBody Map<String, String> user, HttpSession session) {
         String email = user.get("username");
         String password = user.get("password");
 
         Boolean userAuthenticated = jdbcTemplate.queryForObject(
                 "SELECT EXISTS(SELECT email FROM customers WHERE email=\"" + email + "\" " +
                         "AND password=\"" + password + "\")", Boolean.class);
-        System.out.println("Logged in "+userAuthenticated);
+
+        session.setAttribute("isAuth", userAuthenticated);
+        System.out.println("Logged in "+ userAuthenticated);
+
+        if (userAuthenticated)
+            session.setAttribute("user", email);
+
         return ResponseEntity.ok(userAuthenticated);
     }
+
+    @RequestMapping(
+            value = "api/auth/isAuth",
+            method = RequestMethod.GET
+    )
+    @Override
+    public Boolean isAuth(HttpSession session) {
+        Boolean result = (Boolean) session.getAttribute("isAuth");
+        return result;
+    }
+
 
 
     // *************** SHOPPING CART ******************
