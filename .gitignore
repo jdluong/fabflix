@@ -1,6 +1,7 @@
 
 # Created by https://www.gitignore.io/api/java,maven,eclipse,java-web,intellij
 
+.idea
 .idea/
 *.DS_Store
 # application.properties
