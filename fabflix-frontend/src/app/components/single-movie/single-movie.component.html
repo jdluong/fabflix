@@ -28,7 +28,7 @@
             <p>{{ rating.rating }}</p>
         </div>
         <br>
-        <a [routerLink] = "['/movie-list']"><button type="button" class="btn-light btn-outline-dark">Back to list</button></a>
+        <a [routerLink]="" (click)="navigateToList()"><button type="button" style="color:white" class="btn-secondary btn-outline-dark">Back to list</button></a>
         <button type="button" class="btn-light btn-outline-dark" (click)="addToCart(movie.id)"><a>Add to Cart</a></button>
     </div>
 </body>

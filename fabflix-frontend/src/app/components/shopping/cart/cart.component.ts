@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ShoppingService } from 'src/app/services/shopping.service';
 import { Movie } from 'src/app/models/Movie';
 import { MovieService } from 'src/app/services/movie.service';
+import { ServerCacheService } from 'src/app/services/server-cache.service';
 
 @Component({
   selector: 'app-cart',
@@ -19,7 +20,8 @@ export class CartComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private shoppingService: ShoppingService,
-    private movieService: MovieService) { }
+    private movieService: MovieService,
+    private cacheService: ServerCacheService) { }
 
   ngOnInit() {
     this.shoppingService.getCartContents().subscribe(
@@ -50,6 +52,15 @@ export class CartComponent implements OnInit {
       total += (this.cart[key]*5);
     }
     return total;
+  }
+
+  navigateToList() {
+    let params;
+    this.cacheService.getCachedSearchParams().subscribe(
+      data => {
+        params = data;
+        this.router.navigate(['/movie-list'], { queryParams: params });
+      });
   }
 
   updateQuantity(movieId, quantity) {
