@@ -8,7 +8,7 @@
     transform: translate(-50%, -50%);
     color: #f3f3f3;
   }
-  
+
 body {
     background: #232426;
     font-family: 'Abel', sans-serif;
@@ -66,10 +66,12 @@ button {
     margin-left: 20px;
     left:10%;
     top:8%;
+    font-size: 1.0em;
 }
 
 .checkout {
     position:absolute;
-    left: 84.7%;
+    left: 86.75%;
     top: 8%;
+    font-size: 1.0em;
 }

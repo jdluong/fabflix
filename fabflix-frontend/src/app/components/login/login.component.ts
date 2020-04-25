@@ -13,7 +13,8 @@ export class LoginComponent implements OnInit {
   username: string;
   password: string;
   errorMessage = 'Invalid username/password.';
-  successMessage: string;
+  incompleteMessage = 'One or more fields incomplete.';
+  incomplete = false;
   invalidLogin = false;
   loginSuccess = false;
 
@@ -26,13 +27,20 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
   }
 
+  checkFields() {
+    if (this.username === undefined || this.password === undefined) {
+      this.incomplete = true;
+    } else {
+      this.incomplete = false;
+      this.handleLogin();
+    }
+  }
+
   handleLogin() {
     this.authenticationService.authenticate(this.username, this.password).subscribe(result => {
       if (result === true) {
-        this.authenticationService.registerSuccessfulLogin(this.username, this.password);
         this.invalidLogin = false;
         this.loginSuccess = true;
-        this.successMessage = 'Login Successful.';
         this.router.navigate(['/search']);
       } else {
         this.invalidLogin = true;

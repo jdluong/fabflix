@@ -13,12 +13,12 @@ import { BrowseByTitleComponent } from './components/browse-by-title/browse-by-t
 import { LoginComponent } from './components/login/login.component';
 
 import { FormsModule } from '@angular/forms';
-import { HttpInterceptorService } from './services/httpInterceptor.service';
 import { MainSearchBrowseComponent } from './components/main-search-browse/main-search-browse.component';
 import { CartComponent } from './components/shopping/cart/cart.component';
 import { CheckoutComponent } from './components/shopping/checkout/checkout.component';
 import { PostPaymentComponent } from './components/shopping/post-payment/post-payment.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RedirectComponent } from './components/redirect/redirect.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +33,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     MainSearchBrowseComponent,
     CartComponent,
     CheckoutComponent,
-    PostPaymentComponent
+    PostPaymentComponent,
+    RedirectComponent
   ],
   imports: [
     BrowserModule,
@@ -42,13 +43,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FormsModule,
     FontAwesomeModule
   ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: HttpInterceptorService,
-      multi: true
-    }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

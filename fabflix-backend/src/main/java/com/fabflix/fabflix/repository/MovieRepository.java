@@ -83,7 +83,9 @@ public interface MovieRepository {
     int getNumOfMoviesByTitle(@PathVariable String startsWith);
 
     // LOGIN FUNCTIONS
-    ResponseEntity<Boolean> authenticate(Map<String, String> user);
+    ResponseEntity<Boolean> authenticate(Map<String, String> user, HttpSession session);
+
+    Boolean isAuth(HttpSession session);
 
     // ************
     // SHOPPING

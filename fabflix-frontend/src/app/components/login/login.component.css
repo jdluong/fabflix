@@ -47,6 +47,10 @@ ul.list li input {
   border-radius: 5px;
 }
 
+ul.list li input:focus {
+  border-color: steelblue;
+}
+
 ul.list li input[type="submit"] {
   background-color: #f3f3f3;
   color: #000000;
