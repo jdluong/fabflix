@@ -10,6 +10,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.servlet.http.HttpSession;
+
 @SpringBootApplication
 public class FabflixApplication implements CommandLineRunner {
     private static final Logger log = LoggerFactory.getLogger(FabflixApplication.class);

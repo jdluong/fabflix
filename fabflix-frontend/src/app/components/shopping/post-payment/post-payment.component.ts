@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
+import {ShoppingService} from "../../../services/shopping.service";
 
 @Component({
   selector: 'app-post-payment',
@@ -7,7 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PostPaymentComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private shoppingService: ShoppingService,
+  ) { }
 
   ngOnInit() {
   }

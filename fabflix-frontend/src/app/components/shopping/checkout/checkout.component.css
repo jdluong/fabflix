@@ -106,7 +106,7 @@ input[type='date']:focus {
   width: 182px;
 }
 
-.incomplete {
+.error {
   color: orange;
   margin-top: 41px;
   font-size: 0.8em;
