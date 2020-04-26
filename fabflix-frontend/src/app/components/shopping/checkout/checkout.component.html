@@ -26,8 +26,12 @@
               <input type="date" id="date" [(ngModel)]="expiration"/>
             </div>
 
-            <div class="incomplete" *ngIf='incomplete'>
+            <div class="error" *ngIf='incompleteForm'>
               <p>*All fields are required.</p>
+            </div>
+
+            <div class="error" *ngIf='invalidOrder'>
+              <p>*Invalid credentials.</p>
             </div>
 
           </div>

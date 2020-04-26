@@ -12,6 +12,7 @@ import { MainSearchBrowseComponent } from './components/main-search-browse/main-
 import { CartComponent } from './components/shopping/cart/cart.component';
 import { RedirectComponent } from './components/redirect/redirect.component';
 import {CheckoutComponent} from './components/shopping/checkout/checkout.component';
+import {PostPaymentComponent} from './components/shopping/post-payment/post-payment.component';
 
 const routes: Routes = [
   { path: 'movie-list', component: MovieListComponent },
@@ -25,6 +26,7 @@ const routes: Routes = [
   { path: 'search', component: MainSearchBrowseComponent },
   { path: 'checkout', component: CheckoutComponent},
   { path: 'cart', component: CartComponent},
+  { path: 'post-payment', component: PostPaymentComponent },
   { path: '', component: MainSearchBrowseComponent, pathMatch: 'full'},
   { path: '**', component: PageNotFoundComponent }
 ];
