@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { NotifierService } from 'angular-notifier';
 import { switchMap } from 'rxjs/operators';
 import { Movie } from 'src/app/models/Movie';
 import { MovieService } from 'src/app/services/movie.service';
@@ -30,8 +31,11 @@ export class MovieListComponent implements OnInit {
     private browseService: BrowseService,
     private searchService: SearchService,
     private shoppingService: ShoppingService,
-    private cacheService: ServerCacheService
-   ) { }
+    private cacheService: ServerCacheService,
+    private notifier: NotifierService) 
+    {
+      this.notifier = notifier;
+    }
 
   ngOnInit() {
 
@@ -39,8 +43,6 @@ export class MovieListComponent implements OnInit {
       .subscribe(data =>
       {
         this.params = data;
-        // console.log("In movie-list: ");
-        // console.log(this.params);
         if (this.params == {}){
           this.router.navigate(['/search']);
         }
@@ -134,11 +136,18 @@ export class MovieListComponent implements OnInit {
 
   // for add to cart button
 
-  addToCart(movieId:string) {
-    // console.log(movieId);
+  addToCart(movieId:string, movieTitle:string) {
     this.shoppingService.addToCart(movieId, 1).subscribe(
       data => {
+        // console.log(data[movieId]);
+        if (data[movieId] == 1) {
+          this.notifier.notify('success', 'Added \"'+movieTitle+"\" to cart");
+        }
+        else {
+          this.notifier.notify('error', 'Could not add \"'+movieTitle+"\" to cart");
+        }
       });
+
   }
 
 

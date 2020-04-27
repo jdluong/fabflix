@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { NotifierService } from 'angular-notifier';
 import { switchMap } from 'rxjs/operators';
 import { HttpParams } from '@angular/common/http'
 
@@ -29,8 +30,11 @@ export class SingleMovieComponent implements OnInit {
     private router: Router,
     private movieService: MovieService,
     private shoppingService: ShoppingService,
-    private cacheService: ServerCacheService
-  ) { }
+    private cacheService: ServerCacheService,
+    private notifier: NotifierService) 
+    {
+      this.notifier = notifier;
+    }
 
   ngOnInit() {
 
@@ -40,16 +44,25 @@ export class SingleMovieComponent implements OnInit {
     this.movieService.getMovie(movieId).subscribe(
       data => {
         this.movie = data;
+        this.movieService.getGenresByMovieId(movieId).subscribe(
+          data => this.genres = data
+        );
+        this.movieService.getStarsByMovieId(movieId).subscribe(
+          data => this.stars = data
+        );
+        this.movieService.getRatingbyMovieId(movieId).subscribe(
+          data => this.rating = data
+        );
       });
-    this.movieService.getGenresByMovieId(movieId).subscribe(
-      data => this.genres = data
-    );
-    this.movieService.getStarsByMovieId(movieId).subscribe(
-      data => this.stars = data
-    );
-    this.movieService.getRatingbyMovieId(movieId).subscribe(
-      data => this.rating = data
-    );
+    // this.movieService.getGenresByMovieId(movieId).subscribe(
+    //   data => this.genres = data
+    // );
+    // this.movieService.getStarsByMovieId(movieId).subscribe(
+    //   data => this.stars = data
+    // );
+    // this.movieService.getRatingbyMovieId(movieId).subscribe(
+    //   data => this.rating = data
+    // );
   }
 
   navigateToList() {
@@ -57,17 +70,19 @@ export class SingleMovieComponent implements OnInit {
     this.cacheService.getCachedSearchParams().subscribe(
       data => {
         params = data;
-        // console.log("In single-movie: ");
-        // console.log(params);
         this.router.navigate(['/movie-list'], { queryParams: params });
       });
   }
   
-  addToCart(movieId:string) {
-    // console.log(movieId);
+  addToCart(movieId:string, movieTitle:string) {
     this.shoppingService.addToCart(movieId, 1).subscribe(
       data => {
-        // console.log(data);
+        if (data[movieId] == 1) {
+          this.notifier.notify('success', 'Added \"'+movieTitle+"\" to cart");
+        }
+        else {
+          this.notifier.notify('error', 'Could not add \"'+movieTitle+"\" to cart");
+        }
       });
   }
 

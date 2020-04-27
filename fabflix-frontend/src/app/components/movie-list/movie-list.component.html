@@ -54,7 +54,7 @@
       <tr *ngFor = "let m of movies; index as ind">
         <th scope="row">{{ ind + 1 + ((params.page-1)*params.perPage)}}
           <br>
-          <button class="cart" (click)="addToCart(m.movie.id)"><i class="fas fa-shopping-cart"></i></button>
+          <button class="cart" (click)="addToCart(m.movie.id, m.movie.title)"><i class="fas fa-shopping-cart"></i></button>
         </th>
         <td>
           <!-- <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a> -->
@@ -94,3 +94,4 @@
     </div>
   </div>
 </body>
+<notifier-container></notifier-container>
