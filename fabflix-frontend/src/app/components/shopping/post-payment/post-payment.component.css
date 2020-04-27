@@ -41,14 +41,47 @@
   font-size: 1.2em;
 }
 
-table {
+.table {
   margin-top: 5%;
   width: 100%;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  border-collapse: collapse;
 }
 
 caption {
   caption-side: top;
   font-size: 1.2em;
+}
+
+.table-head {
+  background-color: steelblue;
+  color: #f3f3f3;
+  text-align: left;
+  font-weight: bold;
+  border-color: steelblue;
+}
+
+.table th, .table td {
+  text-align: left;
+  padding: 12px, 15px;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.table tbody tr:nth-of-type(odd) {
+  background-color:#ffffff;
+}
+
+.table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.table tbody td:nth-of-type(2) {
+  font-style: italic;
 }
 
 .panel-footer {

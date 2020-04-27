@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {map, tap} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -15,12 +16,9 @@ export class ShoppingService {
 
   public firstName: string;
   public lastName: string;
-  public address: string;
-  public saleIds: number[];
-  public customerId: number;
+  public saleIds: number[] = [];
   public cartTotal: number;
   public cartContents: any;
-  error;
 
   public addToCart(movieId: string, quantity: number) {
     // console.log(this.url+"/addToCart/"+movieId+"/"+quantity)
@@ -52,32 +50,20 @@ export class ShoppingService {
     return this.http.post(this.url + 'auth', info, {withCredentials: true});
   }
 
-  // tslint:disable-next-line:ban-types
-  public getCustomerId(creditcard: string): Observable<Number> {
-    const credentials: Map<string, string> = new Map<string, string>();
-    credentials.set('number', creditcard);
-
-    const info = {};
-    credentials.forEach((val: string, key: string) => {
-      info[key] = val;
-    });
-
-    // @ts-ignore
-    return this.http.post(this.url + 'getCustomerId', info, {withCredentials: true});
-  }
-
   public addSales() {
     const movieIds = [];
     for (const key of Object.keys(this.cartContents)) {
       movieIds.push(key);
     }
 
-    this.http.get(this.url + 'addSale/' + this.customerId + movieIds, {withCredentials: true}).subscribe(result => {
-      for (const id of Object.keys(result)) {
-        this.saleIds.push(Number(id));
-      }
-    }, error => {
-      console.log(error);
-    });
+    for (const movie of movieIds.keys()) {
+        this.http.get<number>(this.url + 'addSale/' + movieIds[movie], {withCredentials: true}).subscribe(result => {
+          this.saleIds.push(result);
+        });
+    }
+  }
+
+  public getMovieId(saleId: any) {
+    return this.http.get(this.url + 'getMovieId/' + saleId, {withCredentials: true});
   }
 }

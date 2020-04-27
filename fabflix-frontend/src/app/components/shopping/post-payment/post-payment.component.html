@@ -14,7 +14,7 @@
       </div>
 
       <div class="order-details">
-        <table>
+        <table class="table">
           <caption>Order Items</caption>
 
           <thead class="table-head">
@@ -27,12 +27,20 @@
           </thead>
 
           <tbody class="table-body">
-          <tr>
-            <td>Sale Id</td>
-            <td>Movie Title</td>
-            <td>1</td>
-            <td>$5.00</td>
+<!--          <tr>-->
+<!--            <td>Id</td>-->
+<!--            <td>Movie Title</td>-->
+<!--            <td>1</td>-->
+<!--            <td>$5.00</td>-->
+<!--          </tr>-->
+
+          <tr *ngFor="let movie of sales.keys()">
+            <td>{{sales[movie]}}</td>
+            <td>{{movie}}</td>
+            <td>{{quantities[movie]}}</td>
+            <td>{{5 * quantities[movie] | currency}}</td>
           </tr>
+
           </tbody>
         </table>
       </div>
@@ -42,5 +50,6 @@
       <button class="btn back-btn">Return to Browse</button>
       <button class="btn next-btn">Return to Search</button>
     </div>
+
   </div>
 </div>

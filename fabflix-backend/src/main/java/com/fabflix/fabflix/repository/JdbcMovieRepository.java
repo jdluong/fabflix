@@ -624,49 +624,49 @@ public class JdbcMovieRepository implements MovieRepository {
         Boolean orderAuthenticated = jdbcTemplate.queryForObject("SELECT EXISTS(SELECT id FROM creditcards WHERE id=\"" + creditCard + "\" " +
                         "AND expiration=\"" + expiration + "\")", Boolean.class);
 
+        if (orderAuthenticated) {
+            Integer customerId = jdbcTemplate.queryForObject("SELECT id FROM customers WHERE ccId=\"" + creditCard + "\"", Integer.class);
+            session.setAttribute("customerId", customerId);
+        }
+
         return ResponseEntity.ok(orderAuthenticated);
     }
 
     @RequestMapping(
-            value = "api/shopping/getCustomerId",
-            method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    @Override
-    public ResponseEntity<Number> getCustomerId(@RequestBody Map<String, String> credentials, HttpSession session) {
-        String creditCard = credentials.get("number");
-
-        Number id = jdbcTemplate.queryForObject("SELECT id FROM customers WHERE ccId=\"" + creditCard + "\"", Number.class);
-
-        return ResponseEntity.ok(id);
-    }
-
-    @RequestMapping(
-            value = "api/shopping/addSale/{customerId}/{movieIds}",
+            value = "api/shopping/addSale/{movieId}",
             method = RequestMethod.GET
     )
     @Override
-    public List<Integer> addSale(@RequestParam int customerId, @RequestParam String[] movieIds, HttpSession session) {
-        ArrayList<Integer> sales = new ArrayList<>();
+    public int addSale(@PathVariable String movieId, HttpSession session) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
 
-        for (String movie : movieIds) {
-            jdbcTemplate.update(new PreparedStatementCreator() {
-                @Override
-                public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                    PreparedStatement stmt = connection.prepareStatement("INSERT INTO sales(customerId, movieId, saleDate) " +
-                            "VALUES (" + customerId + ", \"" + movie + "\", CURRENT_DATE())", Statement.RETURN_GENERATED_KEYS);
-                    return stmt;
-                }
-            }, holder);
-            sales.add(holder.getKey().intValue());
-        }
+        int customerId = (int) session.getAttribute("customerId");
 
-        for (Integer s : sales) {
-            System.out.println(s);
-        }
+        jdbcTemplate.update(new PreparedStatementCreator() {
+            @Override
+            public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO sales(customerId, movieId, saleDate) " +
+                        "VALUES (" + customerId + ", \"" + movieId + "\", CURRENT_DATE())", Statement.RETURN_GENERATED_KEYS);
+                return stmt;
+            }
+        }, holder);
 
-        return sales;
+        return holder.getKey().intValue();
+    }
+
+    @RequestMapping(
+            value="api/shopping/getMovieId/{saleId}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public Map<String, String> getMovieId(@PathVariable String saleId, HttpSession session) {
+        String movieId = this.jdbcTemplate.queryForObject("SELECT movieId FROM sales WHERE id=\"" + saleId + "\"", String.class);
+        System.out.println("movie id: " + movieId);
+
+        Map<String, String> result = new HashMap<>();
+        result.put(movieId, saleId);
+
+        return result;
     }
 
 //    @RequestMapping(
