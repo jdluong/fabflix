@@ -108,11 +108,11 @@ public interface MovieRepository {
     // validate credit card credentials
     ResponseEntity<Boolean> authenticateOrder(Map<String, String> orderInfo, HttpSession session);
 
-    // gets customer id for order
-    ResponseEntity<Number> getCustomerId(Map<String, String> credentials, HttpSession session);
-
     // add sales to db
-    List<Integer> addSale(int customerId, String[] movieIds, HttpSession session);
+    int addSale(String movieId, HttpSession session);
+
+    // get movie id from sale
+    Map<String, String> getMovieId(String saleId, HttpSession session);
 
     // ***********
     // various cACHING

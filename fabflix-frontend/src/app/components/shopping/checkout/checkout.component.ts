@@ -44,20 +44,12 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  setCustomerId(creditcard: string) {
-    this.shoppingService.getCustomerId(creditcard).subscribe(result => {
-      // @ts-ignore
-      this.shoppingService.customerId = result;
-    });
-  }
-
   handleOrder() {
     this.shoppingService.authenticateOrder(this.cardNumber, this.expiration).subscribe(result => {
       if (result === true) {
         this.invalidOrder = false;
         this.shoppingService.firstName = this.firstName;
         this.shoppingService.lastName = this.lastName;
-        this.setCustomerId(this.cardNumber);
         this.shoppingService.addSales();
         this.router.navigate(['/post-payment']);
       } else {
