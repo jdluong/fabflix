@@ -2,14 +2,21 @@ package com.fabflix.fabflix.repository;
 
 import com.fabflix.fabflix.*;
 import com.fabflix.fabflix.repository.MovieRepository;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -602,6 +609,64 @@ public class JdbcMovieRepository implements MovieRepository {
             json.put("success",true);
             return json;
         }
+    }
+
+    @RequestMapping(
+            value = "api/shopping/auth",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Override
+    public ResponseEntity<Boolean> authenticateOrder(@RequestBody Map<String, String> credentials, HttpSession session) {
+        String creditCard = credentials.get("number");
+        String expiration = credentials.get("expiration");
+
+        Boolean orderAuthenticated = jdbcTemplate.queryForObject("SELECT EXISTS(SELECT id FROM creditcards WHERE id=\"" + creditCard + "\" " +
+                        "AND expiration=\"" + expiration + "\")", Boolean.class);
+
+        return ResponseEntity.ok(orderAuthenticated);
+    }
+
+    @RequestMapping(
+            value = "api/shopping/getCustomerId",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Override
+    public ResponseEntity<Number> getCustomerId(@RequestBody Map<String, String> credentials, HttpSession session) {
+        String creditCard = credentials.get("number");
+
+        Number id = jdbcTemplate.queryForObject("SELECT id FROM customers WHERE ccId=\"" + creditCard + "\"", Number.class);
+
+        return ResponseEntity.ok(id);
+    }
+
+    @RequestMapping(
+            value = "api/shopping/addSale/{customerId}/{movieIds}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public List<Integer> addSale(@RequestParam int customerId, @RequestParam String[] movieIds, HttpSession session) {
+        ArrayList<Integer> sales = new ArrayList<>();
+        GeneratedKeyHolder holder = new GeneratedKeyHolder();
+
+        for (String movie : movieIds) {
+            jdbcTemplate.update(new PreparedStatementCreator() {
+                @Override
+                public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+                    PreparedStatement stmt = connection.prepareStatement("INSERT INTO sales(customerId, movieId, saleDate) " +
+                            "VALUES (" + customerId + ", \"" + movie + "\", CURRENT_DATE())", Statement.RETURN_GENERATED_KEYS);
+                    return stmt;
+                }
+            }, holder);
+            sales.add(holder.getKey().intValue());
+        }
+
+        for (Integer s : sales) {
+            System.out.println(s);
+        }
+
+        return sales;
     }
 
 //    @RequestMapping(

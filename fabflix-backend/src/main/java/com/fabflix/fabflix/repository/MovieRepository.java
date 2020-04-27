@@ -105,6 +105,14 @@ public interface MovieRepository {
     // empty cart contents
     public Map<String,Boolean> emptyCart(HttpSession session);
 
+    // validate credit card credentials
+    ResponseEntity<Boolean> authenticateOrder(Map<String, String> orderInfo, HttpSession session);
+
+    // gets customer id for order
+    ResponseEntity<Number> getCustomerId(Map<String, String> credentials, HttpSession session);
+
+    // add sales to db
+    List<Integer> addSale(int customerId, String[] movieIds, HttpSession session);
 
     // ***********
     // various cACHING

@@ -12,9 +12,9 @@ import { ServerCacheService } from 'src/app/services/server-cache.service';
 })
 export class CartComponent implements OnInit {
 
-  cart:any;
-  ids:any;
-  movieTitles:any;
+  cart: any;
+  ids: any;
+  movieTitles: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -64,6 +64,8 @@ export class CartComponent implements OnInit {
   }
 
   navigateToCheckout() {
+    this.shoppingService.cartTotal = this.calculateTotal();
+    this.shoppingService.cartContents = this.cart;
     this.router.navigate(['/checkout']);
   }
 
@@ -79,7 +81,7 @@ export class CartComponent implements OnInit {
       data => {
         this.ngOnInit();
       }
-    )
+    );
   }
 
 }
