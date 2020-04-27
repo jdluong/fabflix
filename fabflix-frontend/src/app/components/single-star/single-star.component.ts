@@ -27,12 +27,13 @@ export class SingleStarComponent implements OnInit {
     starId = this.route.snapshot.paramMap.get('starId');
 
     this.movieService.getStar(starId).subscribe(
-      data => {this.star = data;
-              // console.log(this.star)
-            });
-    this.movieService.getMoviesByStarId(starId).subscribe(
-      data => this.movies = data
-    );
+      data => {
+          this.star = data;
+          this.movieService.getMoviesByStarId(starId).subscribe(
+            data => {
+              this.movies = data;
+          });
+      });
 
   }
 

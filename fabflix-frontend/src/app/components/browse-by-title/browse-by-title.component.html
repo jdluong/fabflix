@@ -24,9 +24,9 @@
         <br>
         <li class="list-item-heading">
             <p>By Non-Alphanumeric:</p>
-            <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: '*', page: 1}">*</a>
+            <a [routerLink]="['/movie-list']" [queryParams]="{by: 'title', startsWith: '*', page: 1, perPage: 25}">*</a>
         </li>
     </ul>
     <br>
-    <button type="button" class="back-button"><a [routerLink] = "['/']">Back to search</a></button>
+    <a [routerLink] = "['/search']"><button type="button" class="back-button btn-secondary">Back to search</button></a>
 </div>

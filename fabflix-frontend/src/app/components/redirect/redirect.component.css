@@ -1,0 +1,37 @@
+* {
+  background: #232426;
+  font-family: 'Abel', sans-serif;
+}
+
+.container {
+  width: 75%;
+  height: 20%;
+  margin: 25% auto;
+}
+
+.container p {
+  color: white;
+  text-align: center;
+  font-size: 2.0em;
+  align-content: center;
+}
+
+button {
+  width: 100px;
+  padding: 5px 5px;
+  border: none;
+  background: steelblue;
+  border-radius: 40px;
+  text-align: center;
+  font-size: 1.5em;
+  color: #f3f3f3;
+  margin: 0 auto;
+  display: block;
+  text-decoration: none;
+}
+
+
+
+
+
+

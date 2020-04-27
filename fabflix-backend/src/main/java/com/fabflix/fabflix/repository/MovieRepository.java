@@ -83,7 +83,9 @@ public interface MovieRepository {
     int getNumOfMoviesByTitle(@PathVariable String startsWith);
 
     // LOGIN FUNCTIONS
-    ResponseEntity<Boolean> authenticate(Map<String, String> user);
+    ResponseEntity<Boolean> authenticate(Map<String, String> user, HttpSession session);
+
+    Boolean isAuth(HttpSession session);
 
     // ************
     // SHOPPING
@@ -103,6 +105,14 @@ public interface MovieRepository {
     // empty cart contents
     public Map<String,Boolean> emptyCart(HttpSession session);
 
+    // validate credit card credentials
+    ResponseEntity<Boolean> authenticateOrder(Map<String, String> orderInfo, HttpSession session);
+
+    // add sales to db
+    int addSale(String movieId, HttpSession session);
+
+    // get movie id from sale
+    Map<String, String> getMovieId(String saleId, HttpSession session);
 
     // ***********
     // various cACHING
