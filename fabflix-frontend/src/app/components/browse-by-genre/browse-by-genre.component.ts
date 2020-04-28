@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MovieService } from 'src/app/services/movie.service';
 import { Genre } from 'src/app/models/Genre';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-browse-by-genre',
@@ -12,16 +13,28 @@ export class BrowseByGenreComponent implements OnInit {
 
   genres: Genre[];
 
+  isAuth: any;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private authService: AuthenticationService
   ) { }
 
   ngOnInit() {
-    this.movieService.getAllGenres().subscribe(
+    this.authService.isAuth().subscribe(
       data => {
-        this.genres = data;
+        this.isAuth = data;
+        if (this.isAuth == false) {
+          this.router.navigate(['/redirect']);
+        }
+        else {
+          this.movieService.getAllGenres().subscribe(
+            data => {
+              this.genres = data;
+            });
+          }
       });
   }
 
@@ -32,5 +45,5 @@ export class BrowseByGenreComponent implements OnInit {
     };
     this.router.navigate(['/movie-list', params]);
   }
-
+  
 }

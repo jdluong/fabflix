@@ -21,13 +21,12 @@ const routes: Routes = [
   { path: 'genres', component: BrowseByGenreComponent },
   { path: 'titles', component: BrowseByTitleComponent },
   { path: 'redirect', component: RedirectComponent},
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'search', component: MainSearchBrowseComponent },
   { path: 'checkout', component: CheckoutComponent},
   { path: 'cart', component: CartComponent},
   { path: 'post-payment', component: PostPaymentComponent },
-  { path: '', component: MainSearchBrowseComponent, pathMatch: 'full'},
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];
 

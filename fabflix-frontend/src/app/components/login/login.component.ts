@@ -18,6 +18,8 @@ export class LoginComponent implements OnInit {
   invalidLogin = false;
   loginSuccess = false;
 
+  isAuth: any;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -25,6 +27,13 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.authenticationService.isAuth().subscribe(
+      data => {
+        this.isAuth = data;
+        if (this.isAuth == true) {
+          this.router.navigate(['/search']);
+        }
+      });
   }
 
   checkFields() {

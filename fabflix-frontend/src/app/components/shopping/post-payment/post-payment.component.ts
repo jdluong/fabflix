@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ShoppingService} from '../../../services/shopping.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-post-payment',
@@ -14,13 +15,27 @@ export class PostPaymentComponent implements OnInit {
   public sales = new Map();
   public quantities = new Map();
 
+  isAuth: any;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private shoppingService: ShoppingService,
+    private authService: AuthenticationService
   ) { }
 
   ngOnInit() {
+    // this.authService.isAuth().subscribe(
+    //   data => {
+    //     this.isAuth = data;
+    //     if (this.isAuth == false) {
+    //       this.router.navigate(['/redirect']);
+    //     }
+    //     else {
+    //       this.constructOrders();
+    //     }
+    //   }
+    // )
     this.constructOrders();
   }
   constructOrders() {

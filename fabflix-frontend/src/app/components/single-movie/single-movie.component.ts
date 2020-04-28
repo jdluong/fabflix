@@ -12,6 +12,7 @@ import { Star } from 'src/app/models/Star';
 import { Rating } from 'src/app/models/Rating';
 import { ShoppingService } from 'src/app/services/shopping.service';
 import { ServerCacheService } from 'src/app/services/server-cache.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-single-movie',
@@ -25,44 +26,45 @@ export class SingleMovieComponent implements OnInit {
   stars: Star[]
   rating: Rating;
 
+  isAuth: any;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private movieService: MovieService,
     private shoppingService: ShoppingService,
     private cacheService: ServerCacheService,
-    private notifier: NotifierService) 
+    private notifier: NotifierService,
+    private authService: AuthenticationService) 
     {
       this.notifier = notifier;
     }
 
   ngOnInit() {
-
-    let movieId:string;
-    movieId = this.route.snapshot.paramMap.get('movieId');
-
-    this.movieService.getMovie(movieId).subscribe(
+    this.authService.isAuth().subscribe( 
       data => {
-        this.movie = data;
-        this.movieService.getGenresByMovieId(movieId).subscribe(
-          data => this.genres = data
-        );
-        this.movieService.getStarsByMovieId(movieId).subscribe(
-          data => this.stars = data
-        );
-        this.movieService.getRatingbyMovieId(movieId).subscribe(
-          data => this.rating = data
-        );
+        this.isAuth = data;
+        if (this.isAuth == false) {
+          this.router.navigate(['/redirect']);
+        }
+        else {
+          let movieId:string;
+          movieId = this.route.snapshot.paramMap.get('movieId');
+          this.movieService.getMovie(movieId).subscribe(
+            data => {
+              this.movie = data;
+              this.movieService.getGenresByMovieId(movieId).subscribe(
+                data => this.genres = data
+              );
+              this.movieService.getStarsByMovieId(movieId).subscribe(
+                data => this.stars = data
+              );
+              this.movieService.getRatingbyMovieId(movieId).subscribe(
+                data => this.rating = data
+              );
+            });
+        }
       });
-    // this.movieService.getGenresByMovieId(movieId).subscribe(
-    //   data => this.genres = data
-    // );
-    // this.movieService.getStarsByMovieId(movieId).subscribe(
-    //   data => this.stars = data
-    // );
-    // this.movieService.getRatingbyMovieId(movieId).subscribe(
-    //   data => this.rating = data
-    // );
   }
 
   navigateToList() {

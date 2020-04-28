@@ -4,6 +4,7 @@
 <!--    @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital@1&display=swap');-->
 <!--    @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');-->
 <!--</style>-->
+<div *ngIf="isAuth">
 <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
 <div class="content">
     <p class="heading">Browse by Title</p>
@@ -29,4 +30,5 @@
     </ul>
     <br>
     <a [routerLink] = "['/search']"><button type="button" class="back-button btn-secondary">Back to search</button></a>
+</div>
 </div>

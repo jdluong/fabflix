@@ -461,7 +461,14 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public Boolean isAuth(HttpSession session) {
-        Boolean result = (Boolean) session.getAttribute("isAuth");
+        Boolean result;
+        if (session.getAttribute("isAuth") == null) {
+            result = false;
+        }
+        else {
+            result = (Boolean) session.getAttribute("isAuth");
+        }
+        System.out.println(result);
         return result;
     }
 
