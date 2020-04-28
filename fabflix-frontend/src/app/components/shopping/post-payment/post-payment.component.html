@@ -28,28 +28,25 @@
           </thead>
 
           <tbody class="table-body">
-<!--          <tr>-->
-<!--            <td>Id</td>-->
-<!--            <td>Movie Title</td>-->
-<!--            <td>1</td>-->
-<!--            <td>$5.00</td>-->
-<!--          </tr>-->
 
-          <tr *ngFor="let movie of sales.keys()">
-            <td>{{sales[movie]}}</td>
-            <td>{{movie}}</td>
-            <td>{{quantities[movie]}}</td>
-            <td>{{5 * quantities[movie] | currency}}</td>
+          <tr *ngFor="let movieId of ids; let i = index">
+            <td>{{this.shoppingService.saleIds[i]}}</td>
+            <td>{{this.movieTitles.get(movieId)}}</td>
+            <td>{{this.shoppingService.cartContents[movieId]}}</td>
+            <td>{{this.shoppingService.cartContents[movieId] * 5 | currency}}</td>
+          </tr>
+
+          <tr class="table-footer">
+            <td style="text-align:right" colspan="4" class="footer-data"> <strong>TOTAL: </strong> {{calculateTotal() | currency}} </td>
           </tr>
 
           </tbody>
         </table>
-      </div>
     </div>
 
     <div class="panel-footer">
-      <button class="btn back-btn">Return to Browse</button>
-      <button class="btn next-btn">Return to Search</button>
+      <button (click)="navigateToBrowse()" class="btn back-btn">Return to Browse</button>
+      <button (click)="navigateToSearch()" class="btn next-btn">Return to Search</button>
     </div>
 
   </div>

@@ -646,14 +646,15 @@ public class JdbcMovieRepository implements MovieRepository {
     @Override
     public int addSale(@PathVariable String movieId, HttpSession session) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
-
+        Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
         int customerId = (int) session.getAttribute("customerId");
+        int quantity = cart.get(movieId);
 
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
             public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-                PreparedStatement stmt = connection.prepareStatement("INSERT INTO sales(customerId, movieId, saleDate) " +
-                        "VALUES (" + customerId + ", \"" + movieId + "\", CURRENT_DATE())", Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement stmt = connection.prepareStatement("INSERT INTO sales(customerId, movieId, quantity, saleDate) " +
+                        "VALUES (" + customerId + ", \"" + movieId + "\", " + quantity +  ", CURRENT_DATE())", Statement.RETURN_GENERATED_KEYS);
                 return stmt;
             }
         }, holder);
@@ -662,18 +663,23 @@ public class JdbcMovieRepository implements MovieRepository {
     }
 
     @RequestMapping(
-            value="api/shopping/getMovieId/{saleId}",
+            value="api/shopping/getMovieTitle/{saleId}",
+            produces="text/plain",
             method = RequestMethod.GET
     )
     @Override
-    public Map<String, String> getMovieId(@PathVariable String saleId, HttpSession session) {
-        String movieId = this.jdbcTemplate.queryForObject("SELECT movieId FROM sales WHERE id=\"" + saleId + "\"", String.class);
-        System.out.println("movie id: " + movieId);
+    public String getMovieTitle(@PathVariable String saleId, HttpSession session) {
+        return this.jdbcTemplate.queryForObject("SELECT m.title FROM movies as m INNER JOIN (SELECT movieId FROM sales WHERE id = \"" + saleId + "\"" +
+                ") AS s ON m.id = s.movieId", String.class);
+    }
 
-        Map<String, String> result = new HashMap<>();
-        result.put(movieId, saleId);
-
-        return result;
+    @RequestMapping(
+            value="api/shopping/getQuantity/{saleId}",
+            method = RequestMethod.GET
+    )
+    @Override
+    public int getQuantity(@PathVariable String saleId, HttpSession session) {
+        return this.jdbcTemplate.queryForObject("SELECT quantity FROM sales WHERE id=\"" + saleId + "\"", Integer.class);
     }
 
 //    @RequestMapping(

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ShoppingService} from '../../../services/shopping.service';
+import {MovieService} from '../../../services/movie.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
@@ -10,10 +11,10 @@ import { AuthenticationService } from 'src/app/services/auth.service';
 })
 
 export class PostPaymentComponent implements OnInit {
-  public totalPrice: number;
-  public totalMovies: number;
-  public sales = new Map();
-  public quantities = new Map();
+
+  public movieTitles: any;
+  public ids: any;
+  public mergedLists: any;
 
   isAuth: any;
 
@@ -21,48 +22,60 @@ export class PostPaymentComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private shoppingService: ShoppingService,
+    private movieService: MovieService
     private authService: AuthenticationService
   ) { }
 
   ngOnInit() {
-    // this.authService.isAuth().subscribe(
-    //   data => {
-    //     this.isAuth = data;
-    //     if (this.isAuth == false) {
-    //       this.router.navigate(['/redirect']);
-    //     }
-    //     else {
-    //       this.constructOrders();
-    //     }
-    //   }
-    // )
-    this.constructOrders();
+    this.authService.isAuth().subscribe(
+      data => {
+        this.isAuth = data;
+        if (this.isAuth == false) {
+          this.router.navigate(['/redirect']);
+        }
+        else {
+          this.constructOrders();
+          this.merge();
+        }
+      }
+    }
   }
+
   constructOrders() {
-    let saleId: any;
-    let movieId: any;
+    const movies = new Map();
+    this.ids = [];
 
-    console.log(this.shoppingService.saleIds);
-    console.log(this.shoppingService.saleIds[0]);
-    console.log(this.shoppingService.saleIds[1]);
+    for (const key of Object.keys(this.shoppingService.cartContents)) {
+      this.ids.push(key);
+      this.movieService.getMovie(key).subscribe( result => {
+        movies.set(key, result.title);
+      });
+    }
 
-    // for (const sale in this.shoppingService.saleIds) {
-    //   console.log(sale);
-    //
-    //  //  this.shoppingService.getMovieId(saleId).subscribe(result => {
-    //  //    for (const id of Object.keys(result)) {
-    //  //      movieId = id;
-    //  //    }
-    //  //  });
-    //  //
-    //  //  if (this.sales.has(movieId)) {
-    //  //    this.quantities[movieId] = this.quantities[movieId] + 1;
-    //  //  } else {
-    //  //    this.sales.set(movieId, new Array());
-    //  //    this.quantities.set(movieId, 1);
-    //  //  }
-    //  //
-    //  //  this.sales[movieId].push(saleId);
-    //   }
+    this.movieTitles = movies;
+  }
+
+  merge() {
+    for (let i = 0; i < this.movieTitles.length; i++) {
+      this.mergedLists.push({saleId: this.shoppingService.saleIds[i], movieId: this.ids[i]});
+    }
+  }
+
+  calculateTotal() {
+    let total = 0;
+
+    for (const key of Object.keys(this.shoppingService.cartContents)) {
+      total += (this.shoppingService.cartContents[key]*5);
+    }
+
+    return total;
+  }
+
+  navigateToBrowse() {
+    this.router.navigate(['/titles']);
+  }
+
+  navigateToSearch() {
+    this.router.navigate(['/search']);
   }
 }
