@@ -18,7 +18,7 @@ export class ShoppingService {
 
   public firstName: string;
   public lastName: string;
-  public saleIds: number[] = [];
+  public saleIds: number[];
   public cartTotal: number;
   public cartContents: any;
 
@@ -57,6 +57,8 @@ export class ShoppingService {
     for (const key of Object.keys(this.cartContents)) {
       movies.set(key, this.cartContents[key]);
     }
+
+    this.saleIds = [];
 
     for (const movie of movies.keys()) {
         this.http.get<number>(this.url + 'addSale/' + movie, {withCredentials: true}).subscribe(result => {

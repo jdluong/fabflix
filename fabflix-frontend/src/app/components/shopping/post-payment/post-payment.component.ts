@@ -13,6 +13,7 @@ export class PostPaymentComponent implements OnInit {
 
   public movieTitles: any;
   public ids: any;
+  public mergedLists: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,6 +24,7 @@ export class PostPaymentComponent implements OnInit {
 
   ngOnInit() {
     this.constructOrders();
+    this.merge();
   }
 
   constructOrders() {
@@ -39,6 +41,12 @@ export class PostPaymentComponent implements OnInit {
     this.movieTitles = movies;
   }
 
+  merge() {
+    for (let i = 0; i < this.movieTitles.length; i++) {
+      this.mergedLists.push({saleId: this.shoppingService.saleIds[i], movieId: this.ids[i]});
+    }
+  }
+
   calculateTotal() {
     let total = 0;
 
@@ -47,5 +55,13 @@ export class PostPaymentComponent implements OnInit {
     }
 
     return total;
+  }
+
+  navigateToBrowse() {
+    this.router.navigate(['/titles']);
+  }
+
+  navigateToSearch() {
+    this.router.navigate(['/search']);
   }
 }

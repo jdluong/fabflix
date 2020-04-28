@@ -35,15 +35,17 @@
             <td>{{this.shoppingService.cartContents[movieId] * 5 | currency}}</td>
           </tr>
 
+          <tr class="table-footer">
+            <td style="text-align:right" colspan="4" class="footer-data"> <strong>TOTAL: </strong> {{calculateTotal() | currency}} </td>
+          </tr>
+
           </tbody>
         </table>
-        <p>Total: {{calculateTotal() | currency}}</p>
-      </div>
     </div>
 
     <div class="panel-footer">
-      <button class="btn back-btn">Return to Browse</button>
-      <button class="btn next-btn">Return to Search</button>
+      <button (click)="navigateToBrowse()" class="btn back-btn">Return to Browse</button>
+      <button (click)="navigateToSearch()" class="btn next-btn">Return to Search</button>
     </div>
 
   </div>
