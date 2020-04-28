@@ -28,15 +28,16 @@
 
           <tbody class="table-body">
 
-          <tr *ngFor="let sale of this.shoppingService.saleIds">
-            <td>{{sale}}</td>
-            <td>{{this.shoppingService.getMovieTitle(sale)}}</td>
-            <td>{{this.shoppingService.getQuantity(sale)}}</td>
-            <td>{{this.shoppingService.getQuantity(sale) * 5 | currency}}</td>
+          <tr *ngFor="let movieId of ids; let i = index">
+            <td>{{this.shoppingService.saleIds[i]}}</td>
+            <td>{{this.movieTitles.get(movieId)}}</td>
+            <td>{{this.shoppingService.cartContents[movieId]}}</td>
+            <td>{{this.shoppingService.cartContents[movieId] * 5 | currency}}</td>
           </tr>
 
           </tbody>
         </table>
+        <p>Total: {{calculateTotal() | currency}}</p>
       </div>
     </div>
 

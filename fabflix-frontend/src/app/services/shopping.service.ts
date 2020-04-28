@@ -55,7 +55,7 @@ export class ShoppingService {
   public addSales() {
     const movies = new Map();
     for (const key of Object.keys(this.cartContents)) {
-      movies.set(key, this.cartContents[key] * 1);
+      movies.set(key, this.cartContents[key]);
     }
 
     for (const movie of movies.keys()) {
@@ -65,19 +65,20 @@ export class ShoppingService {
     }
   }
 
-  public getMovieTitle(saleId: any) {
-    const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
+  // public getMovieTitle(saleId: any) {
+  //   const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
+  //
+  //   this.http.get<string>(this.url + 'getMovieTitle/' + saleId, {withCredentials: true, headers}).subscribe(result => {
+  //     console.log(result);
+  //     return result;
+  //   });
+  // }
+  //
+  // public getQuantity(saleId: any) {
+  //   return this.http.get<number>(this.url + 'getQuantiity/' + saleId, {withCredentials: true}).subscribe(result => {
+  //     console.log(result);
+  //     return result;
+  //   });
+  // }
 
-    this.http.get<string>(this.url + 'getMovieTitle/' + saleId, {withCredentials: true, headers}).subscribe(result => {
-      console.log(result);
-      return result;
-    });
-  }
-
-  public getQuantity(saleId: any) {
-    return this.http.get<number>(this.url + 'getQuantiity/' + saleId, {withCredentials: true}).subscribe(result => {
-      console.log(result);
-      return result;
-    });
-  }
 }
