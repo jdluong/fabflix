@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SearchService } from 'src/app/services/search.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-main-search-browse',
@@ -16,12 +17,22 @@ export class MainSearchBrowseComponent implements OnInit {
   star:string;
   searchIcon = faSearch;
 
+  isAuth: any;
+
   constructor(
     private searchService: SearchService,
-    private router: Router
+    private router: Router,
+    private authService: AuthenticationService
   ) { }
 
   ngOnInit() {
+    this.authService.isAuth().subscribe(
+      data => {
+        this.isAuth = data;
+        if (this.isAuth == false) {
+          this.router.navigate(['/redirect']);
+        }
+      });
   }
 
   notNumber() {
@@ -40,7 +51,6 @@ export class MainSearchBrowseComponent implements OnInit {
     if (this.star) { searchParams = {...searchParams, ...{'star':this.star}};}
     let params = {...{'perPage': 25, 'page': 1}, ...searchParams};
     this.router.navigate(['/movie-list'], { queryParams: params});
-
   }
 
 }

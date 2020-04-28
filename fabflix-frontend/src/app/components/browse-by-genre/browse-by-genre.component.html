@@ -1,3 +1,4 @@
+<div *ngIf="isAuth">
 <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
 <div class="content">
     <p class="heading">Browse by Genre</p>
@@ -10,4 +11,5 @@
     </ul>
     <br>
     <a [routerLink] = "['/search']"><button type="button" class="back-button btn-secondary">Back to search</button></a>
+</div>
 </div>

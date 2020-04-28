@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import {ShoppingService} from "../../../services/shopping.service";
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-checkout',
@@ -20,13 +21,27 @@ export class CheckoutComponent implements OnInit {
   public incompleteForm = false;
   public invalidOrder = false;
 
+  isAuth: any;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private shoppingService: ShoppingService
+    private shoppingService: ShoppingService,
+    private authService: AuthenticationService
   ) { }
 
   ngOnInit() {
+    // this.authService.isAuth().subscribe(
+    //   data => {
+    //     this.isAuth = data;
+    //     if (this.isAuth == false) {
+    //       this.router.navigate(['/redirect']);
+    //     }
+    //     else {
+    //       this.updateTotal();
+    //     }
+    //   }
+    // )
     this.updateTotal();
   }
 

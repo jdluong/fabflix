@@ -1,4 +1,3 @@
-<title>{{ star.name }}</title>
 <!-- <link rel="stylesheet" href="single-star.component.css">
 
 <meta name="viewport" content="width=device-width", initial-scale="1.0"> -->
@@ -7,7 +6,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Exo+2:ital@1&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
 </style> -->
-
+<div *ngIf="isAuth">
 <body>
     <!-- <p class = "title">FABFLIX</p> -->
 
@@ -30,3 +29,4 @@
         <a [routerLink] = "" (click)="navigateToList()"><button type="button" style="color:white" class="btn-secondary btn-outline-dark">Back to list</button></a>
     </div>
 </body>
+</div>

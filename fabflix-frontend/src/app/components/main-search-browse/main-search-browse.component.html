@@ -1,22 +1,28 @@
 <script src="https://kit.fontawesome.com/285899525c.js" crossorigin="anonymous"></script>
 
+<div *ngIf="isAuth">
+
 <body>
-<p class="title">FABFLIX</p>
-<div>
-    <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
-    <form class="search-box" (ngSubmit)="onSubmit()" #searchForm="ngForm">
-        <input class="search-text" type="text" [(ngModel)]="title" name="title" placeholder="Title (e.g., The Terminator)">
-        <input class="search-text" type="number" [(ngModel)]="year" name="year" placeholder="Year (e.g., 1997)">
-        <input class="search-text" type="text" [(ngModel)]="director" name="director" placeholder="Director (e.g., James Cameron)">
-        <input class="search-text" type="text" [(ngModel)]="star" name="star" placeholder="Star (e.g., Daniel Radcliffe)">
-        <button type="submit" class="search-button">
-            <fa-icon [icon]="searchIcon"></fa-icon>
-        </button>
-    </form>
-</div>
-<div class="links">
-    <button class="browse-button" type="button" [routerLink]="['/genres']" >Browse by Genre</button>
-    <button class="browse-button" type="button" [routerLink]="['/titles']" >Browse by Title</button>
-</div>
-<!-- <div class="error" *ngIf='notNumber()'>Error: Year must be a number</div> -->
+
+<!-- <div *ngIf="isAuth()"> -->
+    <p class="title">FABFLIX</p>
+    <div>
+        <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
+        <form class="search-box" (ngSubmit)="onSubmit()" #searchForm="ngForm">
+            <input class="search-text" type="text" [(ngModel)]="title" name="title" placeholder="Title (e.g., The Terminator)">
+            <input class="search-text" type="number" [(ngModel)]="year" name="year" placeholder="Year (e.g., 1997)">
+            <input class="search-text" type="text" [(ngModel)]="director" name="director" placeholder="Director (e.g., James Cameron)">
+            <input class="search-text" type="text" [(ngModel)]="star" name="star" placeholder="Star (e.g., Daniel Radcliffe)">
+            <button type="submit" class="search-button">
+                <fa-icon [icon]="searchIcon"></fa-icon>
+            </button>
+        </form>
+    </div>
+    <div class="links">
+        <button class="browse-button" type="button" [routerLink]="['/genres']" >Browse by Genre</button>
+        <button class="browse-button" type="button" [routerLink]="['/titles']" >Browse by Title</button>
+    </div>
+<!-- </div> -->
 </body>
+
+</div>

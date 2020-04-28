@@ -1,4 +1,4 @@
-<title>{{ movie.title }}</title>
+
 
 <!--<link rel="stylesheet" href="single-movie.component.css">-->
 
@@ -7,6 +7,7 @@
 <!--    @import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');-->
 <!--</style>-->
 
+<div *ngIf="isAuth">
 <body>
     <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
     <div class = "content">
@@ -32,3 +33,4 @@
         <button type="button" class="btn-light btn-outline-dark" (click)="addToCart(movie.id, movie.title)"><a>Add to Cart</a></button>
     </div>
 </body>
+</div>
