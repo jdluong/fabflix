@@ -30,7 +30,7 @@ export class LoginComponent implements OnInit {
     this.authenticationService.isAuth().subscribe(
       data => {
         this.isAuth = data;
-        if (this.isAuth == true) {
+        if (this.isAuth === true) {
           this.router.navigate(['/search']);
         }
       });
