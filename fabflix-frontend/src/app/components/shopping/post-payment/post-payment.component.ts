@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ShoppingService} from '../../../services/shopping.service';
 import {MovieService} from '../../../services/movie.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-post-payment',
@@ -15,16 +16,29 @@ export class PostPaymentComponent implements OnInit {
   public ids: any;
   public mergedLists: any;
 
+  isAuth: any;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private shoppingService: ShoppingService,
-    private movieService: MovieService
+    private movieService: MovieService,
+    private authService: AuthenticationService
   ) { }
 
   ngOnInit() {
-    this.constructOrders();
-    this.merge();
+    this.authService.isAuth().subscribe(
+      data => {
+        this.isAuth = data;
+        if (this.isAuth == false) {
+          this.router.navigate(['/redirect']);
+        }
+        else {
+          this.constructOrders();
+          this.merge();
+        }
+      }
+    );
   }
 
   constructOrders() {

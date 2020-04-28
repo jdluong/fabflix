@@ -4,6 +4,7 @@ import { ShoppingService } from 'src/app/services/shopping.service';
 import { Movie } from 'src/app/models/Movie';
 import { MovieService } from 'src/app/services/movie.service';
 import { ServerCacheService } from 'src/app/services/server-cache.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -15,15 +16,32 @@ export class CartComponent implements OnInit {
   cart: any;
   ids: any;
   movieTitles: any;
+  isAuth: any;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private shoppingService: ShoppingService,
     private movieService: MovieService,
-    private cacheService: ServerCacheService) { }
+    private cacheService: ServerCacheService,
+    private authService: AuthenticationService) { }
 
   ngOnInit() {
+    // this.authService.isAuth().subscribe(
+    //   data => {
+    //     this.isAuth = data;
+    //     if (this.isAuth == false) {
+    //       this.router.navigate(['/redirect']);
+    //     }
+    //     else {
+    //       this.shoppingService.getCartContents().subscribe(
+    //         data => {
+    //           this.cart = data;
+    //           console.log(this.cart);
+    //           this.initMovies();
+    //         });   
+    //     }
+    //   });
     this.shoppingService.getCartContents().subscribe(
       data => {
         this.cart = data;

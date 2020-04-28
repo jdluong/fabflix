@@ -11,6 +11,7 @@ import { BrowseService } from 'src/app/services/browse.service';
 import { SearchService } from 'src/app/services/search.service';
 import { ShoppingService } from 'src/app/services/shopping.service';
 import { ServerCacheService } from 'src/app/services/server-cache.service';
+import { AuthenticationService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-movie-list',
@@ -24,6 +25,8 @@ export class MovieListComponent implements OnInit {
   maxPage: number;
   pageNums = [];
 
+  isAuth: any;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -32,23 +35,31 @@ export class MovieListComponent implements OnInit {
     private searchService: SearchService,
     private shoppingService: ShoppingService,
     private cacheService: ServerCacheService,
-    private notifier: NotifierService) 
+    private notifier: NotifierService,
+    private authService: AuthenticationService) 
     {
       this.notifier = notifier;
     }
 
   ngOnInit() {
-
-    this.route.queryParams
-      .subscribe(data =>
-      {
-        this.params = data;
-        if (this.params == {}){
-          this.router.navigate(['/search']);
+    this.authService.isAuth().subscribe(
+      data => {
+        this.isAuth = data;
+        if (this.isAuth == false) {
+          this.router.navigate(['/redirect']);
         }
         else {
-          this.initMovies();
-          this.initMaxPage();
+          this.route.queryParams.subscribe(
+            data => {
+              this.params = data;
+              if (this.params == {}){
+                this.router.navigate(['/search']);
+              }
+              else {
+                this.initMovies();
+                this.initMaxPage();
+              }
+            });
         }
       });
 
