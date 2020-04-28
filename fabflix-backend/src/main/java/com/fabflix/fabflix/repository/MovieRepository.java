@@ -112,7 +112,10 @@ public interface MovieRepository {
     int addSale(String movieId, HttpSession session);
 
     // get movie id from sale
-    Map<String, String> getMovieId(String saleId, HttpSession session);
+    String getMovieTitle(String saleId, HttpSession session);
+
+    // get quantity
+    int getQuantity(String saleId, HttpSession session);
 
     // ***********
     // various cACHING

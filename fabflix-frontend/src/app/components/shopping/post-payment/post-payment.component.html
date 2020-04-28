@@ -27,18 +27,12 @@
           </thead>
 
           <tbody class="table-body">
-<!--          <tr>-->
-<!--            <td>Id</td>-->
-<!--            <td>Movie Title</td>-->
-<!--            <td>1</td>-->
-<!--            <td>$5.00</td>-->
-<!--          </tr>-->
 
-          <tr *ngFor="let movie of sales.keys()">
-            <td>{{sales[movie]}}</td>
-            <td>{{movie}}</td>
-            <td>{{quantities[movie]}}</td>
-            <td>{{5 * quantities[movie] | currency}}</td>
+          <tr *ngFor="let sale of this.shoppingService.saleIds">
+            <td>{{sale}}</td>
+            <td>{{this.shoppingService.getMovieTitle(sale)}}</td>
+            <td>{{this.shoppingService.getQuantity(sale)}}</td>
+            <td>{{this.shoppingService.getQuantity(sale) * 5 | currency}}</td>
           </tr>
 
           </tbody>

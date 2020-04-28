@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {map, tap} from "rxjs/operators";
+import {map, tap} from 'rxjs/operators';
+import {Movie} from '../models/Movie';
+import {ObserveOnSubscriber} from 'rxjs/internal/operators/observeOn';
 
 @Injectable({
   providedIn: 'root'
@@ -51,19 +53,28 @@ export class ShoppingService {
   }
 
   public addSales() {
-    const movieIds = [];
+    const movies = new Map();
     for (const key of Object.keys(this.cartContents)) {
-      movieIds.push(key);
+      movies.set(key, this.cartContents[key] * 1);
     }
 
-    for (const movie of movieIds.keys()) {
-        this.http.get<number>(this.url + 'addSale/' + movieIds[movie], {withCredentials: true}).subscribe(result => {
+    for (const movie of movies.keys()) {
+        this.http.get<number>(this.url + 'addSale/' + movie, {withCredentials: true}).subscribe(result => {
           this.saleIds.push(result);
         });
     }
   }
 
-  public getMovieId(saleId: any) {
-    return this.http.get(this.url + 'getMovieId/' + saleId, {withCredentials: true});
+  public getMovieTitle(saleId: any) {
+    const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
+
+    this.http.get<string>(this.url + 'getMovieTitle/' + saleId, {withCredentials: true, headers}).subscribe(result => {
+      console.log(result);
+      return result;
+    });
+  }
+
+  public getQuantity(saleId: any): Observable<number> {
+    return this.http.get<number>(this.url + 'getQuantiity/' + saleId, {withCredentials: true});
   }
 }
