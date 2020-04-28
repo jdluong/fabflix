@@ -74,7 +74,10 @@ export class ShoppingService {
     });
   }
 
-  public getQuantity(saleId: any): Observable<number> {
-    return this.http.get<number>(this.url + 'getQuantiity/' + saleId, {withCredentials: true});
+  public getQuantity(saleId: any) {
+    return this.http.get<number>(this.url + 'getQuantiity/' + saleId, {withCredentials: true}).subscribe(result => {
+      console.log(result);
+      return result;
+    });
   }
 }
