@@ -34,12 +34,15 @@ export class CheckoutComponent implements OnInit {
     this.authService.isAuth().subscribe(
       data => {
         this.isAuth = data;
-        if (this.isAuth === false) {
+        if (this.isAuth == false) {
           this.router.navigate(['/redirect']);
-        } else {
+        }
+        else {
           this.updateTotal();
         }
-      });
+      }
+    )
+    // this.updateTotal();
   }
 
   navigateToCart() {

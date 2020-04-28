@@ -3,6 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ShoppingService} from '../../../services/shopping.service';
 import {MovieService} from '../../../services/movie.service';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { ServerCacheService } from 'src/app/services/server-cache.service';
 
 @Component({
   selector: 'app-post-payment',
@@ -21,9 +22,10 @@ export class PostPaymentComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private shoppingService: ShoppingService,
     private movieService: MovieService,
-    private authService: AuthenticationService
+    public shoppingService: ShoppingService,
+    private authService: AuthenticationService,
+    private cacheService: ServerCacheService
   ) { }
 
   ngOnInit() {
@@ -35,6 +37,7 @@ export class PostPaymentComponent implements OnInit {
         } else {
           this.constructOrders();
           this.merge();
+          this.emptyCart();
         }
       });
   }
@@ -69,11 +72,24 @@ export class PostPaymentComponent implements OnInit {
     return total;
   }
 
+  emptyCart() {
+    this.shoppingService.emptyCart().subscribe(
+      data => {
+        console.log(data);
+      });
+  }
+
   navigateToBrowse() {
     this.router.navigate(['/titles']);
   }
 
-  navigateToSearch() {
-    this.router.navigate(['/search']);
+  navigateToList() {
+    let params;
+    this.cacheService.getCachedSearchParams().subscribe(
+      data => {
+        params = data;
+        this.router.navigate(['/movie-list'], { queryParams: params });
+      });
   }
+
 }
