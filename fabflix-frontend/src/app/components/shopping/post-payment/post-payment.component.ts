@@ -30,15 +30,13 @@ export class PostPaymentComponent implements OnInit {
     this.authService.isAuth().subscribe(
       data => {
         this.isAuth = data;
-        if (this.isAuth == false) {
+        if (this.isAuth === false) {
           this.router.navigate(['/redirect']);
-        }
-        else {
+        } else {
           this.constructOrders();
           this.merge();
         }
-      }
-    );
+      });
   }
 
   constructOrders() {
