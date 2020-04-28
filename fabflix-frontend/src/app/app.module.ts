@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { NotifierModule, NotifierOptions } from "angular-notifier";
-
+import {HashLocationStrategy, LocationStrategy} from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -90,7 +90,10 @@ const customNotifierOptions: NotifierOptions = {
     FontAwesomeModule,
     NotifierModule.withConfig((customNotifierOptions))
   ],
-  providers: [],
+  providers: [
+    {provide: LocationStrategy,
+    useClass: HashLocationStrategy}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

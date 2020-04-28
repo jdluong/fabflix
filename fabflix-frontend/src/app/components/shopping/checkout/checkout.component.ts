@@ -31,18 +31,18 @@ export class CheckoutComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.authService.isAuth().subscribe(
-    //   data => {
-    //     this.isAuth = data;
-    //     if (this.isAuth == false) {
-    //       this.router.navigate(['/redirect']);
-    //     }
-    //     else {
-    //       this.updateTotal();
-    //     }
-    //   }
-    // )
-    this.updateTotal();
+    this.authService.isAuth().subscribe(
+      data => {
+        this.isAuth = data;
+        if (this.isAuth == false) {
+          this.router.navigate(['/redirect']);
+        }
+        else {
+          this.updateTotal();
+        }
+      }
+    )
+    // this.updateTotal();
   }
 
   navigateToCart() {

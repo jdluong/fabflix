@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
+// @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
 // @CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
@@ -647,8 +647,11 @@ public class JdbcMovieRepository implements MovieRepository {
     public int addSale(@PathVariable String movieId, HttpSession session) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
+        System.out.println(cart);
         int customerId = (int) session.getAttribute("customerId");
+        System.out.println("customerId: "+customerId);
         int quantity = cart.get(movieId);
+        System.out.println("quantity: " + quantity);
 
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
@@ -658,6 +661,8 @@ public class JdbcMovieRepository implements MovieRepository {
                 return stmt;
             }
         }, holder);
+
+        System.out.println("holder: "+holder.getKey().intValue());
 
         return holder.getKey().intValue();
     }

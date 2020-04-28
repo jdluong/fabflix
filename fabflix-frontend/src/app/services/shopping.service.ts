@@ -13,8 +13,8 @@ export class ShoppingService {
   constructor(private http: HttpClient) {
   }
 
-  private url = 'http://localhost:8080/fabflix_backend_war/api/shopping/';
-  // private url:string = "http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/fabflix-backend/api/";
+  // private url = 'http://localhost:8080/fabflix_backend_war/api/shopping/';
+  private url:string = "http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/fabflix-backend/api/shopping/";
 
   public firstName: string;
   public lastName: string;
@@ -65,6 +65,10 @@ export class ShoppingService {
           this.saleIds.push(result);
         });
     }
+  }
+
+  public emptyCart() {
+    return this.http.delete(this.url+'emptyCart',{withCredentials:true});
   }
 
   // public getMovieTitle(saleId: any) {

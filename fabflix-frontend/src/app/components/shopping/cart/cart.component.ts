@@ -27,27 +27,27 @@ export class CartComponent implements OnInit {
     private authService: AuthenticationService) { }
 
   ngOnInit() {
-    // this.authService.isAuth().subscribe(
-    //   data => {
-    //     this.isAuth = data;
-    //     if (this.isAuth == false) {
-    //       this.router.navigate(['/redirect']);
-    //     }
-    //     else {
-    //       this.shoppingService.getCartContents().subscribe(
-    //         data => {
-    //           this.cart = data;
-    //           console.log(this.cart);
-    //           this.initMovies();
-    //         });   
-    //     }
-    //   });
-    this.shoppingService.getCartContents().subscribe(
+    this.authService.isAuth().subscribe(
       data => {
-        this.cart = data;
-        console.log(this.cart);
-        this.initMovies();
+        this.isAuth = data;
+        if (this.isAuth == false) {
+          this.router.navigate(['/redirect']);
+        }
+        else {
+          this.shoppingService.getCartContents().subscribe(
+            data => {
+              this.cart = data;
+              console.log(this.cart);
+              this.initMovies();
+            });   
+        }
       });
+    // this.shoppingService.getCartContents().subscribe(
+    //   data => {
+    //     this.cart = data;
+    //     console.log(this.cart);
+    //     this.initMovies();
+    //   });
   }
 
   initMovies() {
