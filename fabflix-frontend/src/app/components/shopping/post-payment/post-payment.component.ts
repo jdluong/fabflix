@@ -79,7 +79,7 @@ export class PostPaymentComponent implements OnInit {
       });
   }
 
-  navigateToBrowse() {
+  navigateToSearch() {
     this.router.navigate(['/search']);
   }
 
