@@ -40,37 +40,23 @@ Link: https://youtu.be/j0mx1oNTue0
 Link: https://youtu.be/IjvZFraVNKs
 
 ## DEPLOYMENT
-1)Prepare database and tables
-
-2)Clone this Git Repo
-
-3)change to correct MySQL credentials in cs122b-spring20-team-69/fabflix-backend/src/main/resources/application.properties
-
+1) Prepare database and tables
+2) Clone this Git Repo
+3) Change to correct MySQL credentials in cs122b-spring20-team-69/fabflix-backend/src/main/resources/application.properties
 4) Build .war in fabflix-backend/ directory 
 <code>mvn package</code>
-
 5) Copy .war file to ~/tomcat/webapps
 <code>cp ./target/*.war /home/ubuntu/tomcat/webapps</code>
-
 6) Navigate to fabflix-frontend/ directory
-
 7) Run <code>npm install</code>
-
 8) Run <code>ng build --base-href=. --prod</code>
-
 9) Go to dist/ directory in the same directory
-
 10) Rename directory if desired; default is fabflix-frontend
-
 11) Copy directory to ~/tomcat/webapps
 <code>cp <name_of_directory> /home/ubuntu/tomcat/webapps</code>
-  
 12) Navigate to ~/tomcat/webapps
-
 13) Rename fabflix-0.0.1-SNAPSHOT.war to fabflix-backend.war
-
 14) In browser, navigate to Tomcat manager page at ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/manager/html
-
 15) Click on "/fabflix" under "Paths"
 
 ## SUBSTRING MATCH DESIGN
