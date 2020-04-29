@@ -80,7 +80,7 @@ export class PostPaymentComponent implements OnInit {
   }
 
   navigateToBrowse() {
-    this.router.navigate(['/titles']);
+    this.router.navigate(['/search']);
   }
 
   navigateToList() {

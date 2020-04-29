@@ -60,7 +60,7 @@ export class CheckoutComponent implements OnInit {
   }
 
   handleOrder() {
-    this.shoppingService.authenticateOrder(this.cardNumber, this.expiration).subscribe(result => {
+    this.shoppingService.authenticateOrder(this.firstName, this.lastName, this.cardNumber, this.expiration).subscribe(result => {
       if (result === true) {
         this.invalidOrder = false;
         this.shoppingService.firstName = this.firstName;

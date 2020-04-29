@@ -39,8 +39,10 @@ export class ShoppingService {
     return this.http.delete(this.url + 'deleteItem/' + movieId, {withCredentials: true});
   }
 
-  public authenticateOrder(creditcard: string, expiration: string): Observable<Object> {
+  public authenticateOrder(firstName: string, lastName:string, creditcard: string, expiration: string): Observable<Object> {
     const credentials: Map<string, string> = new Map<string, string>();
+    credentials.set('firstName', firstName);
+    credentials.set('lastName', lastName);
     credentials.set('number', creditcard);
     credentials.set('expiration', expiration);
 

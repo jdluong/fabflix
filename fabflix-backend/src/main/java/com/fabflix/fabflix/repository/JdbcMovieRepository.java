@@ -627,9 +627,11 @@ public class JdbcMovieRepository implements MovieRepository {
     public ResponseEntity<Boolean> authenticateOrder(@RequestBody Map<String, String> credentials, HttpSession session) {
         String creditCard = credentials.get("number");
         String expiration = credentials.get("expiration");
+        String firstName = credentials.get("firstName");
+        String lastName = credentials.get("lastName");
 
         Boolean orderAuthenticated = jdbcTemplate.queryForObject("SELECT EXISTS(SELECT id FROM creditcards WHERE id=\"" + creditCard + "\" " +
-                        "AND expiration=\"" + expiration + "\")", Boolean.class);
+                        "AND expiration=\"" + expiration + "\" AND firstName=\""+firstName+"\" AND lastName=\""+lastName+"\")", Boolean.class);
 
         if (orderAuthenticated) {
             Integer customerId = jdbcTemplate.queryForObject("SELECT id FROM customers WHERE ccId=\"" + creditCard + "\"", Integer.class);
