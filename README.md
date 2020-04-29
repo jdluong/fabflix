@@ -38,6 +38,8 @@ Link: https://youtu.be/j0mx1oNTue0
 
 ## VIDEO
 Link: https://youtu.be/IjvZFraVNKs
+- Demo was done on 4/28/20, but sales entries were 4/29/20, due to time of server instance
+- At the last few minutes, had to use MySQL CLI to correctly query for the sales records
 
 ## DEPLOYMENT
 1) Prepare database and tables
