@@ -55,10 +55,18 @@ ul.list li input[type="submit"] {
   background-color: #f3f3f3;
   color: #000000;
   border: none;
+  padding-top: 6px;
 }
 
 ul.list li:nth-child(1) {
   font-size: 1.5em;
+}
+
+.g-recaptcha {
+  transform:scale(0.82);
+  transform-origin:0 0;
+  border-radius: 5px;
+  padding-top: 2px;
 }
 
 .alert {

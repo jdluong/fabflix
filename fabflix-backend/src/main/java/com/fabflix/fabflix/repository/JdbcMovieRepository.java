@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-// @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
-// @CrossOrigin(origins = {"*"})
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
+//@CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
 
@@ -439,20 +439,40 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public @ResponseBody ResponseEntity authenticate(@RequestBody Map<String, String> user, HttpSession session) {
-        String email = user.get("username");
-        String password = user.get("password");
+        // verify successful recaptcha
+        String recaptcha = user.get("g-recaptcha");
+        System.out.println(recaptcha);
+        boolean recaptchaSuccess = false;
 
-        Boolean userAuthenticated = jdbcTemplate.queryForObject(
-                "SELECT EXISTS(SELECT email FROM customers WHERE email=\"" + email + "\" " +
-                        "AND password=\"" + password + "\")", Boolean.class);
+        try {
+            recaptchaSuccess = RecaptchaService.verify(recaptcha);
+        } catch (Exception e) {
+            // return false if any exception occurred
+            return ResponseEntity.ok(false);
+        }
 
-        session.setAttribute("isAuth", userAuthenticated);
-        System.out.println("Logged in "+ userAuthenticated);
+        System.out.println("recaptcha=" + recaptchaSuccess);
 
-        if (userAuthenticated)
-            session.setAttribute("user", email);
+        // if recaptcha successful, continue with login
+        if (recaptchaSuccess) {
+            String email = user.get("username");
+            String password = user.get("password");
 
-        return ResponseEntity.ok(userAuthenticated);
+            Boolean userAuthenticated = jdbcTemplate.queryForObject(
+                    "SELECT EXISTS(SELECT email FROM customers WHERE email=\"" + email + "\" " +
+                            "AND password=\"" + password + "\")", Boolean.class);
+
+            session.setAttribute("isAuth", userAuthenticated);
+            System.out.println("Logged in "+ userAuthenticated);
+
+            if (userAuthenticated)
+                session.setAttribute("user", email);
+
+            return ResponseEntity.ok(userAuthenticated);
+        }
+
+        // if unsuccessful, authentication failed, return false
+        return ResponseEntity.ok(false);
     }
 
     @RequestMapping(
@@ -649,11 +669,8 @@ public class JdbcMovieRepository implements MovieRepository {
     public int addSale(@PathVariable String movieId, HttpSession session) {
         GeneratedKeyHolder holder = new GeneratedKeyHolder();
         Map<String, Integer> cart = (Map<String, Integer>) session.getAttribute("cart");
-        System.out.println(cart);
         int customerId = (int) session.getAttribute("customerId");
-        System.out.println("customerId: "+customerId);
         int quantity = cart.get(movieId);
-        System.out.println("quantity: " + quantity);
 
         jdbcTemplate.update(new PreparedStatementCreator() {
             @Override
@@ -688,15 +705,6 @@ public class JdbcMovieRepository implements MovieRepository {
     public int getQuantity(@PathVariable String saleId, HttpSession session) {
         return this.jdbcTemplate.queryForObject("SELECT quantity FROM sales WHERE id=\"" + saleId + "\"", Integer.class);
     }
-
-//    @RequestMapping(
-//            value="/api/shopping/makePurchase",
-//            method = RequestMethod.POST
-//    )
-//    public Map<String,Boolean> makePurchase(HttpSession session, @RequestBody Map<String, Object> payload) {
-//
-//
-//    }
 
     // *************** various caching stuff ******************
     @RequestMapping(
