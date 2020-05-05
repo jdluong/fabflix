@@ -31,13 +31,13 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.authenticationService.isAuth().subscribe(
-    //   data => {
-    //     this.isAuth = data;
-    //     if (this.isAuth === true) {
-    //       this.router.navigate(['/search']);
-    //     }
-    //   });
+    this.authenticationService.isAuth().subscribe(
+      data => {
+        this.isAuth = data;
+        if (this.isAuth === true) {
+          this.router.navigate(['/search']);
+        }
+      });
   }
 
   checkFields() {
