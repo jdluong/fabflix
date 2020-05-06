@@ -40,6 +40,9 @@ export class LoginComponent implements OnInit {
           if (this.isAuth === true) {
             this.router.navigate(['/search']);
           }
+          grecaptcha.render('recaptcha', {
+            'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
+          });
         });
       // });
   }
