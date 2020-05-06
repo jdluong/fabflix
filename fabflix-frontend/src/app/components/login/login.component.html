@@ -1,4 +1,12 @@
-<div *ngIf="isAuth == false && recaptchaLoaded == true">
+<script type="text/javascript">
+  var onloadCallback = function() {
+    grepatcha.render('recaptcha', {
+      'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
+    });
+  };
+</script>
+<script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+<div *ngIf="isAuth == false">
 <div class="body">
   <form name="login" action="form" method="POST">
     <div class="form-container">
@@ -7,7 +15,7 @@
         <li>Member Login</li>
         <li><input type="text" id="username" name="username" [(ngModel)]="username" placeholder="Username"></li>
         <li><input type="password" id="password" name="password" [(ngModel)]="password" placeholder="********"></li>
-        <li><div class="g-recaptcha" data-sitekey="6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO"></div></li>
+        <li><div id="recaptcha" data-sitekey="6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO"></div></li>
         <li><input type="submit" name="submit" (click)=checkFields() value="Submit"></li>
       </ul>
       <div class="alert" *ngIf='invalidLogin'>{{errorMessage}}</div>

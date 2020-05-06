@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadRecaptcha().then(() => {
+    // this.loadRecaptcha().then(() => {
       this.recaptchaLoaded = true;
       this.authenticationService.isAuth().subscribe(
         data => {
@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/search']);
           }
         });
-      });
+      // });
   }
 
   checkFields() {
