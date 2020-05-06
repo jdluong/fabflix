@@ -29,6 +29,7 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService) {
+      this.loadScript();
   }
 
   ngOnInit() {
@@ -40,11 +41,14 @@ export class LoginComponent implements OnInit {
           if (this.isAuth === true) {
             this.router.navigate(['/search']);
           }
-          grecaptcha.render('recaptcha', {
-            'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
-          });
-        });
+        })
       // });
+  }
+
+  ngAfterViewChecked() {
+    grecaptcha.render('recaptcha', {
+      'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
+    });
   }
 
   checkFields() {
