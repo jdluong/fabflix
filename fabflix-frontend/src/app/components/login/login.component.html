@@ -1,10 +1,16 @@
 <div *ngIf="isAuth == false">
 <div class="body">
+  <div *ngIf="userType == 'Employee'">
+    <button class="btn btn-secondary user-type-button" (click)="changeTo('Customer')">Go to Customer Login</button>
+  </div>
+  <div *ngIf="userType == 'Customer'">
+    <button class="btn btn-secondary user-type-button" (click)="changeTo('Employee')">Go to Employee Login</button>
+  </div>
   <form name="login" action="form" method="POST">
     <div class="form-container">
       <div class="user-icon"></div>
       <ul class="list">
-        <li>Member Login</li>
+        <li>{{ userType }} Login</li>
         <li><input type="text" id="username" name="username" [(ngModel)]="username" placeholder="Username"></li>
         <li><input type="password" id="password" name="password" [(ngModel)]="password" placeholder="********"></li>
         <li><div id="recaptcha" class="g-recaptcha" data-sitekey="6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO"></div></li>

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-//@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
 //@CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
@@ -540,7 +540,7 @@ public class JdbcMovieRepository implements MovieRepository {
         // System.out.println(recaptcha);
         boolean recaptchaSuccess = false;
 
-        // verify recaptch
+        // verify recaptcha
         try {
             recaptchaSuccess = RecaptchaService.verify(recaptcha);
         } catch (Exception e) {
@@ -552,20 +552,27 @@ public class JdbcMovieRepository implements MovieRepository {
         if (recaptchaSuccess) {
             String email = user.get("username");
             String password = user.get("password");
+            String userType = user.get("userType");
             // String sql = "SELECT EXISTS(SELECT email FROM customers WHERE email = ? AND password = ?)";
-            String sql = "SELECT password FROM customers WHERE email = ?";
+            String sql = "SELECT password FROM "+ userType.toLowerCase()+"s WHERE email = ?";
+            System.out.println(sql);
 
             String encryptedPassword = jdbcTemplate.query(connection -> {
                 PreparedStatement stmt = connection.prepareStatement(sql);
                 stmt.setString(1, email);
                 return stmt;
             }, resultSet -> {
-                resultSet.next();
-                return resultSet.getString(1);
+                if (resultSet.next()) {
+                    return resultSet.getString(1);
+                }
+                else {
+                    return "";
+                }
             });
 
             boolean userAuthenticated = false;
-            userAuthenticated = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
+            if (encryptedPassword != "")
+                userAuthenticated = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
             System.out.println(" auth: " + userAuthenticated);
 //            Boolean userAuthenticated = jdbcTemplate.query(sql, new PreparedStatementSetter() {
 //                @Override
@@ -588,7 +595,7 @@ public class JdbcMovieRepository implements MovieRepository {
             session.setAttribute("isAuth", userAuthenticated);
 
             if (userAuthenticated)
-                session.setAttribute("user", email);
+                session.setAttribute("user", userType);
 
             return ResponseEntity.ok(userAuthenticated);
         }
@@ -602,17 +609,19 @@ public class JdbcMovieRepository implements MovieRepository {
             method = RequestMethod.GET
     )
     @Override
-    public Boolean isAuth(HttpSession session) {
-        System.out.println("isAuth session id: " + session.getId());
-        Boolean result;
+    public Map<String,Boolean> isAuth(HttpSession session) {
+        Map<String,Boolean> json = new HashMap<>();
         if (session.getAttribute("isAuth") == null) {
-            result = false;
+            json.put("isAuth", false);
+            return json;
         }
         else {
-            result = (Boolean) session.getAttribute("isAuth");
+            json.put("isAuth", (Boolean) session.getAttribute("isAuth"));
+            String userType = (String) session.getAttribute("user");
+            json.put(userType, true);
         }
-        System.out.println(result);
-        return result;
+        System.out.println(json);
+        return json;
     }
 
 

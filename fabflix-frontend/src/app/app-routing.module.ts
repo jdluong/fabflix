@@ -13,6 +13,7 @@ import { CartComponent } from './components/shopping/cart/cart.component';
 import { RedirectComponent } from './components/redirect/redirect.component';
 import {CheckoutComponent} from './components/shopping/checkout/checkout.component';
 import {PostPaymentComponent} from './components/shopping/post-payment/post-payment.component';
+import { EmployeeDashboardComponent } from './components/employee-dashboard/employee-dashboard.component';
 
 const routes: Routes = [
   { path: 'movie-list', component: MovieListComponent },
@@ -22,11 +23,13 @@ const routes: Routes = [
   { path: 'titles', component: BrowseByTitleComponent },
   { path: 'redirect', component: RedirectComponent},
   { path: 'login', component: LoginComponent },
+  { path: '_dashboard', component: EmployeeDashboardComponent },
   { path: 'search', component: MainSearchBrowseComponent },
   { path: 'checkout', component: CheckoutComponent},
   { path: 'cart', component: CartComponent},
   { path: 'post-payment', component: PostPaymentComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'not-found', component: PageNotFoundComponent },
   { path: '**', component: PageNotFoundComponent }
 ];
 

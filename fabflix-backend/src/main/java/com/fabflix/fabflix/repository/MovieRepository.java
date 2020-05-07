@@ -85,7 +85,7 @@ public interface MovieRepository {
     // LOGIN FUNCTIONS
     ResponseEntity<Boolean> authenticate(Map<String, String> user, HttpSession session);
 
-    Boolean isAuth(HttpSession session);
+    Map<String, Boolean> isAuth(HttpSession session);
 
     // ************
     // SHOPPING
