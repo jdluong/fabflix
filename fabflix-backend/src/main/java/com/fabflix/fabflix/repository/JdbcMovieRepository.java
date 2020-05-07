@@ -3,6 +3,7 @@ package com.fabflix.fabflix.repository;
 import com.fabflix.fabflix.*;
 import com.fabflix.fabflix.repository.MovieRepository;
 import org.apache.coyote.Response;
+import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
+//@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
 //@CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
@@ -536,7 +537,7 @@ public class JdbcMovieRepository implements MovieRepository {
     public @ResponseBody ResponseEntity authenticate(@RequestBody Map<String, String> user, HttpSession session) {
         // get recaptcha response
         String recaptcha = user.get("g-recaptcha");
-        System.out.println(recaptcha);
+        // System.out.println(recaptcha);
         boolean recaptchaSuccess = false;
 
         // verify recaptch
@@ -551,18 +552,21 @@ public class JdbcMovieRepository implements MovieRepository {
         if (recaptchaSuccess) {
             String email = user.get("username");
             String password = user.get("password");
-            String sql = "SELECT EXISTS(SELECT email FROM customers WHERE email = ? AND password = ?)";
+            // String sql = "SELECT EXISTS(SELECT email FROM customers WHERE email = ? AND password = ?)";
+            String sql = "SELECT password FROM customers WHERE email = ?";
 
-            Boolean userAuthenticated = jdbcTemplate.query(connection -> {
+            String encryptedPassword = jdbcTemplate.query(connection -> {
                 PreparedStatement stmt = connection.prepareStatement(sql);
                 stmt.setString(1, email);
-                stmt.setString(2, password);
                 return stmt;
             }, resultSet -> {
                 resultSet.next();
-                return resultSet.getBoolean(1);
+                return resultSet.getString(1);
             });
 
+            boolean userAuthenticated = false;
+            userAuthenticated = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
+            System.out.println(" auth: " + userAuthenticated);
 //            Boolean userAuthenticated = jdbcTemplate.query(sql, new PreparedStatementSetter() {
 //                @Override
 //                public void setValues(PreparedStatement preparedStatement) throws SQLException {
@@ -582,7 +586,6 @@ public class JdbcMovieRepository implements MovieRepository {
 //                            "AND password=\"" + password + "\")", Boolean.class);
 
             session.setAttribute("isAuth", userAuthenticated);
-            System.out.println("Logged in "+ userAuthenticated);
 
             if (userAuthenticated)
                 session.setAttribute("user", email);
@@ -600,6 +603,7 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public Boolean isAuth(HttpSession session) {
+        System.out.println("isAuth session id: " + session.getId());
         Boolean result;
         if (session.getAttribute("isAuth") == null) {
             result = false;

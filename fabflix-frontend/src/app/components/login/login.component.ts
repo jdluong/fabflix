@@ -23,6 +23,8 @@ export class LoginComponent implements OnInit {
   recaptchaResp: any;
   recaptchaLoaded = false;
 
+  recaptchaId: any;
+
   isAuth: any;
 
   constructor(
@@ -44,21 +46,29 @@ export class LoginComponent implements OnInit {
         })
       // });
   }
-
+ 
   ngAfterViewChecked() {
-    grecaptcha.render('recaptcha', {
-      'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
-    });
+    if (this.recaptchaId == null) {
+      this.recaptchaId = grecaptcha.render('recaptcha', {
+        'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
+      });
+    }
   }
 
   checkFields() {
     if (this.username === undefined || this.password === undefined) {
       this.incomplete = true;
+      console.log("resetting recaptcha..");
+      grecaptcha.reset(this.recaptchaId);
+      console.log("recaptcha reset");
     } else {
       this.recaptchaResp = grecaptcha.getResponse();
       console.log(this.recaptchaResp);
       if (this.recaptchaResp.length === 0) {
         this.invalidRecaptcha = true;
+        console.log("resetting recaptcha..");
+        grecaptcha.reset(this.recaptchaId);
+        console.log("recaptcha reset");
       } else {
         this.incomplete = false;
         this.invalidRecaptcha = false;
@@ -76,6 +86,9 @@ export class LoginComponent implements OnInit {
       } else {
         this.invalidLogin = true;
         this.loginSuccess = false;
+        console.log("resetting recaptcha..");
+        grecaptcha.reset(this.recaptchaId);
+        console.log("recaptcha reset");
       }
     }, error => {
       console.log(error);
