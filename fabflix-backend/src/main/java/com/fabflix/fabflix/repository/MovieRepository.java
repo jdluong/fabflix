@@ -117,9 +117,18 @@ public interface MovieRepository {
     // get quantity
     int getQuantity(String saleId, HttpSession session);
 
+
     // ***********
     // various cACHING
 
     public Map<String,Object> cacheSearchParams(HttpSession session, Map<String, Object> payload);
     public Map<String,Object> getSearchParams(HttpSession session);
+
+
+    // ***********
+    // DASHBOARD
+
+    public Map<String,Object> addMovie(Map<String, Object> payload);
+
+
 }

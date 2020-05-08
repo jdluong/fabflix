@@ -9,6 +9,9 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
@@ -868,6 +871,37 @@ public class JdbcMovieRepository implements MovieRepository {
             System.out.println("GETTING CACHE PARAMS: "+session.getAttribute("searchParams"));
             return (Map<String,Object>) session.getAttribute("searchParams");
         }
+    }
+
+
+    // ******************** DASHBOARD ENDPOINTS *********************
+
+    @RequestMapping(
+            value = "/api/dashboard/addMovie",
+            method = RequestMethod.POST
+    )
+    @Override
+    public Map<String,Object> addMovie(@RequestBody Map<String, Object> payload) {
+        SimpleJdbcCall call = new SimpleJdbcCall(jdbcTemplate)
+                .withProcedureName("add_movie")
+                .declareParameters(new SqlParameter("title", Types.VARCHAR),
+                                    new SqlParameter("year", Types.INTEGER),
+                                    new SqlParameter("director", Types.VARCHAR),
+                                    new SqlParameter("star", Types.VARCHAR),
+                                    new SqlParameter("genre", Types.VARCHAR),
+                                    new SqlOutParameter("movie_message", Types.VARCHAR),
+                                    new SqlOutParameter("star_message", Types.VARCHAR),
+                                    new SqlOutParameter("genre_message",Types.VARCHAR)
+                );
+        SqlParameterSource parameters = new MapSqlParameterSource()
+                                            .addValue("title", payload.get("title"))
+                                            .addValue("year", payload.get("year"))
+                                            .addValue("director", payload.get("director"))
+                                            .addValue("star", payload.get("star"))
+                                            .addValue("genre", payload.get("genre"));
+        Map<String, Object> json = call.execute(parameters);
+
+        return json;
     }
 
 }
