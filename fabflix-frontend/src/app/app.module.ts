@@ -21,6 +21,7 @@ import { CheckoutComponent } from './components/shopping/checkout/checkout.compo
 import { PostPaymentComponent } from './components/shopping/post-payment/post-payment.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RedirectComponent } from './components/redirect/redirect.component';
+import { EmployeeDashboardComponent } from './components/employee-dashboard/employee-dashboard.component';
 
 /**
  * Custom angular notifier options
@@ -80,7 +81,8 @@ const customNotifierOptions: NotifierOptions = {
     CartComponent,
     CheckoutComponent,
     PostPaymentComponent,
-    RedirectComponent
+    RedirectComponent,
+    EmployeeDashboardComponent
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,10 @@
   padding-top: 30vh;
 }
 
+.user-type-button {
+  margin-left: 28%;
+}
+
 .form-container {
   width: 310px;
   height: auto;

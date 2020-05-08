@@ -21,9 +21,12 @@ export class LoginComponent implements OnInit {
   invalidRecaptcha = false;
   loginSuccess = false;
   recaptchaResp: any;
-  recaptchaLoaded = false;
+
+  recaptchaId: any;
 
   isAuth: any;
+
+  userType = "Customer";
 
   constructor(
     private route: ActivatedRoute,
@@ -33,32 +36,46 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.loadRecaptcha().then(() => {
-      this.recaptchaLoaded = true;
-      this.authenticationService.isAuth().subscribe(
-        data => {
-          this.isAuth = data;
-          if (this.isAuth === true) {
-            this.router.navigate(['/search']);
+    this.authenticationService.isAuth().subscribe(
+      data => {
+        this.isAuth = data['isAuth'];
+        if (this.isAuth === true) {
+          if (data['Employee']) {
+            this.router.navigate(['/_dashboard']);
           }
-        })
-      // });
+          else if (data['Customer']) {
+            this.router.navigate(['/search']);  
+          }
+        }
+      });
+  }
+ 
+  ngAfterViewChecked() {
+    // if (this.recaptchaId == null) {
+    //   this.recaptchaId = grecaptcha.render('recaptcha', {
+    //     'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
+    //   });
+    // }
   }
 
-  ngAfterViewChecked() {
-    grecaptcha.render('recaptcha', {
-      'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
-    });
+  changeTo(userType:string) {
+    this.userType = userType;
   }
 
   checkFields() {
     if (this.username === undefined || this.password === undefined) {
       this.incomplete = true;
+      console.log("resetting recaptcha..");
+      grecaptcha.reset(this.recaptchaId);
+      console.log("recaptcha reset");
     } else {
       this.recaptchaResp = grecaptcha.getResponse();
       console.log(this.recaptchaResp);
       if (this.recaptchaResp.length === 0) {
         this.invalidRecaptcha = true;
+        console.log("resetting recaptcha..");
+        grecaptcha.reset(this.recaptchaId);
+        console.log("recaptcha reset");
       } else {
         this.incomplete = false;
         this.invalidRecaptcha = false;
@@ -68,14 +85,22 @@ export class LoginComponent implements OnInit {
   }
 
   handleLogin() {
-    this.authenticationService.authenticate(this.username, this.password, this.recaptchaResp).subscribe(result => {
+    this.authenticationService.authenticate(this.username, this.password, this.recaptchaResp, this.userType).subscribe(result => {
       if (result === true) {
         this.invalidLogin = false;
         this.loginSuccess = true;
-        this.router.navigate(['/search']);
+        if (this.userType == "Customer") {
+          this.router.navigate(['/search']);
+        }
+        else if (this.userType == "Employee") {
+          this.router.navigate(['/_dashboard']);
+        }
       } else {
         this.invalidLogin = true;
         this.loginSuccess = false;
+        console.log("resetting recaptcha..");
+        grecaptcha.reset(this.recaptchaId);
+        console.log("recaptcha reset");
       }
     }, error => {
       console.log(error);
