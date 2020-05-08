@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
+//@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
 //@CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
@@ -877,7 +877,7 @@ public class JdbcMovieRepository implements MovieRepository {
     // ******************** DASHBOARD ENDPOINTS *********************
 
     @RequestMapping(
-            value = "/api/dashboard/addMovie",
+            value = "/api/employee/addMovie",
             method = RequestMethod.POST
     )
     @Override
