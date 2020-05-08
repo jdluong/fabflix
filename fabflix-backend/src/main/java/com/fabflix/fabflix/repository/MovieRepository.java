@@ -1,5 +1,7 @@
 package com.fabflix.fabflix.repository;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -54,10 +56,10 @@ public interface MovieRepository {
     // endpoint that searches
     List<MovieWithDetails> getMoviesSearch(
             String title, Integer year, String director, String star, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2
-    );
+    ) throws SQLException;
 
     // search for getMovies
-    List<MovieWithDetails> getMoviesBySearch(String searchQuery, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
+    List<MovieWithDetails> getMoviesBySearch(PreparedStatement stmt, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
 
     // get number of movies by search
     int getNumOfMoviesBySearch(String title, Integer year, String director, String star);

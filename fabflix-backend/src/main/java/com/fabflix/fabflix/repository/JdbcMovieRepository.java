@@ -1,19 +1,20 @@
 package com.fabflix.fabflix.repository;
 
 import com.fabflix.fabflix.*;
-import com.fabflix.fabflix.repository.MovieRepository;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,8 +30,7 @@ public class JdbcMovieRepository implements MovieRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Rating> findTopTwenty()
-    {
+    public List<Rating> findTopTwenty() {
         return jdbcTemplate.query(
                 "SELECT * FROM ratings ORDER BY rating DESC LIMIT 20",
                 (rs, rowNum) ->
@@ -42,8 +42,7 @@ public class JdbcMovieRepository implements MovieRepository {
             method = RequestMethod.GET
     )
     @Override
-    public List<Movie> getTopTwentyList()
-    {
+    public List<Movie> getTopTwentyList() {
         return jdbcTemplate.query(
                 "SELECT m.id, m.title, m.year, m.director FROM movies AS m INNER JOIN (SELECT movieId FROM ratings ORDER BY rating DESC LIMIT 20) as m2 ON m.id = m2.movieId",
                 (rs, rowNum) ->
@@ -71,21 +70,14 @@ public class JdbcMovieRepository implements MovieRepository {
             method = RequestMethod.GET
     )
     @Override
-    public List<Genre> get3GenresByMovieId(@PathVariable String movieId)
-    {
-        String sql = "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = ?) AS g2 ON g.id = g2.genreId ORDER BY g.name ASC LIMIT 3";
+    public List<Genre> get3GenresByMovieId(@PathVariable String movieId) {
+        String sql = "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = ? ) AS g2 ON g.id = g2.genreId ORDER BY g.name ASC LIMIT 3";
 
         return jdbcTemplate.query(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, movieId);
             return stmt;
         }, (resultSet, i) -> new Genre(resultSet.getInt("id"), resultSet.getString("name")));
-
-//        return jdbcTemplate.query(
-//                "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = \"" +
-//                        movieId + "\") AS g2 ON g.id = g2.genreId ORDER BY g.name ASC LIMIT 3",
-//                (rs, rowNum) ->
-//                        new Genre(rs.getInt("id"), rs.getString("name")));
     }
 
     @RequestMapping(
@@ -93,8 +85,7 @@ public class JdbcMovieRepository implements MovieRepository {
             method = RequestMethod.GET
     )
     @Override
-    public List<Genre> getAllGenresByMovieId(@PathVariable String movieId)
-    {
+    public List<Genre> getAllGenresByMovieId(@PathVariable String movieId) {
         String sql = "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = ?) AS g2 ON g.id = g2.genreId ORDER BY g.name ASC";
 
         return jdbcTemplate.query(connection -> {
@@ -102,12 +93,6 @@ public class JdbcMovieRepository implements MovieRepository {
             stmt.setString(1, movieId);
             return stmt;
         }, (rs, i) -> new Genre(rs.getInt("id"), rs.getString("name")));
-
-//        return jdbcTemplate.query(
-//                "SELECT g.id, g.name FROM genres AS g INNER JOIN (SELECT genreId FROM genres_in_movies WHERE movieId = \"" +
-//                        movieId + "\") AS g2 ON g.id = g2.genreId ORDER BY g.name ASC",
-//                (rs, rowNum) ->
-//                        new Genre(rs.getInt("id"), rs.getString("name")));
     }
 
 
@@ -116,22 +101,15 @@ public class JdbcMovieRepository implements MovieRepository {
             method = RequestMethod.GET
     )
     @Override
-    public List<Star> get3StarsByMovieId(@PathVariable String movieId)
-    {
+    public List<Star> get3StarsByMovieId(@PathVariable String movieId) {
         String sql = "SELECT s.id, s.name, IFNULL(s.birthYear,0) as birthYear FROM stars s, stars_in_movies sim, stars_in_movies sim1 WHERE (s.id = sim.starId) AND (sim.movieId = ?)" +
-                     " AND (s.id = sim1.starId) GROUP BY s.id, s.name, s.birthYear ORDER BY count(*) DESC, s.name ASC LIMIT 3";
+                " AND (s.id = sim1.starId) GROUP BY s.id, s.name, s.birthYear ORDER BY count(*) DESC, s.name ASC LIMIT 3";
 
         return jdbcTemplate.query(connection -> {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, movieId);
             return stmt;
         }, (rs, i) -> new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
-
-//        return jdbcTemplate.query(
-//                "SELECT s.id, s.name, IFNULL(s.birthYear,0) as birthYear FROM stars s, stars_in_movies sim, stars_in_movies sim1 WHERE (s.id = sim.starId) AND (sim.movieId = \"" +
-//                        movieId + "\") AND (s.id = sim1.starId) GROUP BY s.id, s.name, s.birthYear ORDER BY count(*) DESC, s.name ASC LIMIT 3",
-//                (rs, rowNum) ->
-//                        new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
     }
 
     @RequestMapping(
@@ -139,8 +117,7 @@ public class JdbcMovieRepository implements MovieRepository {
             method = RequestMethod.GET
     )
     @Override
-    public List<Star> getAllStarsByMovieId(@PathVariable String movieId)
-    {
+    public List<Star> getAllStarsByMovieId(@PathVariable String movieId) {
         String sql = "SELECT s.id, s.name, IFNULL(s.birthYear,0) as birthYear FROM stars s, stars_in_movies sim, stars_in_movies sim1 WHERE (s.id = sim.starId) AND (sim.movieId = ?)" +
                 " AND (s.id = sim1.starId) GROUP BY s.id, s.name, s.birthYear ORDER BY count(*) DESC, s.name ASC";
 
@@ -149,12 +126,6 @@ public class JdbcMovieRepository implements MovieRepository {
             stmt.setString(1, movieId);
             return stmt;
         }, (rs, i) -> new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
-
-//        return jdbcTemplate.query(
-//                "SELECT s.id, s.name, IFNULL(s.birthYear,0) as birthYear FROM stars s, stars_in_movies sim, stars_in_movies sim1 WHERE (s.id = sim.starId) AND (sim.movieId = \"" +
-//                        movieId + "\") AND (s.id = sim1.starId) GROUP BY s.id, s.name, s.birthYear ORDER BY count(*) DESC, s.name ASC",
-//                (rs, rowNum) ->
-//                        new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
     }
 
     @RequestMapping(
@@ -170,14 +141,11 @@ public class JdbcMovieRepository implements MovieRepository {
             stmt.setString(1, movieId);
             return stmt;
         }, rs -> {
-            return new Rating(rs.getString("id"), rs.getDouble("rating"), rs.getInt("numVotes"));
-        });
+            if (rs.next())
+                return new Rating(rs.getString("id"), rs.getDouble("rating"), rs.getInt("numVotes"));
 
-//        return jdbcTemplate.queryForObject(
-//                "SELECT m.id, r.rating, IFNULL(r.numVotes, 0) as numVotes FROM movies m LEFT JOIN ratings r ON m.id = r.movieId " +
-//                        "WHERE (m.id = \"" + movieId + "\")",
-//                (rs, rowNum) ->
-//                        new Rating(rs.getString("id"), rs.getDouble("rating"), rs.getInt("numVotes")));
+            return null;
+        });
     }
 
     @RequestMapping(
@@ -193,13 +161,11 @@ public class JdbcMovieRepository implements MovieRepository {
             stmt.setString(1, movieId);
             return stmt;
         }, rs -> {
-            return new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director"));
-        });
+            if (rs.next())
+                return new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director"));
 
-//        return jdbcTemplate.queryForObject(
-//                "SELECT id, title, year, director FROM movies WHERE (id = \"" + movieId + "\")",
-//                (rs, rowNum) ->
-//                        new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+            return null;
+        });
     }
 
     @RequestMapping(
@@ -215,12 +181,6 @@ public class JdbcMovieRepository implements MovieRepository {
             stmt.setString(1, starId);
             return stmt;
         }, (rs, i) -> new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
-
-//        return jdbcTemplate.query(
-//                "SELECT m.id, m.title, m.year, m.director FROM movies AS m INNER JOIN (SELECT movieId FROM stars_in_movies WHERE starId = \""
-//                + starId + "\") AS m2 ON m.id = m2.movieId ORDER BY m.year DESC, m.title ASC",
-//                (rs, rowNum) ->
-//                        new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
     }
 
     @RequestMapping(
@@ -236,14 +196,11 @@ public class JdbcMovieRepository implements MovieRepository {
             stmt.setString(1, starId);
             return stmt;
         }, rs -> {
-            return new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear"));
-        });
+            if (rs.next())
+                return new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear"));
 
-//        return jdbcTemplate.queryForObject(
-//                "SELECT id, name, IFNULL(birthYear,0) AS birthYear FROM stars WHERE (id = \""
-//                + starId + "\")",
-//                (rs, rowNum) ->
-//                        new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear")));
+            return null;
+        });
     }
 
 //    @Override
@@ -285,71 +242,51 @@ public class JdbcMovieRepository implements MovieRepository {
             @RequestParam(required = false) String sortBy1,
             @RequestParam(required = false) String order1,
             @RequestParam(required = false) String sortBy2,
-            @RequestParam(required = false) String order2) {
+            @RequestParam(required = false) String order2) throws SQLException {
 
         List<String> searchParams = new ArrayList<>();
+
         if (title != null) {
-            searchParams.add("title LIKE \"%"+title+"%\"");
+            searchParams.add("title LIKE \"%" + title + "%\"");
         }
         if (year != null) {
-            searchParams.add("year = "+year);
+            searchParams.add("year = ?");
         }
         if (director != null) {
-            searchParams.add("director LIKE \"%"+director+"%\"");
+            searchParams.add("director LIKE \"%" + director + "%\"");
         }
         if (star != null) {
-            searchParams.add("name LIKE \"%"+star+"%\"");
+            searchParams.add("name LIKE \"%" + star + "%\"");
         }
+
         String searchQuery = String.join(" AND ", searchParams);
-        return getMoviesBySearch(searchQuery, perPage, page, sortBy1, order1, sortBy2, order2);
+        String sql;
+        if (sortBy1 == null) {
+            sql = "SELECT DISTINCT m.id, m.title, m.year, m.director FROM movies m, stars_in_movies sim, stars s " +
+                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
+                    "ORDER BY m.id LIMIT " + perPage + " OFFSET " + (page-1)*perPage;
+        }
+        else {
+            sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
+                    "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
+                    " LIMIT " + perPage + " OFFSET " + (page-1)*perPage;
+        }
+
+        Connection conn = jdbcTemplate.getDataSource().getConnection();
+        PreparedStatement stmt = conn.prepareStatement(sql);
+
+        if (year != null)
+            stmt.setInt(1, year);
+
+        return getMoviesBySearch(stmt, perPage, page, sortBy1, order1, sortBy2, order2);
     }
 
     @Override
-    public List<MovieWithDetails> getMoviesBySearch(String searchQuery, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2) {
-        List<Movie> movies;
-        if (sortBy1 == null) {
-            String sql = "SELECT DISTINCT m.id, m.title, m.year, m.director FROM movies m, stars_in_movies sim, stars s " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (?) ORDER BY m.id LIMIT ? OFFSET ?";
-
-            movies = jdbcTemplate.query(connection -> {
-                PreparedStatement stmt = connection.prepareStatement(sql);
-                stmt.setString(1, searchQuery);
-                stmt.setString(2, String.valueOf(perPage));
-                stmt.setString(3, String.valueOf((page-1)*perPage));
-                return stmt;
-            }, (rs, i) -> new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
-
-//            movies = jdbcTemplate.query(
-//                    "SELECT DISTINCT m.id, m.title, m.year, m.director FROM movies m, stars_in_movies sim, stars s " +
-//                         "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-//                         "ORDER BY m.id LIMIT " + perPage + " OFFSET " + (page-1)*perPage,
-//                    (rs, rowNum) ->
-//                            new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
-        }
-        else {
-            String sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (?) ORDER BY ? ?, ? ? LIMIT ? OFFSET ?";
-
-            movies = jdbcTemplate.query(connection -> {
-                PreparedStatement stmt = connection.prepareStatement(sql);
-                stmt.setString(1, searchQuery);
-                stmt.setString(2, sortBy1);
-                stmt.setString(3, order1);
-                stmt.setString(4, sortBy2);
-                stmt.setString(5, order2);
-                stmt.setString(6, String.valueOf(perPage));
-                stmt.setString(7, String.valueOf((page-1)*perPage));
-                return stmt;
-            }, (rs, i) -> new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
-
-//            movies = jdbcTemplate.query(
-//                    "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-//                            "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-//                            "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
-//                            " LIMIT " + perPage + " OFFSET " + (page-1)*perPage ,
-//                    (rs, rowNum) ->
-//                            new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
-        }
+    public List<MovieWithDetails> getMoviesBySearch(PreparedStatement stmt, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2) {
+        List<Movie> movies = new ArrayList<>();
+        movies = jdbcTemplate.query(connection -> stmt,
+                (rs, i) -> new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
 
         List<MovieWithDetails> moviesWithDetails = new ArrayList<>();
 
@@ -377,7 +314,7 @@ public class JdbcMovieRepository implements MovieRepository {
             searchParams.add("title LIKE \"%"+title+"%\"");
         }
         if (year != null) {
-            searchParams.add("year = "+year);
+            searchParams.add("year = ?");
         }
         if (director != null) {
             searchParams.add("director LIKE \"%"+director+"%\"");
@@ -385,11 +322,22 @@ public class JdbcMovieRepository implements MovieRepository {
         if (star != null) {
             searchParams.add("name LIKE \"%"+star+"%\"");
         }
+
         String searchQuery = String.join(" AND ", searchParams);
-        return  jdbcTemplate.queryForObject(
-                "SELECT COUNT(DISTINCT m.id, m.title, m.year, m.director) FROM movies m, stars_in_movies sim, stars s " +
-                        "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") ",
-                Integer.class);
+        String sql = "SELECT COUNT(DISTINCT m.id, m.title, m.year, m.director) FROM movies m, stars_in_movies sim, stars s " +
+                "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") ";
+
+        return jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            if (year != null)
+                stmt.setInt(1, year);
+
+            return stmt;
+        }, rs -> {
+            rs.next();
+            return rs.getInt(1);
+        });
     }
 
 
@@ -417,83 +365,79 @@ public class JdbcMovieRepository implements MovieRepository {
         else {
             return getMoviesByTitle(startsWith, perPage, page, sortBy1, order1, sortBy2, order2);
         }
-
     }
 
     @Override
     public List<MovieWithDetails> getMoviesByGenre(int id, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2) {
-        List<Movie> movies = new ArrayList<>();
+        List<Movie> movies = new ArrayList<Movie>();
+        String sql;
         if (sortBy1 == null) {
-            movies = jdbcTemplate.query(
-                    "SELECT m.id, m.title, m.year, m.director FROM movies m, genres_in_movies gim WHERE (gim.genreId = \""
-                        + id + "\") AND (m.id = gim.movieId) ORDER BY m.id LIMIT " + perPage + " OFFSET " + (page-1)*perPage,
-                    (rs, rowNum) ->
-                            new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+            sql = "SELECT m.id, m.title, m.year, m.director FROM movies m, genres_in_movies gim WHERE (gim.genreId = ?) " +
+                    "AND (m.id = gim.movieId) ORDER BY m.id LIMIT " + perPage + " OFFSET " + (page-1)*perPage;
         }
         else {
-            movies = jdbcTemplate.query(
-                    "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                            "WHERE (gim.genreId = " + id + ") AND (m.id = gim.movieId) " +
-                            "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
-                            " LIMIT " + perPage + " OFFSET " + (page-1)*perPage ,
-                    (rs, rowNum) ->
-                            new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+            sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) " +
+                    "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
+                    " LIMIT " + perPage + " OFFSET " + (page-1)*perPage;
         }
+
+        movies = jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, id);
+            return stmt;
+        }, (rs, i) ->  new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+
         List<MovieWithDetails> moviesWithDetails = new ArrayList<>();
+
         for (Movie m: movies) {
             MovieWithDetails movieWithDetails = new MovieWithDetails(m, get3GenresByMovieId(m.getId()), get3StarsByMovieId(m.getId()), getRatingById(m.getId()));
             moviesWithDetails.add(movieWithDetails);
         }
-        return moviesWithDetails;
 
+        return moviesWithDetails;
     }
 
     @Override
     public List<MovieWithDetails> getMoviesByTitle(String startsWith, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2) {
-        List<Movie> movies = new ArrayList<>();
+        List<Movie> movies = new ArrayList<Movie>();
+        String sql;
         if (sortBy1 == null) {
             if (startsWith.equals("*")) {
-                movies = jdbcTemplate.query(
-                        "SELECT id, title, year, director FROM movies WHERE title NOT regexp \"^[[:alnum:]]\" " +
-                                "ORDER BY id LIMIT " + perPage + " OFFSET " + (page - 1) * perPage,
-                        (rs, rowNum) ->
-                                new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+                sql = "SELECT id, title, year, director FROM movies WHERE title NOT regexp \"^[[:alnum:]]\" " +
+                        "ORDER BY id LIMIT " + perPage + " OFFSET " + (page - 1) * perPage;
             }
             else {
-                movies = jdbcTemplate.query(
-                        "SELECT id, title, year, director FROM movies WHERE title LIKE  \"" + startsWith + "%\" " +
-                                "ORDER BY id LIMIT " + perPage + " OFFSET " + (page - 1) * perPage,
-                        (rs, rowNum) ->
-                                new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+                sql = "SELECT id, title, year, director FROM movies WHERE title LIKE  \"" + startsWith + "%\" " +
+                        "ORDER BY id LIMIT " + perPage + " OFFSET " + (page - 1) * perPage;
             }
         }
         else {
             if (startsWith.equals("*")) {
-                movies = jdbcTemplate.query(
-                        "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                                "WHERE (m.id = r.movieId) AND title NOT regexp \"^[[:alnum:]]\"" +
-                                "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
-                                " LIMIT " + perPage + " OFFSET " + (page - 1) * perPage,
-                        (rs, rowNum) ->
-                                new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+                sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+                        "WHERE (m.id = r.movieId) AND title NOT regexp \"^[[:alnum:]]\"" +
+                        "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
+                        " LIMIT " + perPage + " OFFSET " + (page - 1) * perPage;
             }
             else {
-                movies = jdbcTemplate.query(
-                        "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                                "WHERE (m.id = r.movieId) AND title LIKE  \"" + startsWith + "%\" " +
-                                "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
-                                " LIMIT " + perPage + " OFFSET " + (page - 1) * perPage,
-                        (rs, rowNum) ->
-                                new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+                sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+                        "WHERE (m.id = r.movieId) AND title LIKE  \"" + startsWith + "%\" " +
+                        "ORDER BY " + sortBy1 + " " + order1 + ", " + sortBy2 + " " + order2 +
+                        " LIMIT " + perPage + " OFFSET " + (page - 1) * perPage;
             }
         }
+
+        movies = jdbcTemplate.query(sql, (rs, rowNum)
+                -> new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+
         List<MovieWithDetails> moviesWithDetails = new ArrayList<>();
+
         for (Movie m: movies) {
             MovieWithDetails movieWithDetails = new MovieWithDetails(m, get3GenresByMovieId(m.getId()), get3StarsByMovieId(m.getId()), getRatingById(m.getId()));
             moviesWithDetails.add(movieWithDetails);
         }
-        return moviesWithDetails;
 
+        return moviesWithDetails;
     }
 
 
@@ -503,9 +447,18 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public int getNumOfMoviesByGenre(@PathVariable String genreId) {
-        return  jdbcTemplate.queryForObject(
-                "SELECT COUNT(movieId) FROM genres_in_movies WHERE (genreId = \"" + genreId + "\")",
-                        Integer.class);
+        String sql = "SELECT COUNT(movieId) FROM genres_in_movies WHERE (genreId = ?)";
+
+        return jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, genreId);
+            return stmt;
+        }, rs -> {
+            if (rs.next())
+                return rs.getInt(1);
+
+            return null;
+        });
     }
 
     @RequestMapping(
@@ -562,24 +515,6 @@ public class JdbcMovieRepository implements MovieRepository {
                 resultSet.next();
                 return resultSet.getBoolean(1);
             });
-
-//            Boolean userAuthenticated = jdbcTemplate.query(sql, new PreparedStatementSetter() {
-//                @Override
-//                public void setValues(PreparedStatement preparedStatement) throws SQLException {
-//                    preparedStatement.setString(1, email);
-//                    preparedStatement.setString(2, password);
-//                }
-//            }, new ResultSetExtractor<Boolean>() {
-//                @Override
-//                public Boolean extractData(ResultSet resultSet) throws SQLException, DataAccessException {
-//                    resultSet.next();
-//                    return resultSet.getBoolean(1);
-//                }
-//            });
-
-//            Boolean userAuthenticated = jdbcTemplate.queryForObject(
-//                    "SELECT EXISTS(SELECT email FROM customers WHERE email=\"" + email + "\" " +
-//                            "AND password=\"" + password + "\")", Boolean.class);
 
             session.setAttribute("isAuth", userAuthenticated);
             System.out.println("Logged in "+ userAuthenticated);
@@ -769,11 +704,36 @@ public class JdbcMovieRepository implements MovieRepository {
         String firstName = credentials.get("firstName");
         String lastName = credentials.get("lastName");
 
-        Boolean orderAuthenticated = jdbcTemplate.queryForObject("SELECT EXISTS(SELECT id FROM creditcards WHERE id=\"" + creditCard + "\" " +
-                        "AND expiration=\"" + expiration + "\" AND firstName=\""+firstName+"\" AND lastName=\""+lastName+"\")", Boolean.class);
+        String authSql = "SELECT EXISTS(SELECT id FROM creditcards WHERE id = ? AND expiration = ? AND firstName = ? AND lastName = ?)";
+
+        Boolean orderAuthenticated = jdbcTemplate.query((PreparedStatementCreator) connection -> {
+            PreparedStatement stmt = connection.prepareStatement(authSql);
+            stmt.setString(1, creditCard);
+            stmt.setString(2, expiration);
+            stmt.setString(3, firstName);
+            stmt.setString(4, lastName);
+
+            return stmt;
+        }, rs -> {
+            if (rs.next())
+                return rs.getBoolean(1);
+
+            return null;
+        });
 
         if (orderAuthenticated) {
-            Integer customerId = jdbcTemplate.queryForObject("SELECT id FROM customers WHERE ccId=\"" + creditCard + "\"", Integer.class);
+            String customerSql = "SELECT id FROM customers WHERE ccId = ?";
+            Integer customerId = jdbcTemplate.query((PreparedStatementCreator) connection -> {
+                PreparedStatement stmt = connection.prepareStatement(customerSql);
+                stmt.setString(1, creditCard);
+                return stmt;
+            }, rs -> {
+                if (rs.next())
+                    return rs.getInt(1);
+
+                return null;
+            });
+
             session.setAttribute("customerId", customerId);
         }
 
@@ -812,8 +772,18 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public String getMovieTitle(@PathVariable String saleId, HttpSession session) {
-        return this.jdbcTemplate.queryForObject("SELECT m.title FROM movies as m INNER JOIN (SELECT movieId FROM sales WHERE id = \"" + saleId + "\"" +
-                ") AS s ON m.id = s.movieId", String.class);
+        String sql = "SELECT m.title FROM movies as m INNER JOIN (SELECT movieId FROM sales WHERE id = ?) AS s ON m.id = s.movieId";
+
+        return this.jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, saleId);
+            return stmt;
+        }, rs -> {
+            if (rs.next())
+                return rs.getString(1);
+
+            return null;
+        });
     }
 
     @RequestMapping(
@@ -822,7 +792,18 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public int getQuantity(@PathVariable String saleId, HttpSession session) {
-        return this.jdbcTemplate.queryForObject("SELECT quantity FROM sales WHERE id=\"" + saleId + "\"", Integer.class);
+        String sql = "SELECT quantity FROM sales WHERE id= ?";
+
+        return this.jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, saleId);
+            return stmt;
+        }, rs -> {
+            if (rs.next())
+                return rs.getInt(1);
+
+            return null;
+        });
     }
 
     // *************** various caching stuff ******************
@@ -856,7 +837,6 @@ public class JdbcMovieRepository implements MovieRepository {
             return (Map<String,Object>) session.getAttribute("searchParams");
         }
     }
-
 }
 
 
