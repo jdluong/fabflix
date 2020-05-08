@@ -1,6 +1,8 @@
 
 # Created by https://www.gitignore.io/api/java,maven,eclipse,java-web,intellij
 
+keystore
+dist/
 .idea
 .idea/
 *.DS_Store

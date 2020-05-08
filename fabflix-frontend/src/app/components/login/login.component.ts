@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
   invalidRecaptcha = false;
   loginSuccess = false;
   recaptchaResp: any;
+  recaptchaLoaded = false;
 
   isAuth: any;
 
@@ -28,16 +29,26 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private authenticationService: AuthenticationService) {
+      this.loadScript();
   }
 
   ngOnInit() {
-    this.authenticationService.isAuth().subscribe(
-      data => {
-        this.isAuth = data;
-        if (this.isAuth === true) {
-          this.router.navigate(['/search']);
-        }
-      });
+    // this.loadRecaptcha().then(() => {
+      this.recaptchaLoaded = true;
+      this.authenticationService.isAuth().subscribe(
+        data => {
+          this.isAuth = data;
+          if (this.isAuth === true) {
+            this.router.navigate(['/search']);
+          }
+        })
+      // });
+  }
+
+  ngAfterViewChecked() {
+    grecaptcha.render('recaptcha', {
+      'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
+    });
   }
 
   checkFields() {
@@ -69,5 +80,25 @@ export class LoginComponent implements OnInit {
     }, error => {
       console.log(error);
     });
+  }
+
+  public loadScript() {
+    let body = <HTMLDivElement> document.body;
+    let script = document.createElement('script');
+    script.innerHTML = '';
+    script.src = 'https://www.google.com/recaptcha/api.js';
+    script.async = true;
+    script.defer = true;
+    body.appendChild(script);
+}
+
+  public loadRecaptcha() {
+    var script = document.createElement('script');
+    script.src = "https://www.google.com/recaptcha/api.js";
+    script.async =false;
+    document.head.appendChild(script);
+    return new Promise((resolve, reject) => {
+      script.onload = resolve;
+    }); 
   }
 }

@@ -7,7 +7,7 @@
         <li>Member Login</li>
         <li><input type="text" id="username" name="username" [(ngModel)]="username" placeholder="Username"></li>
         <li><input type="password" id="password" name="password" [(ngModel)]="password" placeholder="********"></li>
-        <li><div class="g-recaptcha" data-sitekey="6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO"></div></li>
+        <li><div id="recaptcha" class="g-recaptcha" data-sitekey="6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO"></div></li>
         <li><input type="submit" name="submit" (click)=checkFields() value="Submit"></li>
       </ul>
       <div class="alert" *ngIf='invalidLogin'>{{errorMessage}}</div>
