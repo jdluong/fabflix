@@ -52,6 +52,26 @@ export class EmployeeDashboardComponent implements OnInit {
       });
   }
 
+  addStar() {
+    let params:any;
+    if (!this.birthYear) {
+      params = {"name": this.starName};
+    }
+    else {
+      params = {"name": this.starName,
+                "birthYear": this.birthYear};
+    }
+    this.employeeService.addStar(params).subscribe(
+      data => {
+        this.addStarNotification(data['id']);
+      });
+  }
+
+  addStarNotification(id) {
+    let message = "(NEW) " + this.starName + ": " + id;
+    this.notifier.notify('success', message);
+  }
+
   addMovie() {
     if (this.title == undefined || this.year == undefined || this.director == undefined || this.movieStar == undefined || this.genre == undefined) {
       this.invalidAddMovie = true;

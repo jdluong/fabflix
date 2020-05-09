@@ -874,7 +874,7 @@ public class JdbcMovieRepository implements MovieRepository {
     }
 
 
-    // ******************** DASHBOARD ENDPOINTS *********************
+    // ******************** EMPLOYEE FUNCTION ENDPOINTS *********************
 
     @RequestMapping(
             value = "/api/employee/addMovie",
@@ -901,6 +901,34 @@ public class JdbcMovieRepository implements MovieRepository {
                                             .addValue("genre", payload.get("genre"));
         Map<String, Object> json = call.execute(parameters);
 
+        return json;
+    }
+
+    @RequestMapping(
+            value = "/api/employee/addStar",
+            method = RequestMethod.POST
+    )
+    @Override
+    public Map<String, String> addStar(@RequestBody Map<String, Object> payload) {
+        String newId = jdbcTemplate.queryForObject(
+                "SELECT CONCAT(SUBSTRING(max(id), 1, 2), SUBSTRING(max(id), 3) + 1) AS newId FROM stars;",
+                String.class);
+        String name = (String) payload.get("name");
+        Integer birthYear = (Integer) payload.get("birthYear");
+
+        if (birthYear == null) {
+            this.jdbcTemplate.update(
+                    "INSERT INTO stars(id, name) VALUES(?, ?)",
+                    newId, name);
+        }
+        else {
+            this.jdbcTemplate.update(
+                    "INSERT INTO stars(id, name, birthYear) VALUES(?, ?, ?)",
+                    newId, name, birthYear);
+        }
+
+        Map<String, String> json = new HashMap<>();
+        json.put("id", newId);
         return json;
     }
 

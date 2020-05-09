@@ -1,5 +1,6 @@
 <div *ngIf="isAuth && userType == 'Employee'">
-    <form #addStarForm="ngForm" (ngSubmit)="addStarForm.reset()">
+
+    <form #addStarForm="ngForm" (ngSubmit)="addStar()">
         <label for="starName">Star Name</label>
         <input type="text" id="starName" [(ngModel)]="starName" name="starName" placeholder="Star Name">
         <label for="birthYear">Star Birth Year</label>
@@ -9,7 +10,7 @@
 
     <br>
 
-    <form #addMovieForm="ngForm" (ngSubmit)="addMovie(); addMovieForm.reset()">
+    <form #addMovieForm="ngForm" (ngSubmit)="addMovie()">
         <label for="title">Title</label>
         <input type="text" id="title" [(ngModel)]="title" name="title" placeholder="Title">
         <label for="year">Year</label>
@@ -23,6 +24,8 @@
         <button class="btn btn-secondary" type="submit">Add Movie</button>
         <div *ngIf="invalidAddMovie">{{ invalidAddMovieMessage }}</div>
     </form>
+
 <notifier-container></notifier-container>
+
 </div>
 
