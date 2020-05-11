@@ -51,11 +51,11 @@ export class LoginComponent implements OnInit {
   }
  
   ngAfterViewChecked() {
-    // if (this.recaptchaId == null) {
-    //   this.recaptchaId = grecaptcha.render('recaptcha', {
-    //     'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
-    //   });
-    // }
+    if (this.recaptchaId == null) {
+      this.recaptchaId = grecaptcha.render('recaptcha', {
+        'sitekey': "6LdCRfEUAAAAAHfGp1JVafyPoAsYADMioRmb54oO" 
+      });
+    }
   }
 
   changeTo(userType:string) {
