@@ -1,5 +1,6 @@
 package com.fabflix.fabflix;
 
+import com.fabflix.fabflix.Star;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -36,7 +37,7 @@ public class StarParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse("src/main/actors63.xml");
+            document = builder.parse("actors63.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
