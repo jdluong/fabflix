@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class MovieParser {
     private String USERNAME = "mytestuser";
-    private String PASSWORD = "mypassword";
+    private String PASSWORD = "Password!123";
 
     Map<Movie, List<String>> movies;
     List<String> genres;

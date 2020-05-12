@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class CastParser {
     private String USERNAME = "mytestuser";
-    private String PASSWORD = "mypassword";
+    private String PASSWORD = "Password!123";
 
     // map for inserting entries in stars_in_movies table
     // key = movie name, value = cast members
