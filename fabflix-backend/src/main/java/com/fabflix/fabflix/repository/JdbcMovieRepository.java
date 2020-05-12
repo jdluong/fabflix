@@ -548,7 +548,7 @@ public class JdbcMovieRepository implements MovieRepository {
             }
             else {
                 sql = "SELECT id, title, year, director FROM movies WHERE title LIKE ? " +
-                        "ORDER BY id LIMIT " + perPage + " OFFSET " + (page - 1) * perPage;
+                        "ORDER BY id LIMIT ? OFFSET ?";
             }
         }
         else {
@@ -652,7 +652,7 @@ public class JdbcMovieRepository implements MovieRepository {
             if (startsWith.equals("*"))
                 stmt.setString(1, "^[[:alnum:]]");
             else
-                stmt.setString(1, startsWith);
+                stmt.setString(1, startsWith+"%");
             stmt.setInt(2, perPage);
             stmt.setInt(3, (page-1)*perPage);
             return stmt;
@@ -701,9 +701,19 @@ public class JdbcMovieRepository implements MovieRepository {
                     Integer.class);
         }
         else {
-            return  jdbcTemplate.queryForObject(
-                    "SELECT COUNT(id) FROM movies WHERE title LIKE  \"" + startsWith + "%\"",
-                    Integer.class);
+            String sql = "SELECT COUNT(id) FROM movies WHERE title LIKE ?";
+
+            return jdbcTemplate.query(connection -> {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                stmt.setString(1, startsWith+"%");
+                return stmt;
+            }, rs -> {
+                if (rs.next())
+                    return rs.getInt(1);
+
+                return null;
+            });
+
         }
     }
 
