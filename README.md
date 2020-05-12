@@ -110,6 +110,17 @@ Run <code>ng build --base-href=. --prod</code>
 18) In browser, navigate to Tomcat manager page at ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/manager/html
 19) Click on "/fabflix" under "Paths"
 
+## PREPARED STATEMENTS
+- All prepared statements can be found in the following files:
+1. JdbcMovieRepository (https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-backend/src/main/java/com/fabflix/fabflix/repository/JdbcMovieRepository.java)
+2. MovieParser (https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-backend/src/main/java/com/fabflix/fabflix/MovieParser.java)
+3. StarParser (https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-backend/src/main/java/com/fabflix/fabflix/StarParser.java)
+4. CastParser (https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-backend/src/main/java/com/fabflix/fabflix/CastParser.java)
+
+## PARSING OPTIMIZATIONS
+1. Validating data as they're found when parsing any XML, we make checks at each stage before passing on the data to the next, until it's created and fully processed to store into a List to later iterate over to add to our database;
+2. Gather genres within xml, normalize them using the given key, then using that to generate a subset of genres not already included in table and then adding them to the database in a separate function. This prevents us having to check if the genre found already exists in our genres table for each movie.
+
 ## CONTRIBUTIONS
 John: HTTPS, Encryption, Dashboard
 Alexis: ReCAPTCHA, Stored Procedure, XML
