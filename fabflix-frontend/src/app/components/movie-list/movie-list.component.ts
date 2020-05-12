@@ -26,6 +26,7 @@ export class MovieListComponent implements OnInit {
   pageNums = [];
 
   isAuth: any;
+  userType: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,11 +45,17 @@ export class MovieListComponent implements OnInit {
   ngOnInit() {
     this.authService.isAuth().subscribe(
       data => {
-        this.isAuth = data;
+        this.isAuth = data['isAuth'];
         if (this.isAuth == false) {
           this.router.navigate(['/redirect']);
         }
         else {
+          if (data['Employee']) {
+            this.userType = 'Employee';
+          }
+          else if (data['Customer']) {
+            this.userType = 'Customer';  
+          }
           this.route.queryParams.subscribe(
             data => {
               this.params = data;

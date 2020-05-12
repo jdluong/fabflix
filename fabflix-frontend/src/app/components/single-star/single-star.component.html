@@ -10,7 +10,12 @@
 <body>
     <!-- <p class = "title">FABFLIX</p> -->
 
-    <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
+    <div *ngIf="userType == 'Customer'">
+        <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
+    </div>
+    <div *ngIf="userType == 'Employee'">
+        <a [routerLink]="['/_dashboard']"><button class="viewCart">Dashboard</button></a>
+    </div>
     <div class = "content">
         <p class = "heading"><strong>Name</strong></p>
         <p>{{ star.name }}</p>

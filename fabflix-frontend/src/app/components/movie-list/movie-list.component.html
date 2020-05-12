@@ -12,7 +12,13 @@
     <table class = "table">
       <caption>
         <a [routerLink]="" (click)="navigateToSearch()"><button class="button btn-secondary">Return to search</button></a>
-        <a [routerLink]="" (click)="navigateToCart()"><button class="button btn-light checkout">View Cart</button></a>
+        <!-- <a [routerLink]="" (click)="navigateToCart()"><button class="button btn-light checkout">View Cart</button></a> -->
+        <span *ngIf="userType == 'Customer'">
+          <a [routerLink]="" (click)="navigateToCart()"><button class="button btn-light checkout">View Cart</button></a>
+        </span>
+        <span *ngIf="userType == 'Employee'">
+            <a [routerLink]="['/_dashboard']"><button class="viewCart">Dashboard</button></a>
+        </span>
 
         <select class="selectpicker" title="Sort by..." (change)="selectSort($event.target.value)">
           <option selected >Sort by...</option>
@@ -54,7 +60,9 @@
       <tr *ngFor = "let m of movies; index as ind">
         <th scope="row">{{ ind + 1 + ((params.page-1)*params.perPage)}}
           <br>
-          <button class="cart" (click)="addToCart(m.movie.id, m.movie.title)"><i class="fas fa-shopping-cart"></i></button>
+          <div *ngIf="userType == 'Customer'">
+            <button class="cart" (click)="addToCart(m.movie.id, m.movie.title)"><i class="fas fa-shopping-cart"></i></button>
+          </div>
         </th>
         <td>
           <!-- <a [routerLink]="['/movie/', m.movie.id]">{{ m.movie.title }}</a> -->

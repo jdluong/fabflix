@@ -9,7 +9,12 @@
 
 <div *ngIf="isAuth">
 <body>
-    <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
+    <div *ngIf="userType == 'Customer'">
+        <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
+    </div>
+    <div *ngIf="userType == 'Employee'">
+        <a [routerLink]="['/_dashboard']"><button class="viewCart">Dashboard</button></a>
+    </div>
     <div class = "content">
         <p class = "heading"><strong>Title</strong></p>
         <p>{{ movie.title }}</p>
@@ -30,7 +35,9 @@
         </div>
         <br>
         <a [routerLink]="" (click)="navigateToList()"><button type="button" style="color:white" class="btn-secondary btn-outline-dark">Back to list</button></a>
-        <button type="button" class="btn-light btn-outline-dark" (click)="addToCart(movie.id, movie.title)"><a>Add to Cart</a></button>
+        <div *ngIf="userType == 'Customer'">
+            <button type="button" class="btn-light btn-outline-dark" (click)="addToCart(movie.id, movie.title)"><a>Add to Cart</a></button>
+        </div>
     </div>
 </body>
 </div>

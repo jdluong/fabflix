@@ -31,7 +31,7 @@ export class PostPaymentComponent implements OnInit {
   ngOnInit() {
     this.authService.isAuth().subscribe(
       data => {
-        this.isAuth = data;
+        this.isAuth = data['isAuth'];
         if (this.isAuth === false) {
           this.router.navigate(['/redirect']);
         } else {
