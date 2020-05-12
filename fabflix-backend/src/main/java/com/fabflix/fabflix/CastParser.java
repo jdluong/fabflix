@@ -1,5 +1,6 @@
 package com.fabflix.fabflix;
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +15,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 public class CastParser {
+    private String USERNAME = "mytestuser";
+    private String PASSWORD = "mypassword";
+
     // map for inserting entries in stars_in_movies table
     // key = movie name, value = cast members
     Map<String, ArrayList<String>> starsInMovies;
@@ -23,10 +27,11 @@ public class CastParser {
         this.starsInMovies = new HashMap<>();
     }
 
-    public void run() {
+    public void run() throws SQLException {
         parseXml();
         parseCasts();
-        showData();
+        addToDatabase();
+        //showData();
     }
 
     public void parseXml() {
@@ -34,7 +39,7 @@ public class CastParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse("casts124.xml");
+            document = builder.parse("src/main/casts124.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -100,9 +105,53 @@ public class CastParser {
         }
     }
 
-    public static void main(String[] args) {
-        CastParser parser = new CastParser();
-        parser.run();
+    private String getStarId(Connection connection, String name) throws SQLException {
+        String sql = "SELECT id FROM stars WHERE name=\"" + name + "\" LIMIT 1";
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+
+        if (rs.next())
+            return rs.getString(1);
+        else
+            return null;
+    }
+
+    private String getMovieId(Connection connection, String name) throws SQLException {
+        String sql = "SELECT id FROM movies WHERE title=\"" + name + "\" LIMIT 1";
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+
+        if (rs.next())
+            return rs.getString(1);
+        else
+            return null;
+    }
+
+    private void addToDatabase() throws SQLException {
+        try {
+          Class.forName("com.mysql.cj.jdbc.Driver");
+          Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", USERNAME, PASSWORD);
+
+          String sql = "INSERT INTO stars_in_movies (starId, movieId) VALUES (?, ?)";
+
+          for (Map.Entry<String, ArrayList<String>> entry : starsInMovies.entrySet()) {
+              String movieId = getMovieId(connection, entry.getKey());
+              for (String star : entry.getValue()) {
+                  String starId = getStarId(connection, star);
+                  if (starId != null && movieId != null) {
+                      PreparedStatement stmt = connection.prepareStatement(sql);
+                      stmt.setString(1, starId);
+                      stmt.setString(2, entry.getKey());
+                      stmt.execute();
+                  }
+              }
+          }
+          connection.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 
