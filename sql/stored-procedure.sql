@@ -1,3 +1,4 @@
+DELIMITER //
 CREATE PROCEDURE `add_movie`(IN title VARCHAR(128), IN year INT, IN director VARCHAR(128), IN star VARCHAR(128), IN genre VARCHAR(128),
                            OUT movie_message VARCHAR (255), OUT star_message VARCHAR(255), OUT genre_message VARCHAR(255))
 BEGIN
@@ -70,4 +71,6 @@ DECLARE movieId VARCHAR(128);
 
     END IF;
 
-END
+END //
+
+DELIMITER ;
