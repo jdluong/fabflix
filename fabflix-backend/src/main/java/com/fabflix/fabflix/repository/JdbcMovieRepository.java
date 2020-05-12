@@ -914,6 +914,4 @@ public class JdbcMovieRepository implements MovieRepository {
     }
 }
 
-// XML Parsing Functions
-
 

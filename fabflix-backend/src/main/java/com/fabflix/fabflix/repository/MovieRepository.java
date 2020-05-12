@@ -93,19 +93,19 @@ public interface MovieRepository {
     // SHOPPING
 
     // add quantity of movieId's to shopping cart
-    public Map<String,Integer> addToCart(String movieId,int quantity, HttpSession session);
+    public Map<String, Integer> addToCart(String movieId, int quantity, HttpSession session);
 
     // change quantity of movieId's in shopping cart
-    public Map<String,Integer> changeItemQuantity(String movieId,int quantity, HttpSession session);
+    public Map<String, Integer> changeItemQuantity(String movieId, int quantity, HttpSession session);
 
     // get cart contents
-    public Map<String,Integer> getCartContents(HttpSession session);
+    public Map<String, Integer> getCartContents(HttpSession session);
 
     // delete movieId from shopping cart
-    public Map<String,Boolean> deleteItem(String movieId, HttpSession session);
+    public Map<String, Boolean> deleteItem(String movieId, HttpSession session);
 
     // empty cart contents
-    public Map<String,Boolean> emptyCart(HttpSession session);
+    public Map<String, Boolean> emptyCart(HttpSession session);
 
     // validate credit card credentials
     ResponseEntity<Boolean> authenticateOrder(Map<String, String> orderInfo, HttpSession session);
@@ -123,15 +123,15 @@ public interface MovieRepository {
     // ***********
     // various cACHING
 
-    public Map<String,Object> cacheSearchParams(HttpSession session, Map<String, Object> payload);
-    public Map<String,Object> getSearchParams(HttpSession session);
+    public Map<String, Object> cacheSearchParams(HttpSession session, Map<String, Object> payload);
+
+    public Map<String, Object> getSearchParams(HttpSession session);
 
 
     // ***********
     // DASHBOARD
 
-    public Map<String,Object> addMovie(Map<String, Object> payload);
+    public Map<String, Object> addMovie(Map<String, Object> payload);
+
     public Map<String, String> addStar(Map<String, Object> payload);
-
-
 }

@@ -9,7 +9,7 @@ import {Observable} from 'rxjs';
 export class AuthenticationService {
   public username: string;
   public password: string;
-  // public url = 'http://localhost:8080/fabflix_backend_war/api/auth';
+  //public url = 'http://localhost:8080/fabflix_backend_war/api/auth';
   public url = 'https://localhost:8443/fabflix_backend_war/api/auth'
   // private url:string = "http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/fabflix-backend/api/auth";
   // private url:string = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/auth";
@@ -21,7 +21,7 @@ export class AuthenticationService {
     credentials.set('username', username);
     credentials.set('password', password);
     credentials.set('g-recaptcha', recaptcha);
-    credentials.set('userType', userType)
+    credentials.set('userType', userType);
 
     const user = {};
     credentials.forEach((val: string, key: string) => {

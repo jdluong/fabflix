@@ -81,28 +81,12 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <id>MovieParser</id>
-                        <configuration>
-                            <mainClass>com.fabflix.fabflix.MovieParser</mainClass>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>StarParser</id>
-                        <configuration>
-                            <mainClass>com.fabflix.fabflix.StarParser</mainClass>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>CastParser</id>
-                        <configuration>
-                            <mainClass>com.fabflix.fabflix.CastParser</mainClass>
-                        </configuration>
-                    </execution>
-                </executions>
+                <version>1.2.1</version>
+                <configuration>
+                    <mainClass>com.fabflix.fabflix.Parser</mainClass>
+                </configuration>
             </plugin>
+
         </plugins>
     </build>
 

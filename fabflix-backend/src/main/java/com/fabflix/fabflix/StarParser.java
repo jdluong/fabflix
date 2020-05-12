@@ -9,10 +9,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StarParser {
+    private String USERNAME = "mytestuser";
+    private String PASSWORD = "mypassword";
+
     List<Star> stars;
     Document document;
 
@@ -23,7 +27,8 @@ public class StarParser {
     public void run() {
         parseXml();
         parseStars();
-        showData();
+        //showData();
+        addToDatabase();
     }
 
     public void parseXml() {
@@ -31,7 +36,7 @@ public class StarParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse("actors63.xml");
+            document = builder.parse("src/main/actors63.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -102,8 +107,45 @@ public class StarParser {
             System.out.println(s);
     }
 
-    public static void main(String[] args) {
-        StarParser parser = new StarParser();
-        parser.run();
+    private String generateStarId(Connection connection) throws SQLException {
+        String sql = "SELECT CONCAT(SUBSTRING(max(id), 1, 2), SUBSTRING(max(id), 3) + 1) FROM stars";
+
+        Statement stmt = connection.createStatement();
+        stmt.execute(sql);
+
+        ResultSet rs = stmt.getResultSet();
+
+        if (rs.next())
+            return rs.getString(1);
+
+        return null;
+    }
+
+    private void addToDatabase() {
+        try  {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", USERNAME, PASSWORD);
+
+            String sql = "INSERT INTO stars VALUES (?, ?, ?)";
+
+            for (Star s : stars) {
+                String starId = generateStarId(connection);
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                stmt.setString(1, starId);
+                stmt.setString(2, s.getName());
+
+                if (s.getBirthYear() != -1)
+                    stmt.setInt(3, s.getBirthYear());
+                else
+                    stmt.setNull(3, java.sql.Types.INTEGER);
+
+                stmt.execute();
+            }
+            connection.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
