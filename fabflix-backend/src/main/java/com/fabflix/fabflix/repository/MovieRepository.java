@@ -59,7 +59,7 @@ public interface MovieRepository {
     ) throws SQLException;
 
     // search for getMovies
-    List<MovieWithDetails> getMoviesBySearch(PreparedStatement stmt, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2);
+    List<MovieWithDetails> getMoviesBySearch(PreparedStatement stmt);
 
     // get number of movies by search
     int getNumOfMoviesBySearch(String title, Integer year, String director, String star);
