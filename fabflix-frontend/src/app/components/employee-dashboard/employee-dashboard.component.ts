@@ -26,6 +26,8 @@ export class EmployeeDashboardComponent implements OnInit {
   invalidAddMovie = false;
   invalidAddMovieMessage = "One or more fields missing";
 
+  tables:any;
+
   constructor(
     private authService: AuthenticationService,
     private router: Router,
@@ -44,8 +46,13 @@ export class EmployeeDashboardComponent implements OnInit {
           }
           else if (data['Employee']) {
             this.userType = 'Employee';
+            this.employeeService.getTables().subscribe(
+              data => {
+                this.tables = data;
+                console.log(this.tables);
+              });
+            }
           }
-        }
         else {
           this.router.navigate(['/redirect']);
         }
@@ -81,7 +88,7 @@ export class EmployeeDashboardComponent implements OnInit {
                   "year": this.year,
                   "director": this.director,
                   "star": this.movieStar,
-                  "genre": this.genre};
+                  "genre": this.genre[0].toUpperCase() + this.genre.substring(1).toLowerCase()};
     this.employeeService.addMovie(params).subscribe(
       data => {
         this.addMovieNotifications(data);

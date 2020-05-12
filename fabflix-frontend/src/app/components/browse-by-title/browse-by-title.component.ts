@@ -14,6 +14,7 @@ export class BrowseByTitleComponent implements OnInit {
             'N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
   
   isAuth: any;
+  userType: string;
 
   constructor(
     private authService: AuthenticationService,
@@ -22,10 +23,18 @@ export class BrowseByTitleComponent implements OnInit {
   ngOnInit() {
     this.authService.isAuth().subscribe(
       data => {
-        this.isAuth = data;
+        this.isAuth = data['isAuth'];
         // console.log("auth: "+this.isAuth);
         if (this.isAuth == false) {
           this.router.navigate(['/redirect']);
+        }
+        else {
+          if (data['Employee']) {
+            this.userType = 'Employee';
+          }
+          else if (data['Customer']) {
+            this.userType = 'Customer';  
+          }
         }
       });
   }

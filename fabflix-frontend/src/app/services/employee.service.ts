@@ -20,4 +20,9 @@ export class EmployeeService {
   public addMovie(params:any):Observable<Object> {
     return this.http.post(this.url+"addMovie", params, {withCredentials: true});
   }
+
+  public getTables():Observable<Object> {
+    return this.http.get(this.url+"getTables", {withCredentials:true});
+  }
+
 }

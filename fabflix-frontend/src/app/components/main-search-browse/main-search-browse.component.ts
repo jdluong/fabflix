@@ -18,6 +18,7 @@ export class MainSearchBrowseComponent implements OnInit {
   searchIcon = faSearch;
 
   isAuth: any;
+  userType: string;
 
   constructor(
     private searchService: SearchService,
@@ -31,6 +32,14 @@ export class MainSearchBrowseComponent implements OnInit {
         this.isAuth = data['isAuth'];
         if (this.isAuth == false) {
           this.router.navigate(['/redirect']);
+        }
+        else {
+          if (data['Employee']) {
+            this.userType = 'Employee';
+          }
+          else if (data['Customer']) {
+            this.userType = 'Customer';  
+          }
         }
       });
   }

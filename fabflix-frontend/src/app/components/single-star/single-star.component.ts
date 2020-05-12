@@ -17,6 +17,7 @@ export class SingleStarComponent implements OnInit {
   movies:Movie[];
 
   isAuth: any;
+  userType: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,11 +30,17 @@ export class SingleStarComponent implements OnInit {
   ngOnInit() {
     this.authService.isAuth().subscribe( 
       data => {
-        this.isAuth = data;
+        this.isAuth = data['isAuth'];
         if (this.isAuth == false) {
           this.router.navigate(['/redirect']);
         }
         else {
+          if (data['Employee']) {
+            this.userType = 'Employee';
+          }
+          else if (data['Customer']) {
+            this.userType = 'Customer';  
+          }
           let starId:string;
           starId = this.route.snapshot.paramMap.get('starId');
 
