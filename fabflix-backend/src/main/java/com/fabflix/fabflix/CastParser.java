@@ -39,7 +39,8 @@ public class CastParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse("casts124.xml");
+//            document = builder.parse("casts124.xml");
+            document = builder.parse("classes/casts124.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -87,6 +88,9 @@ public class CastParser {
                 if (e.hasChildNodes())
                     val = e.getFirstChild().getNodeValue();
             }
+
+            if (val == null)
+                System.out.println("Inconsistent Data Found: (Name) = " + e.getNodeName() + ", (Value) = " + e.getNodeValue());
         }
 
         return val;
@@ -106,14 +110,19 @@ public class CastParser {
     }
 
     private String getStarId(Connection connection, String name) throws SQLException {
+        name = name.replaceAll("\"", "'");
         String sql = "SELECT id FROM stars WHERE name=\"" + name + "\" LIMIT 1";
         Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
+        try {
+            ResultSet rs = stmt.executeQuery(sql);
 
-        if (rs.next())
-            return rs.getString(1);
-        else
+            if (rs.next())
+                return rs.getString(1);
+            else
+                return null;
+        } catch (SQLException e) {
             return null;
+        }
     }
 
     private String getMovieId(Connection connection, String name) throws SQLException {
@@ -133,15 +142,15 @@ public class CastParser {
           Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", USERNAME, PASSWORD);
 
           String sql = "INSERT INTO stars_in_movies (starId, movieId) VALUES (?, ?)";
+          PreparedStatement stmt = connection.prepareStatement(sql);
 
           for (Map.Entry<String, ArrayList<String>> entry : starsInMovies.entrySet()) {
               String movieId = getMovieId(connection, entry.getKey());
               for (String star : entry.getValue()) {
                   String starId = getStarId(connection, star);
                   if (starId != null && movieId != null) {
-                      PreparedStatement stmt = connection.prepareStatement(sql);
                       stmt.setString(1, starId);
-                      stmt.setString(2, entry.getKey());
+                      stmt.setString(2, movieId);
                       stmt.execute();
                   }
               }
@@ -149,6 +158,15 @@ public class CastParser {
           connection.close();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        CastParser parser = new CastParser();
+        try {
+            parser.run();
         } catch (SQLException e) {
             e.printStackTrace();
         }
