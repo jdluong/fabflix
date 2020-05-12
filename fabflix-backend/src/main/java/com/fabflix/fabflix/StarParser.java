@@ -15,7 +15,7 @@ import java.util.List;
 
 public class StarParser {
     private String USERNAME = "mytestuser";
-    private String PASSWORD = "mypassword";
+    private String PASSWORD = "Password!123";
 
     List<Star> stars;
     Document document;
