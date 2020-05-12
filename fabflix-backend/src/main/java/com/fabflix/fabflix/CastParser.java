@@ -39,7 +39,7 @@ public class CastParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse("src/main/casts124.xml");
+            document = builder.parse("casts124.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
