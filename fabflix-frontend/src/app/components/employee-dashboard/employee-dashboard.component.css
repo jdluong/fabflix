@@ -7,7 +7,8 @@ body {
 .title {
     font-family: 'Exo 2', sans-serif;
     font-size: 3.0em;
-    margin-left: 34%;
+    /* margin-left: 34%; */
+    text-align: center;
     color: #f3f3f3;
 }
 
@@ -54,5 +55,5 @@ button {
 .searchButton {
     position: absolute;
     margin-left: 5px;
-    top: 4%;
+    top: 3.5%;
 }
