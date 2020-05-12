@@ -132,6 +132,7 @@ public interface MovieRepository {
 
     public Map<String,Object> addMovie(Map<String, Object> payload);
     public Map<String, String> addStar(Map<String, Object> payload);
+    public Map<String, Object> getTables();
 
 
 }

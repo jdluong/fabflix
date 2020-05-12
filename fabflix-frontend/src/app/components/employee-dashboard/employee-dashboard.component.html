@@ -1,31 +1,69 @@
 <div *ngIf="isAuth && userType == 'Employee'">
+    <body>
+    <button class="searchButton" [routerLink]="['/search']">Go to search</button>
+    <p class="title">Employee Dashboard</p>
+    <div class="card form-containers">
+        <h5 class="card-header">Add a star</h5>
+        <div class="card-body">
+            <form #addStarForm="ngForm" (ngSubmit)="addStar()">
+                <label for="starName">Star Name: </label>
+                <input class="col-6" type="text" id="starName" [(ngModel)]="starName" name="starName" placeholder="Star Name">
+                <label for="birthYear">Star Birth Year: </label>
+                <input class="col-1" type="number" id="birthYear" [(ngModel)]="birthYear" name="birthYear" placeholder="yyyy">
+                <button class="btn btn-secondary" type="submit">Add Star</button>
+            </form>
+            
+        </div>
+    </div>
 
-    <form #addStarForm="ngForm" (ngSubmit)="addStar()">
-        <label for="starName">Star Name</label>
-        <input type="text" id="starName" [(ngModel)]="starName" name="starName" placeholder="Star Name">
-        <label for="birthYear">Star Birth Year</label>
-        <input type="number" id="birthYear" [(ngModel)]="birthYear" name="birthYear">
-        <button class="btn btn-secondary" type="submit">Add Star</button>
-    </form>
+    <div class="card form-containers">
+        <h5 class="card-header">Add a movie</h5>
+        <div class="card-body">
+            <form #addMovieForm="ngForm" (ngSubmit)="addMovie()">
+                <label for="title">Title</label>
+                <input class="col-6" type="text" id="title" [(ngModel)]="title" name="title" placeholder="Title">
+                <label for="year">Year</label>
+                <input class="col-1" type="number" id="year" [(ngModel)]="year" name="year" placeholder="yyyy">
+                <label for="director">Director</label>
+                <input type="text" id="director" [(ngModel)]="director" name="director" placeholder="Director">
+                <label for="star">Star</label>
+                <input class="col-6" type="text" id="star" [(ngModel)]="movieStar" name="movieStar" placeholder="Star Name">
+                <label for="genre">Genre</label>
+                <input type="text" id="genre" [(ngModel)]="genre" name="genre" placeholder="Genre">
+                <button class="btn btn-secondary" type="submit">Add Movie</button>
+                <div *ngIf="invalidAddMovie">{{ invalidAddMovieMessage }}</div>
+            </form>
+        </div>  
+    </div>
 
-    <br>
-
-    <form #addMovieForm="ngForm" (ngSubmit)="addMovie()">
-        <label for="title">Title</label>
-        <input type="text" id="title" [(ngModel)]="title" name="title" placeholder="Title">
-        <label for="year">Year</label>
-        <input type="number" id="year" [(ngModel)]="year" name="year">
-        <label for="director">Director</label>
-        <input type="text" id="director" [(ngModel)]="director" name="director" placeholder="Director">
-        <label for="star">Star</label>
-        <input type="text" id="star" [(ngModel)]="movieStar" name="movieStar" placeholder="Star">
-        <label for="genre">Genre</label>
-        <input type="text" id="genre" [(ngModel)]="genre" name="genre" placeholder="Genre">
-        <button class="btn btn-secondary" type="submit">Add Movie</button>
-        <div *ngIf="invalidAddMovie">{{ invalidAddMovieMessage }}</div>
-    </form>
-
-<notifier-container></notifier-container>
+    <div class="card form-containers">
+        <h5 class="card-header bg-light">Tables</h5>
+        <div class="card-body">
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">Column Name</th>
+                        <th scope="col">Column Type</th>
+                        <th scope="col">Column Size</th>
+                        <th scope="col">Required</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let table of tables['tables']">
+                        <tr>
+                            <td colspan="4" class="table-secondary"><strong>TABLE NAME: {{ table['name'] }}</strong></td>
+                        </tr>
+                        <tr *ngFor="let column of table['columns']">
+                            <td>{{ column['name'] }}</td>
+                            <td>{{ column['type'] }}</td>
+                            <td>{{ column['size'] }}</td>
+                            <td>{{ column['required'] }}</td>
+                        </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </body>
+    <notifier-container></notifier-container>
 
 </div>
 

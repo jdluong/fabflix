@@ -14,6 +14,7 @@ export class BrowseByGenreComponent implements OnInit {
   genres: Genre[];
 
   isAuth: any;
+  userType:string;
 
   constructor(
     private route: ActivatedRoute,
@@ -25,11 +26,17 @@ export class BrowseByGenreComponent implements OnInit {
   ngOnInit() {
     this.authService.isAuth().subscribe(
       data => {
-        this.isAuth = data;
+        this.isAuth = data['isAuth'];
         if (this.isAuth == false) {
           this.router.navigate(['/redirect']);
         }
         else {
+          if (data['Employee']) {
+            this.userType = 'Employee';
+          }
+          else if (data['Customer']) {
+            this.userType = 'Customer';  
+          }
           this.movieService.getAllGenres().subscribe(
             data => {
               this.genres = data;

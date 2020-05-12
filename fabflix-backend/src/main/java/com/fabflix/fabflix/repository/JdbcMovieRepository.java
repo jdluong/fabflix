@@ -13,11 +13,15 @@ import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
+import org.springframework.jdbc.support.DatabaseMetaDataCallback;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.MetaDataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,7 +36,7 @@ public class JdbcMovieRepository implements MovieRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
+    
     @Override
     public List<Rating> findTopTwenty() {
         return jdbcTemplate.query(
@@ -912,6 +916,60 @@ public class JdbcMovieRepository implements MovieRepository {
         json.put("id", newId);
         return json;
     }
+
+    @RequestMapping(
+            value = "/api/employee/getTables",
+            method = RequestMethod.GET
+    )
+    @Override
+    public Map<String, Object> getTables() {
+        DataSource ds = jdbcTemplate.getDataSource();
+        Map<String,Object> json = new HashMap<>();
+        ArrayList<Map> tablesArray = new ArrayList<>();
+        try {
+            Connection conn = ds.getConnection();
+            DatabaseMetaData md = conn.getMetaData();
+            ResultSet tables = md.getTables(null, "moviedb", null, new String[]{"TABLE"});
+            while (tables.next()) {
+                Map<String, Object> tableJson = new HashMap<>();
+                ArrayList<Map> columnData = new ArrayList<Map>();
+                String tableName = tables.getString("TABLE_NAME");
+                if (!tableName.equals("sys_config")) {
+//                    System.out.println(tableName);
+                    tableJson.put("name", tableName);
+                    ResultSet columns = md.getColumns(null, "moviedb", tableName, null);
+                    while (columns.next()) {
+                        Map<String, Object> columnJson = new HashMap<>();
+                        String columnName = columns.getString("COLUMN_NAME");
+//                        System.out.println("--- "+columnName);
+                        columnJson.put("name", columnName);
+                        String typeName = columns.getString("TYPE_NAME");
+                        columnJson.put("type", typeName);
+                        String columnSize = columns.getString("COLUMN_SIZE");
+                        columnJson.put("size", columnSize);
+                        String isNullable = columns.getString("IS_NULLABLE");
+                        if (isNullable.equals("YES")) {
+                            columnJson.put("required", "NO");
+                        } else {
+                            columnJson.put("required", "YES");
+                        }
+                        columnData.add(columnJson);
+                    }
+                    columns.close();
+                    tableJson.put("columns", columnData);
+                    tablesArray.add(tableJson);
+                }
+            }
+            tables.close();
+            conn.close();
+        }
+        catch (SQLException e) {
+            System.out.println(e);
+        }
+        json.put("tables", tablesArray);
+        return json;
+    }
+
 }
 
 // XML Parsing Functions
