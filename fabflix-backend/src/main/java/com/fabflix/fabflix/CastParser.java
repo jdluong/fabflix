@@ -115,15 +115,18 @@ public class CastParser {
         Statement stmt = connection.createStatement();
         try {
             ResultSet rs = stmt.executeQuery(sql);
-            stmt.close();
 
             if (rs.next()) {
                 String id = rs.getString(1);
                 rs.close();
+                stmt.close();
                 return id;
             }
-            else
+            else {
+                rs.close();
+                stmt.close();
                 return null;
+            }
 
         } catch (SQLException e) {
             return null;
@@ -134,14 +137,16 @@ public class CastParser {
         String sql = "SELECT id FROM movies WHERE title=\"" + name + "\" LIMIT 1";
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
-        stmt.close();
 
         if (rs.next()) {
             String id = rs.getString(1);
+            stmt.close();
             rs.close();
             return id;
         }
-        
+
+        stmt.close();
+        rs.close();
         return null;
     }
 

@@ -293,10 +293,16 @@ public class MovieParser {
         stmt.execute(generateIdSql);
 
         ResultSet rs = stmt.getResultSet();
-        if (rs.next())
-            return rs.getString(1);
+
+        if (rs.next()) {
+            String id = rs.getString(1);
+            rs.close();
+            stmt.close();
+            return id;
+        }
 
         rs.close();
+        stmt.close();
         return null;
     }
 
@@ -320,9 +326,11 @@ public class MovieParser {
                 stmt.execute();
 
                 for (String genre : entry.getValue()) {
-                    stmt = connection.prepareStatement(updateSql);
+                    PreparedStatement updateStmt = connection.prepareStatement(updateSql);
                     stmt.setString(1, genre);
                     stmt.setString(2, movieId);
+                    updateStmt.execute();
+                    updateStmt.close();
                 }
 
                 stmt.close();
