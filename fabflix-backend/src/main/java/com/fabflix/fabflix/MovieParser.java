@@ -318,22 +318,25 @@ public class MovieParser {
             for (Map.Entry<Movie, List<String>> entry : movies.entrySet()) {
                 // add the movie to the db
                 String movieId = generateMovieId(connection);
-                PreparedStatement stmt = connection.prepareStatement(movieSql);
-                stmt.setString(1, movieId);
-                stmt.setString(2, entry.getKey().getTitle());
-                stmt.setInt(3, entry.getKey().getYear());
-                stmt.setString(4, entry.getKey().getDirector());
-                stmt.execute();
+                
+                if (movieId != null) {
+                    PreparedStatement stmt = connection.prepareStatement(movieSql);
+                    stmt.setString(1, movieId);
+                    stmt.setString(2, entry.getKey().getTitle());
+                    stmt.setInt(3, entry.getKey().getYear());
+                    stmt.setString(4, entry.getKey().getDirector());
+                    stmt.execute();
 
-                for (String genre : entry.getValue()) {
-                    PreparedStatement updateStmt = connection.prepareStatement(updateSql);
-                    stmt.setString(1, genre);
-                    stmt.setString(2, movieId);
-                    updateStmt.execute();
-                    updateStmt.close();
+                    for (String genre : entry.getValue()) {
+                        PreparedStatement updateStmt = connection.prepareStatement(updateSql);
+                        stmt.setString(1, genre);
+                        stmt.setString(2, movieId);
+                        updateStmt.execute();
+                        updateStmt.close();
+                    }
+
+                    stmt.close();
                 }
-
-                stmt.close();
             }
 
             connection.close();
