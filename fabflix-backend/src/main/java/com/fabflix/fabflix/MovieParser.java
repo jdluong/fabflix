@@ -258,7 +258,7 @@ public class MovieParser {
             System.out.println(genre);
     }
 
-    private void addNewGenres(Connection connection) throws SQLException, ClassNotFoundException {
+    private void addNewGenres(Connection connection) throws SQLException {
         String querySql = "SELECT name FROM genres";
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(querySql);
@@ -281,6 +281,9 @@ public class MovieParser {
             String addSql = "INSERT INTO genres (name) VALUES (\"" + g + "\")";
             stmt.execute(addSql);
         }
+
+        rs.close();
+        stmt.close();
     }
 
     private String generateMovieId(Connection connection) throws SQLException {
@@ -293,6 +296,7 @@ public class MovieParser {
         if (rs.next())
             return rs.getString(1);
 
+        rs.close();
         return null;
     }
 
@@ -320,6 +324,8 @@ public class MovieParser {
                     stmt.setString(1, genre);
                     stmt.setString(2, movieId);
                 }
+
+                stmt.close();
             }
 
             connection.close();

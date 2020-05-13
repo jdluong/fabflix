@@ -118,10 +118,13 @@ public class StarParser {
 
         ResultSet rs = stmt.getResultSet();
 
-        if (rs.next())
-            return rs.getString(1);
-
-        return null;
+        if (rs.next()) {
+           String id = rs.getString(1);
+           rs.close();
+           return id;
+        }
+        else
+            return null;
     }
 
     private void addToDatabase() {
@@ -130,10 +133,10 @@ public class StarParser {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", USERNAME, PASSWORD);
 
             String sql = "INSERT INTO stars VALUES (?, ?, ?)";
-            PreparedStatement stmt = connection.prepareStatement(sql);
 
             for (Star s : stars) {
                 String starId = generateStarId(connection);
+                PreparedStatement stmt = connection.prepareStatement(sql);
                 stmt.setString(1, starId);
                 stmt.setString(2, s.getName());
 
@@ -143,6 +146,7 @@ public class StarParser {
                     stmt.setNull(3, java.sql.Types.INTEGER);
 
                 stmt.execute();
+                stmt.close();
             }
             connection.close();
         } catch (ClassNotFoundException e) {
