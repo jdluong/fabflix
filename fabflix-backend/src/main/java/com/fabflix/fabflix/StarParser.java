@@ -1,6 +1,5 @@
 package com.fabflix.fabflix;
 
-import com.fabflix.fabflix.Star;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -16,7 +15,7 @@ import java.util.List;
 
 public class StarParser {
     private String USERNAME = "mytestuser";
-    private String PASSWORD = "mypassword";
+    private String PASSWORD = "Password!123";
 
     List<Star> stars;
     Document document;
@@ -37,7 +36,7 @@ public class StarParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse("actors63.xml");
+            document = builder.parse("classes/actors63.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -88,6 +87,9 @@ public class StarParser {
                 if (e.hasChildNodes())
                     val = e.getFirstChild().getNodeValue();
             }
+
+            if (val == null && !tag.equals("dob"))
+                System.out.println("Inconsistent Data Found: (Name) = " + e.getNodeName() + ", (Value) = " + e.getNodeValue());
         }
 
         return val;
@@ -128,10 +130,10 @@ public class StarParser {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", USERNAME, PASSWORD);
 
             String sql = "INSERT INTO stars VALUES (?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(sql);
 
             for (Star s : stars) {
                 String starId = generateStarId(connection);
-                PreparedStatement stmt = connection.prepareStatement(sql);
                 stmt.setString(1, starId);
                 stmt.setString(2, s.getName());
 
@@ -148,5 +150,10 @@ public class StarParser {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        StarParser parser = new StarParser();
+        parser.run();
     }
 }

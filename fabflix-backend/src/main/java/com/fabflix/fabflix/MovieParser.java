@@ -1,6 +1,5 @@
 package com.fabflix.fabflix;
 
-import com.fabflix.fabflix.Movie;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -18,7 +17,7 @@ import java.util.Map;
 
 public class MovieParser {
     private String USERNAME = "mytestuser";
-    private String PASSWORD = "mypassword";
+    private String PASSWORD = "Password!123";
 
     Map<Movie, List<String>> movies;
     List<String> genres;
@@ -41,7 +40,8 @@ public class MovieParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse("mains243.xml");
+//            document = builder.parse("mains243.xml");
+            document = builder.parse("classes/mains243.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -118,6 +118,9 @@ public class MovieParser {
                 if (e.hasChildNodes())
                     val = e.getFirstChild().getNodeValue();
             }
+
+            if (val == null)
+                System.out.println("Inconsistent Data Found: (Name) = " + e.getNodeName() + ", (Value) = " + e.getNodeValue());
         }
 
         return val;
@@ -140,6 +143,8 @@ public class MovieParser {
 
                     if (val != null)
                         values.add(val);
+                    else
+                        System.out.println("Inconsistent Data Found: (Name) = " + e.getNodeName() + ", (Value) = " + e.getNodeValue());
                 }
             }
         }
@@ -319,6 +324,17 @@ public class MovieParser {
 
             connection.close();
         } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        MovieParser parser = new MovieParser();
+        try {
+            parser.run();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
