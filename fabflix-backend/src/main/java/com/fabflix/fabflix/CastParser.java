@@ -136,10 +136,12 @@ public class CastParser {
         ResultSet rs = stmt.executeQuery(sql);
         stmt.close();
 
-        if (rs.next())
-            return rs.getString(1);
-
-        rs.close();
+        if (rs.next()) {
+            String id = rs.getString(1);
+            rs.close();
+            return id;
+        }
+        
         return null;
     }
 
