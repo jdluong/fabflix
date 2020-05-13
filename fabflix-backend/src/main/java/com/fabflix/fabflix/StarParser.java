@@ -121,10 +121,14 @@ public class StarParser {
         if (rs.next()) {
            String id = rs.getString(1);
            rs.close();
+           stmt.close();
            return id;
         }
-        else
+        else {
+            rs.close();
+            stmt.close();
             return null;
+        }
     }
 
     private void addToDatabase() {
