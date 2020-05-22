@@ -3,6 +3,7 @@ import { SearchService } from 'src/app/services/search.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { AuthenticationService } from 'src/app/services/auth.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-main-search-browse',
@@ -10,6 +11,10 @@ import { AuthenticationService } from 'src/app/services/auth.service';
   styleUrls: ['./main-search-browse.component.css']
 })
 export class MainSearchBrowseComponent implements OnInit {
+
+  by:string;
+
+  fullTextTitle:string;
 
   title:string;
   year:number;
@@ -42,14 +47,6 @@ export class MainSearchBrowseComponent implements OnInit {
           }
         }
       });
-  }
-
-  notNumber() {
-    if (isNaN(Number(this.year))) {
-      console.log(Number(this.year));
-      return false;
-    }
-    return true;
   }
 
   onSubmit() {

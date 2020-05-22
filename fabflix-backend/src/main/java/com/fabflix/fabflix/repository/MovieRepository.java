@@ -53,16 +53,19 @@ public interface MovieRepository {
     // ****************
     // SEARCH FUNCTIONS
 
+    // helper function to build sort and/or pagination sql
+    String buildSortAndPagination(String sql, String sortBy1, String order1, String sortBy2, String order2);
+
     // endpoint that searches
     List<MovieWithDetails> getMoviesSearch(
-            String title, Integer year, String director, String star, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2
+            String by, String title, Integer year, String director, String star, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2
     ) throws SQLException;
 
     // search for getMovies
     List<MovieWithDetails> getMoviesBySearch(PreparedStatement stmt);
 
     // get number of movies by search
-    int getNumOfMoviesBySearch(String title, Integer year, String director, String star);
+    int getNumOfMoviesBySearch(String by, String title, Integer year, String director, String star);
 
     // ****************
     // BROWSE FUNCTIONS
@@ -84,6 +87,7 @@ public interface MovieRepository {
     // get number of movies byt itle
     int getNumOfMoviesByTitle(@PathVariable String startsWith);
 
+    // ***************
     // LOGIN FUNCTIONS
     ResponseEntity<Boolean> authenticate(Map<String, String> user, HttpSession session);
 
