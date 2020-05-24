@@ -10,7 +10,7 @@
 }
 
 .user-type-button {
-  margin-left: 28%;
+  padding: 5px;
 }
 
 .form-container {
@@ -62,7 +62,7 @@ ul.list li input[type="submit"] {
   padding-top: 6px;
 }
 
-ul.list li:nth-child(1) {
+ul.list li:nth-child(2) {
   font-size: 1.5em;
 }
 

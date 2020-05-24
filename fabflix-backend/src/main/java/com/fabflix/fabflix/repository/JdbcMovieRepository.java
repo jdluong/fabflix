@@ -282,48 +282,34 @@ public class JdbcMovieRepository implements MovieRepository {
                     "ORDER BY m.id LIMIT ? OFFSET ?";
         }
         else {
+            sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+            "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") ";
             if (sortBy1.equals("title")) {
                 if (order1.equals("asc") && order2.equals("asc")) {
-                    sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-                    "ORDER BY title asc, rating asc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("asc") && order2.equals("desc")) {
-                    sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-                    "ORDER BY title asc, rating desc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("desc") && order2.equals("asc")) {
-                    sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-                    "ORDER BY title desc, rating asc LIMIT ? OFFSET  ?";
+                    sql  += "ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("desc") && order2.equals("desc")) {
-                    sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-                    "ORDER BY title desc, rating desc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
                 }
             }
             else if (sortBy1.equals("rating")) {
                 if (order1.equals("asc") && order2.equals("asc")) {
-                    sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-                    "ORDER BY rating asc, title asc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("asc") && order2.equals("desc")) {
-                    sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-                    "ORDER BY rating asc, title desc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("desc") && order2.equals("asc")) {
-                    sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-                    "ORDER BY rating desc, title asc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("desc") && order2.equals("desc")) {
-                    sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-                    "ORDER BY rating desc, title desc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
                 }
             }
         }
@@ -474,48 +460,34 @@ public class JdbcMovieRepository implements MovieRepository {
                     "AND (m.id = gim.movieId) ORDER BY m.id LIMIT ? OFFSET ?";
         }
         else {
+            sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) ";
             if (sortBy1.equals("title")) {
                 if (order1.equals("asc") && order2.equals("asc")) {
-                    sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) " +
-                    "ORDER BY title asc, rating asc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("asc") && order2.equals("desc")) {
-                    sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) " +
-                    "ORDER BY title asc, rating desc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("desc") && order2.equals("asc")) {
-                    sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) " +
-                    "ORDER BY title desc, rating asc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("desc") && order2.equals("desc")) {
-                    sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) " +
-                    "ORDER BY title desc, rating desc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
                 }
             }
             else if (sortBy1.equals("rating")) {
                 if (order1.equals("asc") && order2.equals("asc")) {
-                    sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) " +
-                    "ORDER BY rating asc, title asc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("asc") && order2.equals("desc")) {
-                    sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) " +
-                    "ORDER BY rating asc, title desc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("desc") && order2.equals("asc")) {
-                    sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) " +
-                    "ORDER BY rating desc, title asc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
                 }
                 else if (order1.equals("desc") && order2.equals("desc")) {
-                    sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) " +
-                    "ORDER BY rating desc, title desc LIMIT ? OFFSET  ?";
+                    sql += "ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
                 }
             }
         }
@@ -550,99 +522,71 @@ public class JdbcMovieRepository implements MovieRepository {
             }
             else {
                 sql = "SELECT id, title, year, director FROM movies WHERE title LIKE ? " +
-                        "ORDER BY id LIMIT " + perPage + " OFFSET " + (page - 1) * perPage;
+                        "ORDER BY id LIMIT ? OFFSET ?";
             }
         }
         else {
             if (startsWith.equals("*")) {
+                sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+                        "WHERE (m.id = r.movieId) AND title NOT regexp ? ";
                 if (sortBy1.equals("title")) {
                     if (order1.equals("asc") && order2.equals("asc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title NOT regexp ? " +
-                        "ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("asc") && order2.equals("desc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title NOT regexp ? " +
-                        "ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("desc") && order2.equals("asc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title NOT regexp ? " +
-                        "ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("desc") && order2.equals("desc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title NOT regexp ? " +
-                        "ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
                     }
                 }
                 else if (sortBy1.equals("rating")) {
                     if (order1.equals("asc") && order2.equals("asc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title NOT regexp ? " +
-                        "ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("asc") && order2.equals("desc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title NOT regexp ? " +
-                        "ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("desc") && order2.equals("asc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title NOT regexp ? " +
-                        "ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("desc") && order2.equals("desc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title NOT regexp ? " +
-                        "ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
                     }
                 }
             }
             else {
+                sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+                        "WHERE (m.id = r.movieId) AND title LIKE ? ";
                 if (sortBy1.equals("title")) {
                     if (order1.equals("asc") && order2.equals("asc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title LIKE ? " +
-                        "ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("asc") && order2.equals("desc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title LIKE ? " +
-                        "ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("desc") && order2.equals("asc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title LIKE ? " +
-                        "ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("desc") && order2.equals("desc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title LIKE ? " +
-                        "ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
                     }
                 }
                 else if (sortBy1.equals("rating")) {
                     if (order1.equals("asc") && order2.equals("asc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title LIKE ? " +
-                        "ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("asc") && order2.equals("desc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title LIKE ? " +
-                        "ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("desc") && order2.equals("asc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title LIKE ? " +
-                        "ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
                     }
                     else if (order1.equals("desc") && order2.equals("desc")) {
-                        sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title LIKE ? " +
-                        "ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
+                        sql += "ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
                     }
                 }
             }
@@ -654,7 +598,7 @@ public class JdbcMovieRepository implements MovieRepository {
             if (startsWith.equals("*"))
                 stmt.setString(1, "^[[:alnum:]]");
             else
-                stmt.setString(1, startsWith);
+                stmt.setString(1, startsWith+"%");
             stmt.setInt(2, perPage);
             stmt.setInt(3, (page-1)*perPage);
             return stmt;
@@ -703,9 +647,19 @@ public class JdbcMovieRepository implements MovieRepository {
                     Integer.class);
         }
         else {
-            return  jdbcTemplate.queryForObject(
-                    "SELECT COUNT(id) FROM movies WHERE title LIKE  \"" + startsWith + "%\"",
-                    Integer.class);
+            String sql = "SELECT COUNT(id) FROM movies WHERE title LIKE ?";
+
+            return jdbcTemplate.query(connection -> {
+                PreparedStatement stmt = connection.prepareStatement(sql);
+                stmt.setString(1, startsWith+"%");
+                return stmt;
+            }, rs -> {
+                if (rs.next())
+                    return rs.getInt(1);
+
+                return null;
+            });
+
         }
     }
 

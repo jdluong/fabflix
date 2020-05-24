@@ -20,15 +20,16 @@
         <h5 class="card-header">Add a movie</h5>
         <div class="card-body">
             <form #addMovieForm="ngForm" (ngSubmit)="addMovie()">
-                <label for="title">Title</label>
+                <label for="title">Title: </label>
                 <input class="col-6" type="text" id="title" [(ngModel)]="title" name="title" placeholder="Title">
-                <label for="year">Year</label>
+                <label for="year">Year: </label>
                 <input class="col-1" type="number" id="year" [(ngModel)]="year" name="year" placeholder="yyyy">
-                <label for="director">Director</label>
+                <label for="director">Director: </label>
                 <input type="text" id="director" [(ngModel)]="director" name="director" placeholder="Director">
-                <label for="star">Star</label>
+                <br>
+                <label for="star">Star: </label>
                 <input class="col-6" type="text" id="star" [(ngModel)]="movieStar" name="movieStar" placeholder="Star Name">
-                <label for="genre">Genre</label>
+                <label for="genre">Genre: </label>
                 <input type="text" id="genre" [(ngModel)]="genre" name="genre" placeholder="Genre">
                 <button class="btn btn-secondary" type="submit">Add Movie</button>
                 <div *ngIf="invalidAddMovie">{{ invalidAddMovieMessage }}</div>
@@ -66,4 +67,3 @@
     <notifier-container></notifier-container>
 
 </div>
-

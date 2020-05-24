@@ -133,11 +133,9 @@ public interface MovieRepository {
     // DASHBOARD
 
     public Map<String,Object> addMovie(Map<String, Object> payload);
-
-    public Map<String, Object> getTables();
-
     public Map<String, String> addStar(Map<String, Object> payload);
-
-    // ********** APP FUNCTIONS
+    public Map<String, Object> getTables();
+  
+  // ********** APP FUNCTIONS
     ResponseEntity<String> appAuthenticate(Map<String, String> user, HttpSession session);
 }

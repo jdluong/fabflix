@@ -17,7 +17,7 @@
           <a [routerLink]="" (click)="navigateToCart()"><button class="button btn-light checkout">View Cart</button></a>
         </span>
         <span *ngIf="userType == 'Employee'">
-            <a [routerLink]="['/_dashboard']"><button class="viewCart">Dashboard</button></a>
+            <a [routerLink]="['/_dashboard']"><button class="button btn-light checkout">Dashboard</button></a>
         </span>
 
         <select class="selectpicker" title="Sort by..." (change)="selectSort($event.target.value)">
