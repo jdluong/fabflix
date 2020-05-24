@@ -2,9 +2,11 @@ package com.fabflix.fabflix.repository;
 
 import com.fabflix.fabflix.*;
 import com.fabflix.fabflix.repository.MovieRepository;
+import com.google.gson.JsonObject;
 import org.apache.coyote.Response;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-//@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
 //@CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
@@ -1190,6 +1192,57 @@ public class JdbcMovieRepository implements MovieRepository {
         return json;
     }
 
+    // APP FUNCTIONS
+    @RequestMapping(
+            value = "api/app/auth",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Override
+    public @ResponseBody ResponseEntity<String> appAuthenticate(@RequestParam Map<String, String> user, HttpSession session) {
+        String email = user.get("username");
+        String password = user.get("password");
+        String userType = "customer";
+
+        // String sql = "SELECT EXISTS(SELECT email FROM customers WHERE email = ? AND password = ?)";
+        String sql = "SELECT password FROM "+ userType.toLowerCase() + "s WHERE email = ?";
+
+        String encryptedPassword = jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, email);
+            return stmt;
+        }, resultSet -> {
+            if (resultSet.next()) {
+                return resultSet.getString(1);
+            }
+            else {
+                return "";
+            }
+        });
+
+        boolean userAuthenticated = false;
+
+        if (!encryptedPassword.equals(""))
+            userAuthenticated = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
+
+        System.out.println(" auth: " + userAuthenticated);
+
+        JsonObject response = new JsonObject();
+        session.setAttribute("isAuth", userAuthenticated);
+
+        if (userAuthenticated) {
+            response.addProperty("status", "success");
+            response.addProperty("message", "success");
+        }
+        else {
+            response.addProperty("status", "fail");
+        }
+
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.set("Content-Type", "application/json");
+
+        return ResponseEntity.ok().headers(responseHeaders).body(response.toString());
+    }
 }
 
 
