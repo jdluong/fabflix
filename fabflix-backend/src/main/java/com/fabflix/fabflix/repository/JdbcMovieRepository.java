@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
+// @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
 //@CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
@@ -205,20 +205,10 @@ public class JdbcMovieRepository implements MovieRepository {
         }, rs -> {
             if (rs.next())
                 return new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear"));
-
             return null;
         });
     }
 
-//    @Override
-//    public Customer getCustomer(@PathVariable String username, @PathVariable String password) {
-//            return jdbcTemplate.queryForObject(
-//                    "SELECT id, firstName, lastName, ccId, address, email, password FROM customers WHERE (email = \""
-//                    + username + "\" " + "AND password = \"" + password + "\")",
-//                    (rs, rowNum) ->
-//                        new Customer(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("ccId"), rs.getString("address"),
-//                                     rs.getString("email"), rs.getString("password")));
-//    }
 
     @RequestMapping (
             value = "api/getAllGenres",
@@ -267,7 +257,31 @@ public class JdbcMovieRepository implements MovieRepository {
         return sql;
     }
 
-    @RequestMapping (
+    @RequestMapping(
+        value = "api/search/suggestions",
+        method = RequestMethod.GET
+    )
+    @Override
+    public List<String> getSuggestions(@RequestParam String title) {
+        
+        String sql = "SELECT m.title FROM movies m " +
+        "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE) " +
+        "LIMIT 10";
+
+        return jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            String[] tokens = title.split(" ");
+            String againstClause = "";
+            for (String token: tokens) {
+                againstClause += ("+"+token+"*");
+            }
+            stmt.setString(1, againstClause);
+            return stmt;
+            }, (rs, i) ->  rs.getString("title")
+        );
+    }
+
+    @RequestMapping(
             value = "api/search",
             method = RequestMethod.GET
     )
@@ -315,15 +329,15 @@ public class JdbcMovieRepository implements MovieRepository {
                         "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ")";
             }
         }
-        else if (by.equals("full-text")) {
+        else if (by.equals("fulltext")) {
             ++paramsCount;
             if (sortBy1 == null) {
-                sql = "SELECT id, title, year, director FROM movies" +
-                        "WHERE MATCH (title) AGAINST (? IN BOOLEAN MODE)";
+                sql = "SELECT m.id, m.title, m.year, m.director FROM movies m " +
+                        "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)";
             }
             else {
-                sql = "SELECT id, title, year, director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId)" +
-                        "WHERE MATCH (title) AGAINST (? IN BOOLEAN MODE)";
+                sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+                        "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)";
             }
         }
         
@@ -334,56 +348,55 @@ public class JdbcMovieRepository implements MovieRepository {
             sql = this.buildSortAndPagination(sql, sortBy1, order1, sortBy2, order2);
         }
 
-        Connection conn = jdbcTemplate.getDataSource().getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        
-        if (by.equals("advanced")) {
-            boolean titleDone = false;
-            boolean yearDone = false;
-            boolean directorDone = false;
-            boolean starDone = false;
-            for (int i = 1; i <= paramsCount; ++i) {
-                if (title != null && !titleDone) {
-                    stmt.setString(i, '%'+title+'%');
-                }
-                else if (year != null && !yearDone) {
-                    stmt.setInt(i, year);
-                }
-                else if (director != null && !directorDone) {
-                    stmt.setString(i, '%'+director+'%');
-                }
-                else if (star != null && !starDone) {
-                    stmt.setString(i, '%'+star+'%');
+        String finalSql = sql;
+        int finalParamsCount = paramsCount;
+        List<Movie> movies = jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(finalSql);
+            if (by.equals("advanced")) {
+                boolean titleDone = false;
+                boolean yearDone = false;
+                boolean directorDone = false;
+                boolean starDone = false;
+                for (int i = 1; i <= finalParamsCount; ++i) {
+                    if (title != null && !titleDone) {
+                        stmt.setString(i, '%'+title+'%');
+                    }
+                    else if (year != null && !yearDone) {
+                        stmt.setInt(i, year);
+                    }
+                    else if (director != null && !directorDone) {
+                        stmt.setString(i, '%'+director+'%');
+                    }
+                    else if (star != null && !starDone) {
+                        stmt.setString(i, '%'+star+'%');
+                    }
                 }
             }
-        }
-        else if (by.equals("full-text")) {
-            String[] tokens = title.split(" ");
-            String againstClause = "";
-            for (String token: tokens) {
-                againstClause += ("+"+token+"* ");
+            else if (by.equals("fulltext")) {
+                String[] tokens = title.split(" ");
+                String againstClause = "";
+                for (String token: tokens) {
+                    againstClause += ("+"+token+"*");
+                }
+                stmt.setString(1, againstClause);
             }
-            stmt.setString(1, againstClause);
-        }
-        stmt.setInt(paramsCount+1, perPage);
-        stmt.setInt(paramsCount+2, (page-1)*perPage);
+            stmt.setInt(finalParamsCount +1, perPage);
+            stmt.setInt(finalParamsCount +2, (page-1)*perPage);
+            return stmt;
+            }, (rs, i) ->  new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director"))
+        );
 
-        return getMoviesBySearch(stmt);
+        return getMoviesBySearch(movies);
     }
 
     @Override
-    public List<MovieWithDetails> getMoviesBySearch(PreparedStatement stmt) {
-        List<Movie> movies = new ArrayList<>();
-        movies = jdbcTemplate.query(connection -> stmt,
-                (rs, i) -> new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
-
+    public List<MovieWithDetails> getMoviesBySearch(List<Movie> movies) {
         List<MovieWithDetails> moviesWithDetails = new ArrayList<>();
-
         for (Movie m: movies) {
             MovieWithDetails movieWithDetails = new MovieWithDetails(m, get3GenresByMovieId(m.getId()), get3StarsByMovieId(m.getId()), getRatingById(m.getId()));
             moviesWithDetails.add(movieWithDetails);
         }
-
+        
         return moviesWithDetails;
     }
 
@@ -423,22 +436,22 @@ public class JdbcMovieRepository implements MovieRepository {
             sql = "SELECT COUNT(DISTINCT m.id, m.title, m.year, m.director) FROM movies m, stars_in_movies sim, stars s " +
                     "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ")";
         }
-        else if (by.equals("full-text")) {
+        else if (by.equals("fulltext")) {
             ++paramsCount;
-            sql = "SELECT COUNT(id) FROM movies" +
-                    "WHERE MATCH (title) AGAINST (? IN BOOLEAN MODE)";
+            sql = "SELECT COUNT(m.id) FROM movies m " +
+                    "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)";
         }
 
-        try {
-            Connection conn = jdbcTemplate.getDataSource().getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
-
+        String finalSql = sql;
+        int finalParamsCount = paramsCount;
+        return jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(finalSql);
             if (by.equals("advanced")) {
                 boolean titleDone = false;
                 boolean yearDone = false;
                 boolean directorDone = false;
                 boolean starDone = false;
-                for (int i = 1; i <= paramsCount; ++i) {
+                for (int i = 1; i <= finalParamsCount; ++i) {
                     if (title != null && !titleDone) {
                         stmt.setString(i, '%'+title+'%');
                     }
@@ -453,25 +466,22 @@ public class JdbcMovieRepository implements MovieRepository {
                     }
                 }
             }
-            else if (by.equals("full-text")) {
+            else if (by.equals("fulltext")) {
                 String[] tokens = title.split(" ");
                 String againstClause = "";
                 for (String token: tokens) {
-                    againstClause += ("+"+token+"* ");
+                    againstClause += ("+"+token+"*");
                 }
                 stmt.setString(1, againstClause);
             }
-            
-            return jdbcTemplate.query(connection -> stmt,
-            rs -> {
-                rs.next();
-                return rs.getInt(1);
-            });
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return 0;
+            return stmt;
+            }, rs -> {
+                if (rs.next())
+                    return rs.getInt(1);
+                return null;
+            }
+        );
+
     }
 
 
@@ -503,7 +513,6 @@ public class JdbcMovieRepository implements MovieRepository {
 
     @Override
     public List<MovieWithDetails> getMoviesByGenre(int id, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2) {
-        List<Movie> movies = new ArrayList<Movie>();
         String sql = "";
         if (sortBy1 == null) {
             sql = "SELECT m.id, m.title, m.year, m.director FROM movies m, genres_in_movies gim WHERE (gim.genreId = ?) " +
@@ -516,7 +525,7 @@ public class JdbcMovieRepository implements MovieRepository {
         }
 
         String finalSql = sql;
-        movies = jdbcTemplate.query(connection -> {
+        List<Movie> movies = jdbcTemplate.query(connection -> {
             PreparedStatement stmt = connection.prepareStatement(finalSql);
             stmt.setInt(1, id);
             stmt.setInt(2, perPage);

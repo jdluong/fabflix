@@ -15,6 +15,7 @@ import { BrowseByTitleComponent } from './components/browse-by-title/browse-by-t
 import { LoginComponent } from './components/login/login.component';
 
 import { FormsModule } from '@angular/forms';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MainSearchBrowseComponent } from './components/main-search-browse/main-search-browse.component';
 import { CartComponent } from './components/shopping/cart/cart.component';
 import { CheckoutComponent } from './components/shopping/checkout/checkout.component';
@@ -90,7 +91,11 @@ const customNotifierOptions: NotifierOptions = {
     AppRoutingModule,
     FormsModule,
     FontAwesomeModule,
-    NotifierModule.withConfig((customNotifierOptions))
+    NotifierModule.withConfig((customNotifierOptions)),
+    MatAutocompleteModule
+  ],
+  exports: [
+    // MatAutocompleteModule
   ],
   providers: [
     {provide: LocationStrategy,

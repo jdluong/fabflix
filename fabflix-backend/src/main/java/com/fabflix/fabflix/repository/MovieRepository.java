@@ -1,5 +1,6 @@
 package com.fabflix.fabflix.repository;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -56,13 +57,16 @@ public interface MovieRepository {
     // helper function to build sort and/or pagination sql
     String buildSortAndPagination(String sql, String sortBy1, String order1, String sortBy2, String order2);
 
+    // endpoint to get autocomplete suggestions
+    List<String> getSuggestions(String title);
+
     // endpoint that searches
     List<MovieWithDetails> getMoviesSearch(
             String by, String title, Integer year, String director, String star, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2
     ) throws SQLException;
 
     // search for getMovies
-    List<MovieWithDetails> getMoviesBySearch(PreparedStatement stmt);
+    List<MovieWithDetails> getMoviesBySearch(List<Movie> movies);
 
     // get number of movies by search
     int getNumOfMoviesBySearch(String by, String title, Integer year, String director, String star);

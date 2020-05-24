@@ -15,6 +15,10 @@ export class SearchService {
 
   constructor(private http: HttpClient) { }
 
+  public getSuggestions(params:any):Observable<String[]> {
+    return this.http.get<String[]>(this.url+"/suggestions", {params: params});
+  }
+  
   public search(params:any):Observable<MovieWithDetails[]> {
     return this.http.get<MovieWithDetails[]>(this.url, {params:params});
   }
