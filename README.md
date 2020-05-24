@@ -72,7 +72,9 @@ We implemented the substring matching using the ".... LIKE %substring%" method.
 ## PROJECT 3
 
 ## VIDEO
-Link:
+Note: The parser successfully finished, but afterwards, near the end of the demo our database connection was lost and our site wouldn't load results where it previously did as seen in the video. We apologize for this and are uploading whatever is relevant.
+
+Link: https://drive.google.com/open?id=1g8g-FTEfmuYspeVtGtnn8RDDmDMsq7yi
 
 ## DEPLOYMENT
 1) Prepare database and tables

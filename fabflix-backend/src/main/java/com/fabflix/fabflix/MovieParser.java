@@ -16,8 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 public class MovieParser {
-    private String USERNAME = "mytestuser";
-    private String PASSWORD = "Password!123";
+//    private String USERNAME = "mytestuser";
+//    private String PASSWORD = "Password!123";
+
+    private String USERNAME = "root";
+    private String PASSWORD = "password";
 
     Map<Movie, List<String>> movies;
     List<String> genres;
@@ -40,8 +43,8 @@ public class MovieParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-//            document = builder.parse("mains243.xml");
-            document = builder.parse("classes/mains243.xml");
+            document = builder.parse("mains243.xml");
+//            document = builder.parse("classes/mains243.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
@@ -258,7 +261,7 @@ public class MovieParser {
             System.out.println(genre);
     }
 
-    private void addNewGenres(Connection connection) throws SQLException, ClassNotFoundException {
+    private void addNewGenres(Connection connection) throws SQLException {
         String querySql = "SELECT name FROM genres";
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(querySql);
@@ -281,6 +284,9 @@ public class MovieParser {
             String addSql = "INSERT INTO genres (name) VALUES (\"" + g + "\")";
             stmt.execute(addSql);
         }
+
+        rs.close();
+        stmt.close();
     }
 
     private String generateMovieId(Connection connection) throws SQLException {
@@ -290,9 +296,16 @@ public class MovieParser {
         stmt.execute(generateIdSql);
 
         ResultSet rs = stmt.getResultSet();
-        if (rs.next())
-            return rs.getString(1);
 
+        if (rs.next()) {
+            String id = rs.getString(1);
+            rs.close();
+            stmt.close();
+            return id;
+        }
+
+        rs.close();
+        stmt.close();
         return null;
     }
 
@@ -308,17 +321,24 @@ public class MovieParser {
             for (Map.Entry<Movie, List<String>> entry : movies.entrySet()) {
                 // add the movie to the db
                 String movieId = generateMovieId(connection);
-                PreparedStatement stmt = connection.prepareStatement(movieSql);
-                stmt.setString(1, movieId);
-                stmt.setString(2, entry.getKey().getTitle());
-                stmt.setInt(3, entry.getKey().getYear());
-                stmt.setString(4, entry.getKey().getDirector());
-                stmt.execute();
+                
+                if (movieId != null) {
+                    PreparedStatement stmt = connection.prepareStatement(movieSql);
+                    stmt.setString(1, movieId);
+                    stmt.setString(2, entry.getKey().getTitle());
+                    stmt.setInt(3, entry.getKey().getYear());
+                    stmt.setString(4, entry.getKey().getDirector());
+                    stmt.execute();
 
-                for (String genre : entry.getValue()) {
-                    stmt = connection.prepareStatement(updateSql);
-                    stmt.setString(1, genre);
-                    stmt.setString(2, movieId);
+                    for (String genre : entry.getValue()) {
+                        PreparedStatement updateStmt = connection.prepareStatement(updateSql);
+                        updateStmt.setString(1, genre);
+                        updateStmt.setString(2, movieId);
+                        updateStmt.execute();
+                        updateStmt.close();
+                    }
+
+                    stmt.close();
                 }
             }
 

@@ -116,10 +116,18 @@ public class CastParser {
         try {
             ResultSet rs = stmt.executeQuery(sql);
 
-            if (rs.next())
-                return rs.getString(1);
-            else
+            if (rs.next()) {
+                String id = rs.getString(1);
+                rs.close();
+                stmt.close();
+                return id;
+            }
+            else {
+                rs.close();
+                stmt.close();
                 return null;
+            }
+
         } catch (SQLException e) {
             return null;
         }
@@ -130,10 +138,16 @@ public class CastParser {
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery(sql);
 
-        if (rs.next())
-            return rs.getString(1);
-        else
-            return null;
+        if (rs.next()) {
+            String id = rs.getString(1);
+            stmt.close();
+            rs.close();
+            return id;
+        }
+
+        stmt.close();
+        rs.close();
+        return null;
     }
 
     private void addToDatabase() throws SQLException {
@@ -142,16 +156,17 @@ public class CastParser {
           Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", USERNAME, PASSWORD);
 
           String sql = "INSERT INTO stars_in_movies (starId, movieId) VALUES (?, ?)";
-          PreparedStatement stmt = connection.prepareStatement(sql);
 
           for (Map.Entry<String, ArrayList<String>> entry : starsInMovies.entrySet()) {
               String movieId = getMovieId(connection, entry.getKey());
               for (String star : entry.getValue()) {
                   String starId = getStarId(connection, star);
                   if (starId != null && movieId != null) {
+                      PreparedStatement stmt = connection.prepareStatement(sql);
                       stmt.setString(1, starId);
                       stmt.setString(2, movieId);
                       stmt.execute();
+                      stmt.close();
                   }
               }
           }
