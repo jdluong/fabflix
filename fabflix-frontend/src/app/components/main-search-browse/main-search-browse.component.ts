@@ -17,7 +17,7 @@ export class MainSearchBrowseComponent implements OnInit {
 
   advancedSearch:boolean;
   fullTextSearch:boolean;
-  suggestions:String[];
+  suggestions:any;
   term$ = new Subject<string>();
 
   title:string;
@@ -37,14 +37,21 @@ export class MainSearchBrowseComponent implements OnInit {
     this.term$.pipe(debounceTime(300), distinctUntilChanged()).subscribe(
       term => {
         if (term.length >= 3) {
-          console.log("FINDING SUGGESTIONS FOR: "+term);
-          
-          this.searchService.getSuggestions({"title":term}).subscribe(
-            data => {
-              this.suggestions = data;
-              console.log("SUGGESTIONS" + this.suggestions);
-          });
-        
+          console.log("*Finding suggestions for: \'"+term+"\'");
+          if (sessionStorage.getItem(term)) {
+            console.log("**Retrieving from: SESSION STORAGE");
+            this.suggestions = JSON.parse(sessionStorage.getItem(term));
+            console.log("***Suggestions:\n" + this.suggestions.map(sugg => sugg['title']));
+          }
+          else {
+            console.log("**Retrieving from: BACKEND")
+            this.searchService.getSuggestions({"title":term}).subscribe(
+              data => {
+                this.suggestions = data;
+                sessionStorage.setItem(term, JSON.stringify(data));
+                console.log("***Suggestions:\n" + this.suggestions.map(sugg => sugg['title']));
+            });
+          }
         }
       });
   }
@@ -79,8 +86,8 @@ export class MainSearchBrowseComponent implements OnInit {
     }
   }
 
-  goToMovie(title:string) {
-    console.log("******"+title);
+  goToMovie(movie:any) {
+    this.router.navigate(['/movie/', movie['id']]);
   }
 
   onSubmit() {

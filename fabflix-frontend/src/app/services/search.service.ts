@@ -15,8 +15,8 @@ export class SearchService {
 
   constructor(private http: HttpClient) { }
 
-  public getSuggestions(params:any):Observable<String[]> {
-    return this.http.get<String[]>(this.url+"/suggestions", {params: params});
+  public getSuggestions(params:any):Observable<any[]> {
+    return this.http.get<any[]>(this.url+"/suggestions", {params: params});
   }
   
   public search(params:any):Observable<MovieWithDetails[]> {

@@ -24,7 +24,6 @@ export class BrowseByTitleComponent implements OnInit {
     this.authService.isAuth().subscribe(
       data => {
         this.isAuth = data['isAuth'];
-        // console.log("auth: "+this.isAuth);
         if (this.isAuth == false) {
           this.router.navigate(['/redirect']);
         }

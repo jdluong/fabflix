@@ -75,11 +75,17 @@ export class SingleMovieComponent implements OnInit {
   }
 
   navigateToList() {
-    let params;
+    // let params;
     this.cacheService.getCachedSearchParams().subscribe(
       data => {
-        params = data;
-        this.router.navigate(['/movie-list'], { queryParams: params });
+        if (Object.keys(data).length == 0) {
+          // console.log("cached params is empty! redirecting to search...")
+          this.router.navigate(['/search']);
+        }
+        else {
+          // console.log("going to movie-list with "+Object.entries(data));
+          this.router.navigate(['/movie-list'], { queryParams: data });
+        }
       });
   }
   

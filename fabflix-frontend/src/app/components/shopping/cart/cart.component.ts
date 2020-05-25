@@ -37,17 +37,10 @@ export class CartComponent implements OnInit {
           this.shoppingService.getCartContents().subscribe(
             data => {
               this.cart = data;
-              console.log(this.cart);
               this.initMovies();
             });   
         }
       });
-    // this.shoppingService.getCartContents().subscribe(
-    //   data => {
-    //     this.cart = data;
-    //     console.log(this.cart);
-    //     this.initMovies();
-    //   });
   }
 
   initMovies() {
@@ -61,7 +54,7 @@ export class CartComponent implements OnInit {
         });
     }
     this.movieTitles = map;
-    console.log(this.movieTitles);
+    // console.log(this.movieTitles);
   }
 
   calculateTotal() {

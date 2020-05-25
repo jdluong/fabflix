@@ -59,7 +59,7 @@ public interface MovieRepository {
     String buildSortAndPagination(String sql, String sortBy1, String order1, String sortBy2, String order2);
 
     // endpoint to get autocomplete suggestions
-    List<String> getSuggestions(String title);
+    List<Object> getSuggestions(String title);
 
     // endpoint that searches
     List<MovieWithDetails> getMoviesSearch(

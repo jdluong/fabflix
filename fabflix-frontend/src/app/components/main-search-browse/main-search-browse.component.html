@@ -18,12 +18,13 @@
     </div>
     
     <div>
+        <!-- basic (fulltext) search -->
         <div *ngIf="fullTextSearch">
             <form class="search-box" (ngSubmit)="onSubmit()" #searchForm="ngForm">
                 <input class="search-text" type="text" (keyup)="term$.next($event.target.value)" [(ngModel)]="title" name="title" placeholder="Search by title" [matAutocomplete]="auto">
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="goToMovie($event.option.value)">
                     <mat-option *ngFor="let suggestion of suggestions" [value]="suggestion">
-                        {{suggestion}}
+                        {{ suggestion['title'] }}
                     </mat-option>    
                 </mat-autocomplete>
                 <button type="submit" class="search-button">
@@ -31,6 +32,7 @@
                 </button>
             </form>
         </div>
+        <!-- advanced search -->
         <div *ngIf="advancedSearch">
             <form class="search-box" (ngSubmit)="onSubmit()" #searchForm="ngForm">
                 <input class="search-text" type="text" [(ngModel)]="title" name="title" placeholder="Title (e.g., The Terminator)">

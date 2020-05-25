@@ -26,6 +26,7 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -177,6 +178,7 @@ public class JdbcMovieRepository implements MovieRepository {
         });
     }
 
+
     @RequestMapping(
             value = "api/getMoviesByStarId/{starId}",
             method = RequestMethod.GET
@@ -264,9 +266,9 @@ public class JdbcMovieRepository implements MovieRepository {
         method = RequestMethod.GET
     )
     @Override
-    public List<String> getSuggestions(@RequestParam String title) {
+    public List<Object> getSuggestions(@RequestParam String title) {
         
-        String sql = "SELECT m.title FROM movies m " +
+        String sql = "SELECT m.id, m.title FROM movies m " +
         "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE) " +
         "LIMIT 10";
 
@@ -279,8 +281,16 @@ public class JdbcMovieRepository implements MovieRepository {
             }
             stmt.setString(1, againstClause);
             return stmt;
-            }, (rs, i) ->  rs.getString("title")
+            }, (rs, i) -> this.buildSuggestions(rs.getString("id"), rs.getString("title"))
+//                Collections.singletonMap(rs.getString("id"), rs.getString("title"))
         );
+    }
+
+    public Map<String, String> buildSuggestions(String id, String title) {
+        Map<String,String> temp = new HashMap<>();
+        temp.put("id", id);
+        temp.put("title", title);
+        return temp;
     }
 
     @RequestMapping(
@@ -991,9 +1001,7 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public Map<String,Object> cacheSearchParams(HttpSession session, @RequestBody Map<String, Object> payload) {
-        System.out.println("BEFORE CACHE PARAMS: "+session.getAttribute("searchParams"));
         session.setAttribute("searchParams", payload);
-        System.out.println("AFTER CACHE PARAMS: "+session.getAttribute("searchParams"));
 
         Map<String, Boolean> json = new HashMap<String, Boolean>();
         json.put("success", true);
@@ -1011,7 +1019,6 @@ public class JdbcMovieRepository implements MovieRepository {
             return json;
         }
         else {
-            System.out.println("GETTING CACHE PARAMS: "+session.getAttribute("searchParams"));
             return (Map<String,Object>) session.getAttribute("searchParams");
         }
     }
