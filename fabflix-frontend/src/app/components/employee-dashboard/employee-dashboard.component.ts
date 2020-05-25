@@ -49,7 +49,6 @@ export class EmployeeDashboardComponent implements OnInit {
             this.employeeService.getTables().subscribe(
               data => {
                 this.tables = data;
-                console.log(this.tables);
               });
             }
           }

@@ -65,17 +65,13 @@ export class LoginComponent implements OnInit {
   checkFields() {
     if (this.username === undefined || this.password === undefined) {
       this.incomplete = true;
-      console.log("resetting recaptcha..");
       grecaptcha.reset(this.recaptchaId);
-      console.log("recaptcha reset");
     } else {
       this.recaptchaResp = grecaptcha.getResponse();
-      console.log(this.recaptchaResp);
+      // console.log(this.recaptchaResp);
       if (this.recaptchaResp.length === 0) {
         this.invalidRecaptcha = true;
-        console.log("resetting recaptcha..");
         grecaptcha.reset(this.recaptchaId);
-        console.log("recaptcha reset");
       } else {
         this.incomplete = false;
         this.invalidRecaptcha = false;
@@ -98,9 +94,7 @@ export class LoginComponent implements OnInit {
       } else {
         this.invalidLogin = true;
         this.loginSuccess = false;
-        console.log("resetting recaptcha..");
         grecaptcha.reset(this.recaptchaId);
-        console.log("recaptcha reset");
       }
     }, error => {
       console.log(error);

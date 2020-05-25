@@ -5,23 +5,45 @@
 <body>
 
 <!-- <div *ngIf="isAuth()"> -->
+    <div class="search-buttons">
+        <button class="btn btn-secondary" [disabled]="fullTextSearch" (click)="changeSearchType('fulltext')">Basic Search</button>
+        <button class="btn btn-secondary" [disabled]="advancedSearch" (click)="changeSearchType('advanced')">Advanced Search</button>
+    </div>
     <p class="title">FABFLIX</p>
+    <div *ngIf="userType == 'Customer'">
+        <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
+    </div>
+    <div *ngIf="userType == 'Employee'">
+        <a [routerLink]="['/_dashboard']"><button class="viewCart">Dashboard</button></a>
+    </div>
+    
     <div>
-        <div *ngIf="userType == 'Customer'">
-            <a [routerLink]="['/cart']"><button class="viewCart">View cart</button></a>
+        <!-- basic (fulltext) search -->
+        <div *ngIf="fullTextSearch">
+            <form class="search-box" (ngSubmit)="onSubmit()" #searchForm="ngForm">
+                <input class="search-text" type="text" (keyup)="term$.next($event.target.value)" [(ngModel)]="title" name="title" placeholder="Search by title" [matAutocomplete]="auto">
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="goToMovie($event.option.value)">
+                    <mat-option *ngFor="let suggestion of suggestions" [value]="suggestion">
+                        {{ suggestion['title'] }}
+                    </mat-option>    
+                </mat-autocomplete>
+                <button type="submit" class="search-button">
+                    <fa-icon [icon]="searchIcon"></fa-icon>
+                </button>
+            </form>
         </div>
-        <div *ngIf="userType == 'Employee'">
-            <a [routerLink]="['/_dashboard']"><button class="viewCart">Dashboard</button></a>
+        <!-- advanced search -->
+        <div *ngIf="advancedSearch">
+            <form class="search-box" (ngSubmit)="onSubmit()" #searchForm="ngForm">
+                <input class="search-text" type="text" [(ngModel)]="title" name="title" placeholder="Title (e.g., The Terminator)">
+                <input class="search-text" type="number" [(ngModel)]="year" name="year" placeholder="Year (e.g., 1997)">
+                <input class="search-text" type="text" [(ngModel)]="director" name="director" placeholder="Director (e.g., James Cameron)">
+                <input class="search-text" type="text" [(ngModel)]="star" name="star" placeholder="Star (e.g., Daniel Radcliffe)">
+                <button type="submit" class="search-button">
+                    <fa-icon [icon]="searchIcon"></fa-icon>
+                </button>
+            </form>
         </div>
-        <form class="search-box" (ngSubmit)="onSubmit()" #searchForm="ngForm">
-            <input class="search-text" type="text" [(ngModel)]="title" name="title" placeholder="Title (e.g., The Terminator)">
-            <input class="search-text" type="number" [(ngModel)]="year" name="year" placeholder="Year (e.g., 1997)">
-            <input class="search-text" type="text" [(ngModel)]="director" name="director" placeholder="Director (e.g., James Cameron)">
-            <input class="search-text" type="text" [(ngModel)]="star" name="star" placeholder="Star (e.g., Daniel Radcliffe)">
-            <button type="submit" class="search-button">
-                <fa-icon [icon]="searchIcon"></fa-icon>
-            </button>
-        </form>
     </div>
     <div class="links">
         <button class="browse-button" type="button" [routerLink]="['/genres']" >Browse by Genre</button>

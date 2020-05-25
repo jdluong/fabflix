@@ -75,7 +75,7 @@ export class PostPaymentComponent implements OnInit {
   emptyCart() {
     this.shoppingService.emptyCart().subscribe(
       data => {
-        console.log(data);
+        // console.log(data);
       });
   }
 

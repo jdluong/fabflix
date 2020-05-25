@@ -57,11 +57,14 @@ export class SingleStarComponent implements OnInit {
   }
 
   navigateToList() {
-    let params;
     this.cacheService.getCachedSearchParams().subscribe(
       data => {
-        params = data;
-        this.router.navigate(['/movie-list'], { queryParams: params });
+        if (Object.keys(data).length == 0) {
+          this.router.navigate(['/search']);
+        }
+        else {
+          this.router.navigate(['/movie-list'], { queryParams: data });
+        }
       });
   }
   

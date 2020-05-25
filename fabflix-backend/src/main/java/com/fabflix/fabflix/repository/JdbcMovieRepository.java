@@ -26,13 +26,14 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
-//@CrossOrigin(origins = {"*"})
+// @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
+@CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
 
@@ -153,7 +154,6 @@ public class JdbcMovieRepository implements MovieRepository {
         }, rs -> {
             if (rs.next())
                 return new Rating(rs.getString("id"), rs.getDouble("rating"), rs.getInt("numVotes"));
-
             return null;
         });
     }
@@ -177,6 +177,7 @@ public class JdbcMovieRepository implements MovieRepository {
             return null;
         });
     }
+
 
     @RequestMapping(
             value = "api/getMoviesByStarId/{starId}",
@@ -208,20 +209,10 @@ public class JdbcMovieRepository implements MovieRepository {
         }, rs -> {
             if (rs.next())
                 return new Star(rs.getString("id"), rs.getString("name"), rs.getInt("birthYear"));
-
             return null;
         });
     }
 
-//    @Override
-//    public Customer getCustomer(@PathVariable String username, @PathVariable String password) {
-//            return jdbcTemplate.queryForObject(
-//                    "SELECT id, firstName, lastName, ccId, address, email, password FROM customers WHERE (email = \""
-//                    + username + "\" " + "AND password = \"" + password + "\")",
-//                    (rs, rowNum) ->
-//                        new Customer(rs.getInt("id"), rs.getString("firstName"), rs.getString("lastName"), rs.getString("ccId"), rs.getString("address"),
-//                                     rs.getString("email"), rs.getString("password")));
-//    }
 
     @RequestMapping (
             value = "api/getAllGenres",
@@ -237,12 +228,78 @@ public class JdbcMovieRepository implements MovieRepository {
 
     // *************** SEARCHING *****************
 
-    @RequestMapping (
+    @Override
+    public String buildSortAndPagination(String sql, String sortBy1, String order1, String sortBy2, String order2) {
+        if (sortBy1.equals("title")) {
+            if (order1.equals("asc") && order2.equals("asc")) {
+                sql += " ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
+            }
+            else if (order1.equals("asc") && order2.equals("desc")) {
+                sql += " ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
+            }
+            else if (order1.equals("desc") && order2.equals("asc")) {
+                sql  += " ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
+            }
+            else if (order1.equals("desc") && order2.equals("desc")) {
+                sql += " ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
+            }
+        }
+        else if (sortBy1.equals("rating")) {
+            if (order1.equals("asc") && order2.equals("asc")) {
+                sql += " ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
+            }
+            else if (order1.equals("asc") && order2.equals("desc")) {
+                sql += " ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
+            }
+            else if (order1.equals("desc") && order2.equals("asc")) {
+                sql += " ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
+            }
+            else if (order1.equals("desc") && order2.equals("desc")) {
+                sql += " ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
+            }
+        }
+        return sql;
+    }
+
+    @RequestMapping(
+        value = "api/search/suggestions",
+        method = RequestMethod.GET
+    )
+    @Override
+    public List<Object> getSuggestions(@RequestParam String title) {
+        
+        String sql = "SELECT m.id, m.title FROM movies m " +
+        "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE) " +
+        "LIMIT 10";
+
+        return jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            String[] tokens = title.split(" ");
+            String againstClause = "";
+            for (String token: tokens) {
+                againstClause += ("+"+token+"*");
+            }
+            stmt.setString(1, againstClause);
+            return stmt;
+            }, (rs, i) -> this.buildSuggestions(rs.getString("id"), rs.getString("title"))
+//                Collections.singletonMap(rs.getString("id"), rs.getString("title"))
+        );
+    }
+
+    public Map<String, String> buildSuggestions(String id, String title) {
+        Map<String,String> temp = new HashMap<>();
+        temp.put("id", id);
+        temp.put("title", title);
+        return temp;
+    }
+
+    @RequestMapping(
             value = "api/search",
             method = RequestMethod.GET
     )
     @Override
     public List<MovieWithDetails> getMoviesSearch(
+            @RequestParam String by,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) String director,
@@ -253,107 +310,105 @@ public class JdbcMovieRepository implements MovieRepository {
             @RequestParam(required = false) String order1,
             @RequestParam(required = false) String sortBy2,
             @RequestParam(required = false) String order2) throws SQLException {
-
-        List<String> searchParams = new ArrayList<>();
         
-        int paramsCount = 0;
-        if (title != null) {
-            searchParams.add("title LIKE ?");
-            ++paramsCount;
-        }
-        if (year != null) {
-            searchParams.add("year = ?");
-            ++paramsCount;
-        }
-        if (director != null) {
-            searchParams.add("director LIKE ?");
-            ++paramsCount;
-        }
-        if (star != null) {
-            searchParams.add("name LIKE ?");
-            ++paramsCount;
-        }
-
-        String searchQuery = String.join(" AND ", searchParams);
         String sql = "";
+        int paramsCount = 0;
+        if (by.equals("advanced")) {
+            List<String> searchParams = new ArrayList<>();
+            if (title != null) {
+                searchParams.add("title LIKE ?");
+                ++paramsCount;
+            }
+            if (year != null) {
+                searchParams.add("year = ?");
+                ++paramsCount;
+            }
+            if (director != null) {
+                searchParams.add("director LIKE ?");
+                ++paramsCount;
+            }
+            if (star != null) {
+                searchParams.add("name LIKE ?");
+                ++paramsCount;
+            }
+            String searchQuery = String.join(" AND ", searchParams);
+            if (sortBy1 == null) {
+                sql = "SELECT DISTINCT m.id, m.title, m.year, m.director FROM movies m, stars_in_movies sim, stars s " +
+                        "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ")";
+            }
+            else {
+                sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+                        "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ")";
+            }
+        }
+        else if (by.equals("fulltext")) {
+            ++paramsCount;
+            if (sortBy1 == null) {
+                sql = "SELECT m.id, m.title, m.year, m.director FROM movies m " +
+                        "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)";
+            }
+            else {
+                sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
+                        "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)";
+            }
+        }
+        
         if (sortBy1 == null) {
-            sql = "SELECT DISTINCT m.id, m.title, m.year, m.director FROM movies m, stars_in_movies sim, stars s " +
-                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") " +
-                    "ORDER BY m.id LIMIT ? OFFSET ?";
+            sql += " ORDER BY m.id LIMIT ? OFFSET ?";
         }
         else {
-            sql = "SELECT DISTINCT m.id, m.title, m.year, m.director, r.rating FROM stars_in_movies sim, stars s, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-            "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") ";
-            if (sortBy1.equals("title")) {
-                if (order1.equals("asc") && order2.equals("asc")) {
-                    sql += "ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("asc") && order2.equals("desc")) {
-                    sql += "ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("desc") && order2.equals("asc")) {
-                    sql  += "ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("desc") && order2.equals("desc")) {
-                    sql += "ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
-                }
-            }
-            else if (sortBy1.equals("rating")) {
-                if (order1.equals("asc") && order2.equals("asc")) {
-                    sql += "ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("asc") && order2.equals("desc")) {
-                    sql += "ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("desc") && order2.equals("asc")) {
-                    sql += "ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("desc") && order2.equals("desc")) {
-                    sql += "ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
-                }
-            }
+            sql = this.buildSortAndPagination(sql, sortBy1, order1, sortBy2, order2);
         }
 
-        Connection conn = jdbcTemplate.getDataSource().getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        
-        boolean titleDone = false;
-        boolean yearDone = false;
-        boolean directorDone = false;
-        boolean starDone = false;
-        for (int i = 1; i <= paramsCount; ++i) {
-            if (title != null && !titleDone) {
-                stmt.setString(i, '%'+title+'%');
+        String finalSql = sql;
+        int finalParamsCount = paramsCount;
+        List<Movie> movies = jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(finalSql);
+            if (by.equals("advanced")) {
+                boolean titleDone = false;
+                boolean yearDone = false;
+                boolean directorDone = false;
+                boolean starDone = false;
+                for (int i = 1; i <= finalParamsCount; ++i) {
+                    if (title != null && !titleDone) {
+                        stmt.setString(i, '%'+title+'%');
+                    }
+                    else if (year != null && !yearDone) {
+                        stmt.setInt(i, year);
+                    }
+                    else if (director != null && !directorDone) {
+                        stmt.setString(i, '%'+director+'%');
+                    }
+                    else if (star != null && !starDone) {
+                        stmt.setString(i, '%'+star+'%');
+                    }
+                }
             }
-            else if (year != null && !yearDone) {
-                stmt.setInt(i, year);
+            else if (by.equals("fulltext")) {
+                String[] tokens = title.split(" ");
+                String againstClause = "";
+                for (String token: tokens) {
+                    againstClause += ("+"+token+"*");
+                }
+                stmt.setString(1, againstClause);
             }
-            else if (director != null && !directorDone) {
-                stmt.setString(i, '%'+director+'%');
-            }
-            else if (star != null && !starDone) {
-                stmt.setString(i, '%'+star+'%');
-            }
-        }
-        stmt.setInt(paramsCount+1, perPage);
-        stmt.setInt(paramsCount+2, (page-1)*perPage);
+            stmt.setInt(finalParamsCount +1, perPage);
+            stmt.setInt(finalParamsCount +2, (page-1)*perPage);
+            return stmt;
+            }, (rs, i) ->  new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director"))
+        );
 
-        return getMoviesBySearch(stmt);
+        return getMoviesBySearch(movies);
     }
 
     @Override
-    public List<MovieWithDetails> getMoviesBySearch(PreparedStatement stmt) {
-        List<Movie> movies = new ArrayList<>();
-        movies = jdbcTemplate.query(connection -> stmt,
-                (rs, i) -> new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
-
+    public List<MovieWithDetails> getMoviesBySearch(List<Movie> movies) {
         List<MovieWithDetails> moviesWithDetails = new ArrayList<>();
-
         for (Movie m: movies) {
             MovieWithDetails movieWithDetails = new MovieWithDetails(m, get3GenresByMovieId(m.getId()), get3StarsByMovieId(m.getId()), getRatingById(m.getId()));
             moviesWithDetails.add(movieWithDetails);
         }
-
+        
         return moviesWithDetails;
     }
 
@@ -363,65 +418,82 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public int getNumOfMoviesBySearch(
+            @RequestParam String by,
             @RequestParam(required = false) String title,
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) String director,
             @RequestParam(required = false) String star) {
-
-        List<String> searchParams = new ArrayList<>();
-        int paramsCount = 0;
-        if (title != null) {
-            searchParams.add("title LIKE ?");
-            ++paramsCount;
-        }
-        if (year != null) {
-            searchParams.add("year = ?");
-            ++paramsCount;
-        }
-        if (director != null) {
-            searchParams.add("director LIKE ?");
-            ++paramsCount;
-        }
-        if (star != null) {
-            searchParams.add("name LIKE ?");
-            ++paramsCount;
-        }
-        String searchQuery = String.join(" AND ", searchParams);
-        String sql = "SELECT COUNT(DISTINCT m.id, m.title, m.year, m.director) FROM movies m, stars_in_movies sim, stars s " +
-                "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ") ";
         
-        try {
-            Connection conn = jdbcTemplate.getDataSource().getConnection();
-            PreparedStatement stmt = conn.prepareStatement(sql);
+        String sql = "";
+        int paramsCount = 0;
+        if (by.equals("advanced")) {
+            List<String> searchParams = new ArrayList<>();
+            if (title != null) {
+                searchParams.add("title LIKE ?");
+                ++paramsCount;
+            }
+            if (year != null) {
+                searchParams.add("year = ?");
+                ++paramsCount;
+            }
+            if (director != null) {
+                searchParams.add("director LIKE ?");
+                ++paramsCount;
+            }
+            if (star != null) {
+                searchParams.add("name LIKE ?");
+                ++paramsCount;
+            }
+            String searchQuery = String.join(" AND ", searchParams);
+            sql = "SELECT COUNT(DISTINCT m.id, m.title, m.year, m.director) FROM movies m, stars_in_movies sim, stars s " +
+                    "WHERE (sim.starId = s.id) AND (sim.movieId = m.id) AND (" + searchQuery + ")";
+        }
+        else if (by.equals("fulltext")) {
+            ++paramsCount;
+            sql = "SELECT COUNT(m.id) FROM movies m " +
+                    "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)";
+        }
 
-            boolean titleDone = false;
-            boolean yearDone = false;
-            boolean directorDone = false;
-            boolean starDone = false;
-            for (int i = 1; i <= paramsCount; ++i) {
-                if (title != null && !titleDone) {
-                    stmt.setString(i, '%'+title+'%');
-                }
-                else if (year != null && !yearDone) {
-                    stmt.setInt(i, year);
-                }
-                else if (director != null && !directorDone) {
-                    stmt.setString(i, '%'+director+'%');
-                }
-                else if (star != null && !starDone) {
-                    stmt.setString(i, '%'+star+'%');
+        String finalSql = sql;
+        int finalParamsCount = paramsCount;
+        return jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(finalSql);
+            if (by.equals("advanced")) {
+                boolean titleDone = false;
+                boolean yearDone = false;
+                boolean directorDone = false;
+                boolean starDone = false;
+                for (int i = 1; i <= finalParamsCount; ++i) {
+                    if (title != null && !titleDone) {
+                        stmt.setString(i, '%'+title+'%');
+                    }
+                    else if (year != null && !yearDone) {
+                        stmt.setInt(i, year);
+                    }
+                    else if (director != null && !directorDone) {
+                        stmt.setString(i, '%'+director+'%');
+                    }
+                    else if (star != null && !starDone) {
+                        stmt.setString(i, '%'+star+'%');
+                    }
                 }
             }
-            return jdbcTemplate.query(connection -> stmt,
-            rs -> {
-                rs.next();
-                return rs.getInt(1);
-            });
-        }
-        catch (SQLException e) {
-            System.out.println(e);
-        }
-        return 0;
+            else if (by.equals("fulltext")) {
+                String[] tokens = title.split(" ");
+                String againstClause = "";
+                for (String token: tokens) {
+                    againstClause += ("+"+token+"*");
+                }
+                stmt.setString(1, againstClause);
+            }
+            return stmt;
+            }, rs -> {
+                if (rs.next())
+                    return rs.getInt(1);
+                return null;
+            }
+        );
+
     }
 
 
@@ -453,7 +525,6 @@ public class JdbcMovieRepository implements MovieRepository {
 
     @Override
     public List<MovieWithDetails> getMoviesByGenre(int id, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2) {
-        List<Movie> movies = new ArrayList<Movie>();
         String sql = "";
         if (sortBy1 == null) {
             sql = "SELECT m.id, m.title, m.year, m.director FROM movies m, genres_in_movies gim WHERE (gim.genreId = ?) " +
@@ -461,39 +532,12 @@ public class JdbcMovieRepository implements MovieRepository {
         }
         else {
             sql = "SELECT m.id, m.title, m.year, m.director FROM genres_in_movies gim, (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId) ";
-            if (sortBy1.equals("title")) {
-                if (order1.equals("asc") && order2.equals("asc")) {
-                    sql += "ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("asc") && order2.equals("desc")) {
-                    sql += "ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("desc") && order2.equals("asc")) {
-                    sql += "ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("desc") && order2.equals("desc")) {
-                    sql += "ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
-                }
-            }
-            else if (sortBy1.equals("rating")) {
-                if (order1.equals("asc") && order2.equals("asc")) {
-                    sql += "ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("asc") && order2.equals("desc")) {
-                    sql += "ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("desc") && order2.equals("asc")) {
-                    sql += "ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
-                }
-                else if (order1.equals("desc") && order2.equals("desc")) {
-                    sql += "ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
-                }
-            }
+                    "WHERE (gim.genreId = ?) AND (m.id = gim.movieId)";
+            sql = this.buildSortAndPagination(sql, sortBy1, order1, sortBy2, order2);
         }
 
         String finalSql = sql;
-        movies = jdbcTemplate.query(connection -> {
+        List<Movie> movies = jdbcTemplate.query(connection -> {
             PreparedStatement stmt = connection.prepareStatement(finalSql);
             stmt.setInt(1, id);
             stmt.setInt(2, perPage);
@@ -528,67 +572,13 @@ public class JdbcMovieRepository implements MovieRepository {
         else {
             if (startsWith.equals("*")) {
                 sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title NOT regexp ? ";
-                if (sortBy1.equals("title")) {
-                    if (order1.equals("asc") && order2.equals("asc")) {
-                        sql += "ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("asc") && order2.equals("desc")) {
-                        sql += "ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("desc") && order2.equals("asc")) {
-                        sql += "ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("desc") && order2.equals("desc")) {
-                        sql += "ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
-                    }
-                }
-                else if (sortBy1.equals("rating")) {
-                    if (order1.equals("asc") && order2.equals("asc")) {
-                        sql += "ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("asc") && order2.equals("desc")) {
-                        sql += "ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("desc") && order2.equals("asc")) {
-                        sql += "ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("desc") && order2.equals("desc")) {
-                        sql += "ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
-                    }
-                }
+                        "WHERE (m.id = r.movieId) AND title NOT regexp ?";
+                sql = this.buildSortAndPagination(sql, sortBy1, order1, sortBy2, order2);
             }
             else {
                 sql = "SELECT m.id, m.title, m.year, m.director FROM (movies m LEFT JOIN ratings r ON m.id = r.movieId) " +
-                        "WHERE (m.id = r.movieId) AND title LIKE ? ";
-                if (sortBy1.equals("title")) {
-                    if (order1.equals("asc") && order2.equals("asc")) {
-                        sql += "ORDER BY title asc, rating asc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("asc") && order2.equals("desc")) {
-                        sql += "ORDER BY title asc, rating desc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("desc") && order2.equals("asc")) {
-                        sql += "ORDER BY title desc, rating asc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("desc") && order2.equals("desc")) {
-                        sql += "ORDER BY title desc, rating desc LIMIT ? OFFSET ?";
-                    }
-                }
-                else if (sortBy1.equals("rating")) {
-                    if (order1.equals("asc") && order2.equals("asc")) {
-                        sql += "ORDER BY rating asc, title asc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("asc") && order2.equals("desc")) {
-                        sql += "ORDER BY rating asc, title desc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("desc") && order2.equals("asc")) {
-                        sql += "ORDER BY rating desc, title asc LIMIT ? OFFSET ?";
-                    }
-                    else if (order1.equals("desc") && order2.equals("desc")) {
-                        sql += "ORDER BY rating desc, title desc LIMIT ? OFFSET ?";
-                    }
-                }
+                        "WHERE (m.id = r.movieId) AND title LIKE ?";
+                sql = this.buildSortAndPagination(sql, sortBy1, order1, sortBy2, order2);
             }
         }
 
@@ -662,6 +652,7 @@ public class JdbcMovieRepository implements MovieRepository {
 
         }
     }
+
 
     // ~~~~~~~~~ LOGIN FUNCTIONS
     @RequestMapping(
@@ -1010,9 +1001,7 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public Map<String,Object> cacheSearchParams(HttpSession session, @RequestBody Map<String, Object> payload) {
-        System.out.println("BEFORE CACHE PARAMS: "+session.getAttribute("searchParams"));
         session.setAttribute("searchParams", payload);
-        System.out.println("AFTER CACHE PARAMS: "+session.getAttribute("searchParams"));
 
         Map<String, Boolean> json = new HashMap<String, Boolean>();
         json.put("success", true);
@@ -1030,7 +1019,6 @@ public class JdbcMovieRepository implements MovieRepository {
             return json;
         }
         else {
-            System.out.println("GETTING CACHE PARAMS: "+session.getAttribute("searchParams"));
             return (Map<String,Object>) session.getAttribute("searchParams");
         }
     }

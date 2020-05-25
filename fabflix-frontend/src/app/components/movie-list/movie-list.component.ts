@@ -40,6 +40,17 @@ export class MovieListComponent implements OnInit {
     private authService: AuthenticationService) 
     {
       this.notifier = notifier;
+      this.route.queryParams.subscribe(
+        data => {
+          this.params = data;
+          if (Object.keys(this.params).length == 0) {
+            this.router.navigate(['/search']);
+          }
+          else {
+            this.initMovies();
+            this.initMaxPage();
+          }
+        });
     }
 
   ngOnInit() {
@@ -56,20 +67,8 @@ export class MovieListComponent implements OnInit {
           else if (data['Customer']) {
             this.userType = 'Customer';  
           }
-          this.route.queryParams.subscribe(
-            data => {
-              this.params = data;
-              if (this.params == {}){
-                this.router.navigate(['/search']);
-              }
-              else {
-                this.initMovies();
-                this.initMaxPage();
-              }
-            });
         }
       });
-
   }
 
   initMovies() {
@@ -157,7 +156,6 @@ export class MovieListComponent implements OnInit {
   addToCart(movieId:string, movieTitle:string) {
     this.shoppingService.addToCart(movieId, 1).subscribe(
       data => {
-        // console.log(data[movieId]);
         if (data[movieId] == 1) {
           this.notifier.notify('success', 'Added \"'+movieTitle+"\" to cart");
         }
@@ -175,6 +173,12 @@ export class MovieListComponent implements OnInit {
     let params = {}; // empty searchParams in cache
     this.cacheService.cacheSearchParams(params).subscribe();
     this.router.navigate(['/search']);
+  }
+
+  navigateToDashboard() {
+    let params = {}; // empty searchParams in cache
+    this.cacheService.cacheSearchParams(params).subscribe();
+    this.router.navigate(['/_dashboard']);
   }
 
   navigateToCart() {

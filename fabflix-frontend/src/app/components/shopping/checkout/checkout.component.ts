@@ -51,7 +51,6 @@ export class CheckoutComponent implements OnInit {
 
   checkFields() {
     if (this.firstName === undefined || this.lastName === undefined || this.cardNumber === undefined || this.expiration === undefined) {
-      console.log(this.expiration);
       this.incompleteForm = true;
     } else {
       this.incompleteForm = false;
