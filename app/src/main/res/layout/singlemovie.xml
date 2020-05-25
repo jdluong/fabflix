@@ -1,45 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/singleMovie">
 
     <TextView
             android:text="TextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/title"
+            android:layout_height="wrap_content"
+            android:id="@+id/movieTitle"
             tools:text="Movie Title"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" android:textSize="35sp"
             android:textColor="@color/red" android:paddingTop="10dp" android:paddingLeft="10dp" android:minLines="1"
             android:textStyle="italic" android:minHeight="65dp" android:paddingRight="10dp"/>
     <TextView
-            android:text="TextView"
+            android:text="Year"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/yearTitle" android:layout_below="@id/title"
-            android:minHeight="50dp" android:paddingTop="10dp" tools:text="Year"
+            android:layout_height="wrap_content"
+            android:id="@+id/yearTitle" android:layout_below="@id/movieTitle"
+            android:minHeight="50dp" android:paddingTop="10dp"
             android:textSize="25sp" android:textColor="#000000"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:paddingLeft="10dp" android:paddingRight="10dp" android:paddingBottom="5dp"/>
     <TextView
-            android:text="TextView"
+            android:text="Director"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/directorTitle" android:layout_below="@id/yearValue"
-            android:minHeight="50dp" android:paddingTop="10dp" android:paddingLeft="10dp" tools:text="Director"
+            android:minHeight="50dp" android:paddingTop="10dp" android:paddingLeft="10dp"
             android:textSize="25sp" android:textColor="#000000"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" android:paddingRight="10dp"/>
     <TextView
-            android:text="TextView"
+            android:text="Genres"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:layout_below="@id/dirValue"
-            android:minHeight="50dp" android:paddingTop="10dp" android:paddingLeft="10dp" tools:text="Genres"
+            android:minHeight="50dp" android:paddingTop="10dp" android:paddingLeft="10dp"
             android:textSize="25sp" android:textColor="#000000"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" android:id="@+id/genreTitle"
             android:paddingRight="10dp"/>
     <TextView
-            android:text="TextView"
+            android:text="Stars"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:layout_below="@id/genreValue"
-            android:minHeight="50dp" android:paddingTop="10dp" android:paddingLeft="10dp" tools:text="Stars"
+            android:minHeight="50dp" android:paddingTop="10dp" android:paddingLeft="10dp"
             android:textSize="25sp" android:textColor="#000000"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" android:id="@+id/starTitle"
             android:paddingRight="10dp"/>

@@ -32,7 +32,8 @@ public class Login extends AppCompatActivity {
     private EditText password;
     private TextView message;
     private Button loginButton;
-    private String url;
+    private String url = "http://10.0.2.2:8080/fabflix_backend_war/api/app/";
+    //String url = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,6 @@ public class Login extends AppCompatActivity {
          * In Android, localhost is the address of the device or the emulator.
          * To connect to your machine, you need to use the below IP address
          * **/
-        url = "http://10.0.2.2:8080/fabflix_backend_war/api/app/";
 
         //assign a listener to call a function to handle the user request when clicking a button
         loginButton.setOnClickListener(new View.OnClickListener() {

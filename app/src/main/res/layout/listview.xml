@@ -7,18 +7,34 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".ListViewActivity">
 
+    <Button
+            android:text="Previous"
+            android:layout_width="205dp"
+            android:layout_height="?attr/actionBarSize"
+            android:id="@+id/previous" android:layout_marginTop="675sp"/>
+    <Button
+            android:text="Next"
+            android:layout_width="205dp"
+            android:layout_height="?attr/actionBarSize"
+            android:id="@+id/next" android:layout_centerVertical="false" android:layout_toRightOf="@id/previous"
+            android:layout_marginTop="675sp"/>
+
+    <EditText android:layout_width="match_parent"
+              android:layout_height="?attr/actionBarSize"
+              android:id="@+id/searchFilter"></EditText>
+
     <ListView
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-    />
+            android:paddingTop="?attr/actionBarSize" android:paddingBottom="?attr/actionBarSize"/>
     <TextView
-        android:id="@+id/emptyView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="No Results"
-        android:textSize="20sp"
-        android:visibility="gone"
+            android:id="@+id/emptyView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="No Results"
+            android:textSize="20sp"
+            android:visibility="gone"
     />
 </RelativeLayout>
