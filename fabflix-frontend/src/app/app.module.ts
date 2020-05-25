@@ -1,8 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NotifierModule, NotifierOptions } from "angular-notifier";
-import {HashLocationStrategy, LocationStrategy} from '@angular/common';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+
+import { AutocompleteHighlightPipe } from './pipes/autocomplete-highlight.pipe';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,9 +17,6 @@ import { SingleStarComponent } from './components/single-star/single-star.compon
 import { BrowseByGenreComponent } from './components/browse-by-genre/browse-by-genre.component';
 import { BrowseByTitleComponent } from './components/browse-by-title/browse-by-title.component';
 import { LoginComponent } from './components/login/login.component';
-
-import { FormsModule } from '@angular/forms';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import { MainSearchBrowseComponent } from './components/main-search-browse/main-search-browse.component';
 import { CartComponent } from './components/shopping/cart/cart.component';
 import { CheckoutComponent } from './components/shopping/checkout/checkout.component';
@@ -83,7 +84,8 @@ const customNotifierOptions: NotifierOptions = {
     CheckoutComponent,
     PostPaymentComponent,
     RedirectComponent,
-    EmployeeDashboardComponent
+    EmployeeDashboardComponent,
+    AutocompleteHighlightPipe
   ],
   imports: [
     BrowserModule,
@@ -95,7 +97,7 @@ const customNotifierOptions: NotifierOptions = {
     MatAutocompleteModule
   ],
   exports: [
-    // MatAutocompleteModule
+    AutocompleteHighlightPipe
   ],
   providers: [
     {provide: LocationStrategy,

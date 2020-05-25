@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { SearchService } from 'src/app/services/search.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +11,8 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 @Component({
   selector: 'app-main-search-browse',
   templateUrl: './main-search-browse.component.html',
-  styleUrls: ['./main-search-browse.component.css']
+  styleUrls: ['./main-search-browse.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class MainSearchBrowseComponent implements OnInit {
 
@@ -19,6 +20,7 @@ export class MainSearchBrowseComponent implements OnInit {
   fullTextSearch:boolean;
   suggestions:any;
   term$ = new Subject<string>();
+  toHighlight = '';
 
   title:string;
   year:number;
