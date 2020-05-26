@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/singleMovie">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/singleMovie">
+<RelativeLayout android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <TextView
             android:text="TextView"
@@ -73,5 +75,7 @@
             android:layout_height="wrap_content" android:id="@+id/starValue" android:layout_below="@id/starTitle"
             android:minHeight="50dp" android:paddingTop="10dp" android:paddingLeft="20dp" tools:text="stars..."
             android:textSize="20sp" android:textColor="#A1171717" android:textStyle="italic"
-            android:paddingRight="20dp"/>
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp"/>
 </RelativeLayout>
+</ScrollView>

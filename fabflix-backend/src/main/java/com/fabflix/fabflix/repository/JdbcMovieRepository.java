@@ -1186,6 +1186,39 @@ public class JdbcMovieRepository implements MovieRepository {
         return ResponseEntity.ok().headers(responseHeaders).body(response.toString());
     }
 
+    @RequestMapping(
+            value = "api/app/search/{text}",
+            method = RequestMethod.GET
+    )
+    public List<MovieWithDetails> appSearch(@PathVariable String text) {
+        String sql = "SELECT m.id, m.title, m.year, m.director FROM movies m " +
+                "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)";
+
+        List<Movie> movies = jdbcTemplate.query(connection -> {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            String[] tokens = text.split(" ");
+            String against = "";
+
+            for (String t : tokens)
+                against += ("+" + t + "*");
+
+            stmt.setString(1, against);
+            return stmt;
+        }, (rs, i) -> new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director")));
+
+        return getMoviesBySearchApp(movies);
+    }
+
+    @Override
+    public List<MovieWithDetails> getMoviesBySearchApp(List<Movie> movies) {
+        List<MovieWithDetails> moviesWithDetails = new ArrayList<>();
+        for (Movie m: movies) {
+            MovieWithDetails movieWithDetails = new MovieWithDetails(m, getAllGenresByMovieId(m.getId()), getAllStarsByMovieId(m.getId()), getRatingById(m.getId()));
+            moviesWithDetails.add(movieWithDetails);
+        }
+
+        return moviesWithDetails;
+    }
 
 }
 

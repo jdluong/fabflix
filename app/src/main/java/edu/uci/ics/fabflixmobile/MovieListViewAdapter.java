@@ -45,7 +45,7 @@ public class MovieListViewAdapter extends ArrayAdapter<MovieWithDetails> {
             subtitle.append("\nGenre: ");
             for (int i = 0; i < genres.size(); ++i) {
                 if (i == genres.size() - 1)
-                    subtitle.append(genres.get(i).getName() + " ");
+                    subtitle.append(genres.get(i).getName());
                 else
                     subtitle.append(genres.get(i).getName() + ", ");
             }
@@ -54,13 +54,13 @@ public class MovieListViewAdapter extends ArrayAdapter<MovieWithDetails> {
         List<Star> stars = movie.getStars();
 
         if (stars.size() >= 3) {
-            subtitle.append("\nStars: " + stars.get(0).getName() + ", " +  stars.get(1).getName() + ", " + stars.get(2).getName() + ", ");
+            subtitle.append("\nStars: " + stars.get(0).getName() + ", " +  stars.get(1).getName() + ", " + stars.get(2).getName());
         }
         else {
             subtitle.append("\nStars: ");
             for (int i = 0; i < stars.size(); ++i) {
                 if (i == stars.size() - 1)
-                    subtitle.append(stars.get(i).getName() + " ");
+                    subtitle.append(stars.get(i).getName());
                 else
                     subtitle.append(stars.get(i).getName() + ", ");
             }
