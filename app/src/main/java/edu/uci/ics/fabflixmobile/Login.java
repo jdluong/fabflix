@@ -32,8 +32,8 @@ public class Login extends AppCompatActivity {
     private EditText password;
     private TextView message;
     private Button loginButton;
-    private String url = "http://10.0.2.2:8080/fabflix_backend_war/api/app/";
-    //String url = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/";
+    //private String url = "http://10.0.2.2:8080/fabflix_backend_war/api/app/";
+    String url = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
