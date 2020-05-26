@@ -71,6 +71,7 @@ We implemented the substring matching using the ".... LIKE %substring%" method.
 
 ## PROJECT 3
 <details><summary>click for more</summary>
+  
 ## VIDEO
 Note: The parser successfully finished, but afterwards, near the end of the demo our database connection was lost and our site wouldn't load results where it previously did as seen in the video. We apologize for this and are uploading whatever is relevant.
 
@@ -133,6 +134,7 @@ Alexis: ReCAPTCHA, Stored Procedure, XML
 
 ## PROJECT 4
 <details><summary>click for more</summary>
+  
 ## VIDEO
 Link: 
 
