@@ -70,7 +70,7 @@ We implemented the substring matching using the ".... LIKE %substring%" method.
 </details>
 
 ## PROJECT 3
-
+<details><summary>click for more</summary>
 ## VIDEO
 Note: The parser successfully finished, but afterwards, near the end of the demo our database connection was lost and our site wouldn't load results where it previously did as seen in the video. We apologize for this and are uploading whatever is relevant.
 
@@ -129,9 +129,10 @@ Run <code>ng build --base-href=. --prod</code>
 ## CONTRIBUTIONS
 John: HTTPS, Encryption, Dashboard
 Alexis: ReCAPTCHA, Stored Procedure, XML
+</details>
 
 ## PROJECT 4
-
+<details><summary>click for more</summary>
 ## VIDEO
 Link: 
 
@@ -183,3 +184,4 @@ Run <code>ng build --base-href=. --prod</code>
 ## CONTRIBUTIONS
 John: full text search, autocomplete
 Alexis: android app backend/frontend
+</details>
