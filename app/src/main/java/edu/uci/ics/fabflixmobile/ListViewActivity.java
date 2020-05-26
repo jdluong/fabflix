@@ -22,7 +22,7 @@ public class ListViewActivity extends AppCompatActivity {
     final ArrayList<MovieWithDetails> movies = new ArrayList<>();
     final ArrayList<MovieWithDetails> data = new ArrayList<>();
     //String url = "http://10.0.2.2:8080/fabflix_backend_war/api/app/";
-    String url = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/";
+    String url = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/app";
 
     MovieListViewAdapter adapter;
     ListView listView;
