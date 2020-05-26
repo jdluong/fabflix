@@ -130,3 +130,56 @@ Run <code>ng build --base-href=. --prod</code>
 John: HTTPS, Encryption, Dashboard
 Alexis: ReCAPTCHA, Stored Procedure, XML
 
+## PROJECT 4
+
+## VIDEO
+Link: 
+
+## DEPLOYMENT: Webpage
+1) Prepare database and tables
+2) Clone this Git Repo
+3) Copy correct MySQL credentials into cs122b-spring20-team-69/fabflix-backend/src/main/resources
+<code> cp ~/application.properties ~/cs122b-spring20-team-69/fabflix-backend/src/main/resources </code>
+4) cd into backend directory
+<code>cd ~/cs122b-spring20-team-69/fabflix-backend </code>
+5) Build .war in fabflix-backend/ directory 
+<code>mvn clean package</code>
+5) Copy .war file to ~/tomcat/webapps
+<code>cp ./target/*.war /home/ubuntu/tomcat/webapps</code>
+6) cd into frontend directory
+<code>cd  ~/cs122b-spring20-team-69/fabflix-frontend</code>
+7) Install dependencies
+Run <code>npm install</code>
+8) Build files
+Run <code>ng build --base-href=. --prod</code>
+9) cd into target file directory
+<code>cd dist</code>
+10) Rename the directory to fabflix
+11) Create WEB-INF directory in fabflix/
+<code>mkdir fabflix/WEB-INF</code>
+12) Copy web.xml into fabflix/WEB-INF
+<code>cp ~/web.xml ./WEB-INF</code>
+13) Copy fabflix/ directory into ~/tomcat/webapps
+<code>cp fabflix /home/ubuntu/tomcat/webapps</code>
+14) cd to ~/tomcat/webapps
+<code>cd ~/tomcat/webapps</code>
+15) Rename fabflix-0.0.1-SNAPSHOT.war to fabflix-backend.war
+<code>mv fabflix-0.0.1-SNAPSHOT.war fabflix-backend.war</code>
+16) Wait until fabflix-backend directory exists
+17) Copy web.xml into fabflix-backend/WEB-INF
+<code>cp ~/web.xml fabflix-backend/WEB-INF</code>
+18) In browser, navigate to Tomcat manager page at ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/manager/html
+19) Click on "/fabflix" under "Paths"
+
+## DEPLOYMENT: Android App
+1) Clone this Git Repo
+2) Import into Intellij IDEA
+3) Allow Gradle import to finish
+4) Edit configuration -> Add Android App configuration -> set module as "app"
+5) Navigate to Build > Build Bundle(s) & APKs > Build APKs
+6) Once build finishes, locate APK (message notifying location appears at lower right)
+7) Drag and drop APK file onto local emulator
+
+## CONTRIBUTIONS
+John: full text search, autocomplete
+Alexis: android app backend/frontend
