@@ -60,10 +60,16 @@ public class Login extends AppCompatActivity {
             public void onResponse(String response) {
                 //TODO should parse the json response to redirect to appropriate functions.
                 Log.d("login.success", response);
-                //initialize the activity(page)/destination
-                Intent listPage = new Intent(Login.this, ListViewActivity.class);
-                //without starting the activity/page, nothing would happen
-                startActivity(listPage);
+
+                if (response.contains("fail")) {
+                    message.setText("Incorrect credentials");
+                }
+                else if (response.contains("success")) {
+                    //initialize the activity(page)/destination
+                    Intent listPage = new Intent(Login.this, ListViewActivity.class);
+                    //without starting the activity/page, nothing would happen
+                    startActivity(listPage);
+                }
             }
         },
                 new Response.ErrorListener() {
@@ -72,7 +78,7 @@ public class Login extends AppCompatActivity {
                         // error
                         Log.d("login.error", error.toString());
 
-                        message.setText("Incorrect credentials");
+                        message.setText("Error ");
                     }
                 }) {
 
