@@ -110,7 +110,7 @@ public class ListViewActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // get current movie and load new intent with its details
-                MovieWithDetails movie = movies.get(position);
+                MovieWithDetails movie = movies.get((NUM_ITEMS_PER_PAGE * increment) + position);
                 Intent singleMovie = new Intent(ListViewActivity.this, SingleMovieActivity.class);
                 singleMovie.putExtra("title", movie.getMovie().getTitle());
                 singleMovie.putExtra("year", String.valueOf(movie.getMovie().getYear()));
