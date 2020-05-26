@@ -27,6 +27,10 @@ body {
     background: #232426;
 }
 
+b.highlight {
+    color: steelblue;
+}
+
 .search-buttons {
     margin: 15px 0;
     position: absolute;
