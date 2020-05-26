@@ -3,12 +3,13 @@ package edu.uci.ics.fabflixmobile;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 public class SingleMovieActivity extends AppCompatActivity {
-    RelativeLayout singleMovieView;
+    ScrollView singleMovieView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

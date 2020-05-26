@@ -22,20 +22,27 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ListViewActivity extends AppCompatActivity {
     final RequestQueue queue = NetworkManager.sharedManager(this).queue;
     final ArrayList<MovieWithDetails> movies = new ArrayList<>();
-    String url = "http://10.0.2.2:8080/fabflix_backend_war/api/";
+    final ArrayList<MovieWithDetails> data = new ArrayList<>();
+    String url = "http://10.0.2.2:8080/fabflix_backend_war/api/app/";
     //String url = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/";
 
     MovieListViewAdapter adapter;
     ListView listView;
     TextView emptyView;
     EditText search;
+    Button prev;
+    Button next;
+
+    private int NUM_ITEMS_PER_PAGE = 20;
+    private int pageCount;
+    private int increment = 0;
+
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +51,67 @@ public class ListViewActivity extends AppCompatActivity {
         listView = findViewById(R.id.list);
         emptyView = findViewById(R.id.emptyView);
         search = findViewById(R.id.searchFilter);
-        adapter = new MovieListViewAdapter(movies, getApplicationContext());
-        listView.setAdapter(adapter);
+        prev = findViewById(R.id.previous);
+        next = findViewById(R.id.next);
 
-        listView.setEmptyView(emptyView);
+        prev.setEnabled(false);
+
+        prev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                --increment;
+                loadList(increment);
+                checkEnable();
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ++increment;
+                loadList(increment);
+                checkEnable();
+            }
+        });
+
+        search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (timer != null) {
+                    timer.cancel();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                movies.clear();
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url + "search/" + search.getText().toString(), jsonArray -> {
+                            // convert array to movie array list
+                            Gson gson = new Gson();
+                            MovieWithDetails[] movieArr = gson.fromJson(jsonArray.toString(), MovieWithDetails[].class);
+
+                            for (MovieWithDetails m : movieArr) {
+                                movies.add(new MovieWithDetails(m.getMovie(), m.getGenres(), m.getStars(), m.getRating()));
+                            }
+
+                        }, volleyError -> System.out.println(volleyError.toString()));
+
+                        int num = movies.size() % NUM_ITEMS_PER_PAGE;
+                        num = (num == 0) ? 0 : 1;
+                        pageCount = movies.size() / NUM_ITEMS_PER_PAGE + num;
+
+                        queue.add(jsonArrayRequest);
+                    }
+                }, 200);
+            }
+        });
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -72,35 +136,50 @@ public class ListViewActivity extends AppCompatActivity {
                 startActivity(singleMovie);
             }
         });
+    }
 
-        search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    private void checkEnable() {
+        if (increment + 1 == pageCount)
+            next.setEnabled(false);
+        else if (increment == 0)
+            prev.setEnabled(false);
+        else {
+            prev.setEnabled(true);
+            next.setEnabled(true);
+        }
+    }
 
-            }
+    private void loadList(int pageNum) {
+        data.clear();
+        int start = pageNum * NUM_ITEMS_PER_PAGE;
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                System.out.println(charSequence.toString());
+        for (int i = start; i < (start + NUM_ITEMS_PER_PAGE); ++i) {
+            if (i < movies.size())
+                data.add(movies.get(i));
+            else
+                break;
+        }
 
-                JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(url + "getTopTwentyListWithDetails", jsonArray -> {
-                    // convert array to movie array list
-                    Gson gson = new Gson();
-                    MovieWithDetails[] movieArr = gson.fromJson(jsonArray.toString(), MovieWithDetails[].class);
+        adapter = new MovieListViewAdapter(data, this);
+        listView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+    }
 
-                    for (MovieWithDetails m : movieArr) {
-                        movies.add(new MovieWithDetails(m.getMovie(), m.getGenres(), m.getStars(), m.getRating()));
-                        adapter.notifyDataSetChanged();
-                    }
-                }, volleyError -> System.out.println(volleyError.toString()));
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
-                queue.add(jsonArrayRequest);
-                adapter.notifyDataSetChanged();
-            }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
 
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
+        if (id == R.id.refresh) {
+            loadList(0);
+            checkEnable();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

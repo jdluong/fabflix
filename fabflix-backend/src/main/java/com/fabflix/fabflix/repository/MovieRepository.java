@@ -146,4 +146,8 @@ public interface MovieRepository {
   
   // ********** APP FUNCTIONS
     ResponseEntity<String> appAuthenticate(Map<String, String> user, HttpSession session);
+
+    List<MovieWithDetails> appSearch(String text);
+
+    List<MovieWithDetails> getMoviesBySearchApp(List<Movie> movies);
 }
