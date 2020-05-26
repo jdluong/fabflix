@@ -1,12 +1,8 @@
 package edu.uci.ics.fabflixmobile;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -15,14 +11,11 @@ import android.view.View;
 import android.widget.*;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
-import org.json.JSONException;
 
-import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ListViewActivity extends AppCompatActivity {
     final RequestQueue queue = NetworkManager.sharedManager(this).queue;
