@@ -136,7 +136,7 @@ Alexis: ReCAPTCHA, Stored Procedure, XML
 <details><summary>click for more</summary>
   
 ## VIDEO
-Link: 
+Link: https://drive.google.com/file/d/1qmxKobkbLzCit7Z36kI5WUzRwQIRisGm/view?usp=sharing
 
 ## DEPLOYMENT: Webpage
 1) Prepare database and tables
