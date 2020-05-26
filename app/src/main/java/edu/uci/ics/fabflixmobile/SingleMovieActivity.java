@@ -2,7 +2,6 @@ package edu.uci.ics.fabflixmobile;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
