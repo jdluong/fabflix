@@ -59,10 +59,6 @@ b.highlight {
     padding: 10px;
 }
 
-.full-text {
-    height: 60px;
-}
-
 .search-box:hover {
   /* change height to 60 for the full-text class */
   height: 180px; 
@@ -82,6 +78,43 @@ b.highlight {
 }
 
 .search-box:hover > .search-button {
+    width: 40px;
+    height: 40px;
+    background: #232426;
+    font-size: medium;
+}
+
+.search-box-ft {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f3f3f3;
+    /* change height to 80 for full-text class implementation */
+    height:80px;
+    border-radius: 80px;
+    padding: 10px;
+}
+
+.search-box-ft:hover {
+  /* change height to 60 for the full-text class */
+  height: 60px; 
+  width: 400px;
+  border-radius: 20px;
+}
+
+.search-box-ft:hover > .search-text {
+    top: 45%;
+    background: #f3f3f3;
+    width: 300px;
+    padding: 0 5px;
+}
+
+.search-box-ft:hover > .search-text:nth-child(2) {
+  width: 125px;
+}
+
+.search-box-ft:hover > .search-button {
     width: 40px;
     height: 40px;
     background: #232426;
