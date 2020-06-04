@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {Movie} from '../models/Movie';
 import {ObserveOnSubscriber} from 'rxjs/internal/operators/observeOn';
+import { ServerIP } from './server';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,9 @@ export class ShoppingService {
   // private url = 'http://localhost:8080/fabflix_backend_war/api/shopping/';
   // private url:string = "http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/fabflix-backend/api/shopping/";
   // public url = 'https://localhost:8443/fabflix_backend_war/api/shopping/'
-  private url:string = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/shopping/";
+  // private url:string = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/shopping/";
+  private readUrl:string = ServerIP.Read+"/api/shopping/";
+  private writeUrl:string = ServerIP.Write+"/api/shopping/";
 
   public firstName: string;
   public lastName: string;
@@ -26,19 +29,19 @@ export class ShoppingService {
 
   public addToCart(movieId: string, quantity: number) {
     // console.log(this.url+"/addToCart/"+movieId+"/"+quantity)
-    return this.http.get(this.url + 'addToCart/' + movieId + '/' + quantity, {withCredentials: true});
+    return this.http.get(this.readUrl + 'addToCart/' + movieId + '/' + quantity, {withCredentials: true});
   }
 
   public getCartContents() {
-    return this.http.get(this.url + 'getCartContents', {withCredentials: true});
+    return this.http.get(this.readUrl + 'getCartContents', {withCredentials: true});
   }
 
   public changeItemQuantity(movieId: string, quantity: number) {
-    return this.http.get(this.url + 'changeItemQuantity/' + movieId + '/' + quantity, {withCredentials: true});
+    return this.http.get(this.readUrl + 'changeItemQuantity/' + movieId + '/' + quantity, {withCredentials: true});
   }
 
   public removeItem(movieId: string) {
-    return this.http.delete(this.url + 'deleteItem/' + movieId, {withCredentials: true});
+    return this.http.delete(this.readUrl + 'deleteItem/' + movieId, {withCredentials: true});
   }
 
   public authenticateOrder(firstName: string, lastName:string, creditcard: string, expiration: string): Observable<Object> {
@@ -53,7 +56,7 @@ export class ShoppingService {
       info[key] = val;
     });
 
-    return this.http.post(this.url + 'auth', info, {withCredentials: true});
+    return this.http.post(this.readUrl + 'auth', info, {withCredentials: true});
   }
 
   public addSales() {
@@ -65,14 +68,14 @@ export class ShoppingService {
     this.saleIds = [];
 
     for (const movie of movies.keys()) {
-        this.http.get<number>(this.url + 'addSale/' + movie, {withCredentials: true}).subscribe(result => {
+        this.http.get<number>(this.writeUrl + 'addSale/' + movie, {withCredentials: true}).subscribe(result => {
           this.saleIds.push(result);
         });
     }
   }
 
   public emptyCart() {
-    return this.http.delete(this.url+'emptyCart',{withCredentials:true});
+    return this.http.delete(this.readUrl+'emptyCart',{withCredentials:true});
   }
 
   // public getMovieTitle(saleId: any) {
