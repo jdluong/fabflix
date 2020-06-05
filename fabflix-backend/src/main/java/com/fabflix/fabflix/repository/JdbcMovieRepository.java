@@ -24,6 +24,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +48,42 @@ public class JdbcMovieRepository implements MovieRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    private static long start;
+    private static long end;
+    private static long elapsed;
+
+    private static File log = new File("fabflix-backend/src/main/resources/time_log.txt");
+    private static FileWriter logger;
+    private static boolean initialLaunch = true;
+
+    // ****** LOGGING FUNCTIONS
+
+    @Override
+    public void logSearchTime() throws IOException {
+        if (initialLaunch) {
+            log.delete();
+            log.createNewFile();
+            logger = new FileWriter(log);
+            initialLaunch = false;
+        }
+
+        logger.write(elapsed + "\n");
+        logger.flush();
+        System.out.println("Search time: " + elapsed + " ns");
+    }
+
+    @RequestMapping (
+        value = "api/log/auth",
+        method = RequestMethod.POST
+    )
+    @Override
+    public @ResponseBody ResponseEntity logAuth(HttpSession session) {
+        session.setAttribute("isAuth", true);
+        session.setAttribute("user", "customer");
+
+        return ResponseEntity.ok(true);
+    }
     
     @Override
     public List<Rating> findTopTwenty() {
@@ -314,8 +354,10 @@ public class JdbcMovieRepository implements MovieRepository {
             @RequestParam(required = false) String sortBy1,
             @RequestParam(required = false) String order1,
             @RequestParam(required = false) String sortBy2,
-            @RequestParam(required = false) String order2) throws SQLException {
-        
+            @RequestParam(required = false) String order2) throws SQLException, IOException {
+
+        start = System.nanoTime();
+
         String sql = "";
         int paramsCount = 0;
         if (by.equals("advanced")) {
@@ -403,7 +445,13 @@ public class JdbcMovieRepository implements MovieRepository {
             }, (rs, i) ->  new Movie(rs.getString("id"), rs.getString("title"), rs.getInt("year"), rs.getString("director"))
         );
 
-        return getMoviesBySearch(movies);
+        List<MovieWithDetails> results = getMoviesBySearch(movies);
+
+        end = System.nanoTime();
+        elapsed = end - start;
+        logSearchTime();
+
+        return results;
     }
 
     @Override
