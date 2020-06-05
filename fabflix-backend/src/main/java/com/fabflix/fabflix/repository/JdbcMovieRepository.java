@@ -36,8 +36,12 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
-// @CrossOrigin(origins = {"http://98.149.57.70:8080", "http://98.149.57.70:*", "http://54.201.208.32:8080", "http://52.42.172.57:8080"}, allowCredentials = "true")
+// @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://98.149.57.70:8080", "http://98.149.57.70:*", 
+                        "http://ec2-54-201-208-32.us-west-2.compute.amazonaws.com:8080", "http://54.201.208.32:8080",
+                        "http://ec2-52-42-172-57.us-west-2.compute.amazonaws.com:8080", "http://52.42.172.57:8080",
+                        "http://ec2-54-212-3-69.us-west-2.compute.amazonaws.com", "http://54.212.3.69"}, 
+                        allowCredentials = "true")
 // @CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
