@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.Map;
 
 public class MovieParser {
-//    private String USERNAME = "mytestuser";
-//    private String PASSWORD = "Password!123";
+    private String USERNAME = "mytestuser";
+    private String PASSWORD = "Password!123";
 
-    private String USERNAME = "root";
-    private String PASSWORD = "password";
+//    private String USERNAME = "root";
+//    private String PASSWORD = "password";
 
     Map<Movie, List<String>> movies;
     List<String> genres;
@@ -34,8 +34,8 @@ public class MovieParser {
     public void run() throws SQLException, ClassNotFoundException {
         parseXml();
         parseMovies();
-        //showData();
         addToDatabase();
+        //showData();
     }
 
     public void parseXml() {
@@ -43,8 +43,8 @@ public class MovieParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-            document = builder.parse("mains243.xml");
-//            document = builder.parse("classes/mains243.xml");
+            // document = builder.parse("mains243.xml");
+            document = builder.parse("classes/mains243.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException pce) {
             pce.printStackTrace();
