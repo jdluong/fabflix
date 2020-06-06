@@ -1,4 +1,4 @@
-package com.fabflix.fabflix;
+package XML_PARSE;
 
 import java.sql.*;
 import java.util.ArrayList;

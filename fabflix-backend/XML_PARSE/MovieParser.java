@@ -1,4 +1,4 @@
-package com.fabflix.fabflix;
+package XML_PARSE;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
