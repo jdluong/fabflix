@@ -52,7 +52,7 @@ public class JdbcMovieRepository implements MovieRepository {
     private static long endTJ;
     private static long elapsedTJ;
 
-    private static File log = new File("fabflix-backend/src/main/resources/time_log.txt");
+    private static File log = new File("/home/ubuntu/cs122b-spring20-team-69/fabflix-backend/src/main/resources/time_log.txt");
     private static FileWriter logger;
     private static boolean initialLaunch = true;
 
