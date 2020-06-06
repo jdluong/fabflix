@@ -1,11 +1,16 @@
 log = open("src/main/resources/time_log.txt")
 lines = log.readlines()
-totalTime = 0
+totalTS = 0
+totalTJ = 0
 numTimes = len(lines)
 
 for line in lines:
-    totalTime += int(line)
+    times = line.split(' ')
+    totalTS += int(times[0])
+    totalTJ += int(times[1])
 
-average = totalTime / numTimes
+averageTS = (totalTS / numTimes) / 1000000
+averageTJ = totalTJ / numTimes / 1000000
 
-print('Average Search Time: %.2f ns' % average)
+print('Average Search Time: %.2f ms' % averageTS)
+print('Average JDBC Time: %.2f ms' % averageTJ)
