@@ -1,21 +1,21 @@
 package com.fabflix.fabflix.repository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+import com.fabflix.fabflix.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-import com.fabflix.fabflix.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 public interface MovieRepository {
+    // LOGGING FUNCTION
+    void logSearchTime() throws IOException;
+
+    ResponseEntity<Boolean> logAuth(HttpSession session);
+
     // find top 20 movie ratings
     List<Rating> findTopTwenty();
 
@@ -64,7 +64,7 @@ public interface MovieRepository {
     // endpoint that searches
     List<MovieWithDetails> getMoviesSearch(
             String by, String title, Integer year, String director, String star, int perPage, int page, String sortBy1, String order1, String sortBy2, String order2
-    ) throws SQLException;
+    ) throws SQLException, IOException;
 
     // search for getMovies
     List<MovieWithDetails> getMoviesBySearch(List<Movie> movies);

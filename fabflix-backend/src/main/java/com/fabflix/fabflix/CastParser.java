@@ -18,6 +18,9 @@ public class CastParser {
     private String USERNAME = "mytestuser";
     private String PASSWORD = "Password!123";
 
+//    private String USERNAME = "root";
+//    private String PASSWORD = "password";
+
     // map for inserting entries in stars_in_movies table
     // key = movie name, value = cast members
     Map<String, ArrayList<String>> starsInMovies;
@@ -39,7 +42,7 @@ public class CastParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
-//            document = builder.parse("casts124.xml");
+            //document = builder.parse("casts124.xml");
             document = builder.parse("classes/casts124.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException e) {

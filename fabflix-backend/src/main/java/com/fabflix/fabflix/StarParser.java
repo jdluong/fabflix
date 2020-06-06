@@ -17,6 +17,9 @@ public class StarParser {
     private String USERNAME = "mytestuser";
     private String PASSWORD = "Password!123";
 
+//    private String USERNAME = "root";
+//    private String PASSWORD = "password";
+
     List<Star> stars;
     Document document;
 
@@ -27,8 +30,8 @@ public class StarParser {
     public void run() {
         parseXml();
         parseStars();
-        //showData();
         addToDatabase();
+        //showData();
     }
 
     public void parseXml() {
@@ -36,6 +39,7 @@ public class StarParser {
 
         try {
             DocumentBuilder builder = factory.newDocumentBuilder();
+//            document = builder.parse("actors63.xml");
             document = builder.parse("classes/actors63.xml");
             document.getDocumentElement().normalize();
         } catch (ParserConfigurationException pce) {
