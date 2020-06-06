@@ -18,8 +18,8 @@ export class ShoppingService {
   // private url:string = "http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/fabflix-backend/api/shopping/";
   // public url = 'https://localhost:8443/fabflix_backend_war/api/shopping/'
   // private url:string = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/shopping/";
-  private readUrl:string = ServerIP.Read+"/api/shopping/";
-  private writeUrl:string = ServerIP.Write+"/api/shopping/";
+  private readUrl:string = "http://"+ServerIP.Read+":8080/fabflix-backend/api/shopping/";
+  private writeUrl:string = "http://"+ServerIP.Write+":8080/fabflix-backend/api/shopping/";
 
   public firstName: string;
   public lastName: string;
