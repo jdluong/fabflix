@@ -187,3 +187,94 @@ Run <code>ng build --base-href=. --prod</code>
 John: full text search, autocomplete
 Alexis: android app backend/frontend
 </details>
+
+## PROJECT 5
+<details> <summary>click for more</summary>
+
+## VIDEO
+Link: 
+  
+## DEPLOYMENT
+1) Prepare database and tables
+2) Clone this Git Repo
+3) Copy correct MySQL credentials into cs122b-spring20-team-69/fabflix-backend/src/main/resources
+<code> cp ~/application.properties ~/cs122b-spring20-team-69/fabflix-backend/src/main/resources </code>
+4) cd into backend directory
+<code>cd ~/cs122b-spring20-team-69/fabflix-backend </code>
+5) Build .war in fabflix-backend/ directory 
+<code>mvn clean package</code>
+5) Copy .war file to ~/tomcat/webapps
+<code>cp ./target/*.war /home/ubuntu/tomcat/webapps</code>
+6) cd into frontend directory
+<code>cd  ~/cs122b-spring20-team-69/fabflix-frontend</code>
+7) Install dependencies
+Run <code>npm install</code>
+8) Build files
+Run <code>ng build --base-href=. --prod</code>
+9) cd into target file directory
+<code>cd dist</code>
+10) Rename the directory to fabflix
+11) Create WEB-INF directory in fabflix/
+<code>mkdir fabflix/WEB-INF</code>
+12) Copy web.xml into fabflix/WEB-INF
+<code>cp ~/web.xml ./WEB-INF</code>
+13) Copy fabflix/ directory into ~/tomcat/webapps
+<code>cp fabflix /home/ubuntu/tomcat/webapps</code>
+14) cd to ~/tomcat/webapps
+<code>cd ~/tomcat/webapps</code>
+15) Rename fabflix-0.0.1-SNAPSHOT.war to fabflix-backend.war
+<code>mv fabflix-0.0.1-SNAPSHOT.war fabflix-backend.war</code>
+16) Wait until fabflix-backend directory exists
+17) Copy web.xml into fabflix-backend/WEB-INF
+<code>cp ~/web.xml fabflix-backend/WEB-INF</code>
+18) In browser, navigate to Tomcat manager page at ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/manager/html
+19) Click on "/fabflix" under "Paths"
+
+## CONTRIBUTIONS
+John: master/slave and load balancing
+Alexis: connection pooling and time log processing
+
+## CONNECTION POOLING
+- Path of Connection Pooling Configuration: fabflix-backend/src/main/resources/application.properties
+
+- Explain how Connection Pooling is utilized in the Fabflix code.
+	1. spring.datasource.hikari.connection-timeout = 20000 
+		Client will wait a maximum of 20,000 ms when requesting a DB connection, if time exceeds a SQL exception will be thrown.
+	2. spring.datasource.hikari.minimum-idle= 10 
+		A minimum of 10 idle connections will be maintained in the pool. If # of idle connections dips below this and total connections less than max pool size, the pool will add connections accordingly.
+	3. spring.datasource.hikari.maximum-pool-size= 10
+		Connection pool will have maximum of 10 connections, this includes the # of idle/in-use connections. This is kept the same as the # minimum idle connections. 
+	4. spring.datasource.hikari.idle-timeout=10000
+		Connection can be idle for a maximum of 10,000 ms, but setting only applies when minimum # of idle connections < maximum pool size.
+	5. spring.datasource.hikari.auto-commit =true
+		Auto-commit behavior of a returned connection = true.
+    
+- Explain how Connection Pooling works with two backend SQL.
+    
+
+## Master/Slave
+- Path of all code/configuration files in GitHub of routing queries to Master/Slave SQL:
+
+- How read/write requests were routed to Master/Slave SQL?
+    
+
+## JMeter TS/TJ Time Logs
+Instructions of how to use the `log_processing.*` script to process the JMeter logs.
+  1. Navigate to fabflix-backend directory
+  2. Run command: python3 log_processing.py
+
+## JMeter TS/TJ Time Measurement Report
+
+| **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTPS/10 threads                       | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 4: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+
+| **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
+|------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
+| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+</details>
