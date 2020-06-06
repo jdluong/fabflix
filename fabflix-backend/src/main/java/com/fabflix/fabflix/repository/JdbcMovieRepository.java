@@ -35,7 +35,7 @@ import java.util.Map;
                         "http://ec2-54-201-208-32.us-west-2.compute.amazonaws.com:8080", "http://54.201.208.32:8080",
                         "http://ec2-52-42-172-57.us-west-2.compute.amazonaws.com:8080", "http://52.42.172.57:8080",
                         "http://ec2-54-212-3-69.us-west-2.compute.amazonaws.com", "http://54.212.3.69",
-                        "http://http://35.184.14.3"}, 
+                        "http://http://35.184.14.3", "https://54.68.162.171:8443"},
                         allowCredentials = "true")
 // @CrossOrigin(origins = {"*"})
 @Repository
