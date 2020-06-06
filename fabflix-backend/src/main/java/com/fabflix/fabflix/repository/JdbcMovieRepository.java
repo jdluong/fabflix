@@ -1,9 +1,7 @@
 package com.fabflix.fabflix.repository;
 
 import com.fabflix.fabflix.*;
-import com.fabflix.fabflix.repository.MovieRepository;
 import com.google.gson.JsonObject;
-import org.apache.coyote.Response;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -11,26 +9,22 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.SqlOutParameter;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcCall;
-import org.springframework.jdbc.support.DatabaseMetaDataCallback;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.JdbcUtils;
-import org.springframework.jdbc.support.MetaDataAccessException;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,9 +43,13 @@ public class JdbcMovieRepository implements MovieRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static long start;
-    private static long end;
-    private static long elapsed;
+    private static long startTS;
+    private static long endTS;
+    private static long elapsedTS;
+
+    private static long startTJ;
+    private static long endTJ;
+    private static long elapsedTJ;
 
     private static File log = new File("fabflix-backend/src/main/resources/time_log.txt");
     private static FileWriter logger;
@@ -68,9 +66,9 @@ public class JdbcMovieRepository implements MovieRepository {
             initialLaunch = false;
         }
 
-        logger.write(elapsed + "\n");
+        logger.write(elapsedTS + " " + elapsedTJ + "\n");
         logger.flush();
-        System.out.println("Search time: " + elapsed + " ns");
+        //System.out.println("Search Time (TS): " + elapsedTS + " ns, JDBC Time (TJ): " + elapsedTJ + " ns");
     }
 
     @RequestMapping (
@@ -84,7 +82,7 @@ public class JdbcMovieRepository implements MovieRepository {
 
         return ResponseEntity.ok(true);
     }
-    
+
     @Override
     public List<Rating> findTopTwenty() {
         return jdbcTemplate.query(
@@ -312,7 +310,7 @@ public class JdbcMovieRepository implements MovieRepository {
     )
     @Override
     public List<Object> getSuggestions(@RequestParam String title) {
-        
+
         String sql = "SELECT m.id, m.title FROM movies m " +
         "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE) " +
         "LIMIT 10";
@@ -356,7 +354,7 @@ public class JdbcMovieRepository implements MovieRepository {
             @RequestParam(required = false) String sortBy2,
             @RequestParam(required = false) String order2) throws SQLException, IOException {
 
-        start = System.nanoTime();
+        startTS = System.nanoTime();
 
         String sql = "";
         int paramsCount = 0;
@@ -399,7 +397,7 @@ public class JdbcMovieRepository implements MovieRepository {
                         "WHERE MATCH (m.title) AGAINST (? IN BOOLEAN MODE)";
             }
         }
-        
+
         if (sortBy1 == null) {
             sql += " ORDER BY m.id LIMIT ? OFFSET ?";
         }
@@ -409,6 +407,9 @@ public class JdbcMovieRepository implements MovieRepository {
 
         String finalSql = sql;
         int finalParamsCount = paramsCount;
+
+        startTJ = System.nanoTime();
+
         List<Movie> movies = jdbcTemplate.query(connection -> {
             PreparedStatement stmt = connection.prepareStatement(finalSql);
             if (by.equals("advanced")) {
@@ -447,8 +448,11 @@ public class JdbcMovieRepository implements MovieRepository {
 
         List<MovieWithDetails> results = getMoviesBySearch(movies);
 
-        end = System.nanoTime();
-        elapsed = end - start;
+        endTS = System.nanoTime();
+
+        elapsedTS = endTS - startTS;
+        elapsedTJ = endTJ - startTJ;
+
         logSearchTime();
 
         return results;
@@ -461,7 +465,9 @@ public class JdbcMovieRepository implements MovieRepository {
             MovieWithDetails movieWithDetails = new MovieWithDetails(m, get3GenresByMovieId(m.getId()), get3StarsByMovieId(m.getId()), getRatingById(m.getId()));
             moviesWithDetails.add(movieWithDetails);
         }
-        
+
+        endTJ = System.nanoTime();
+
         return moviesWithDetails;
     }
 
@@ -476,7 +482,7 @@ public class JdbcMovieRepository implements MovieRepository {
             @RequestParam(required = false) Integer year,
             @RequestParam(required = false) String director,
             @RequestParam(required = false) String star) {
-        
+
         String sql = "";
         int paramsCount = 0;
         if (by.equals("advanced")) {
