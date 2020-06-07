@@ -260,7 +260,7 @@ Alexis: connection pooling and time log processing
 
 ## JMeter TS/TJ Time Logs
 Instructions of how to use the `log_processing.*` script to process the JMeter logs.
-  1. Navigate to fabflix-backend directory
+  1. Navigate to Test Case Logs/Images folder
   2. Run command: python3 log_processing.py "log_file_name.txt"
 
 ## JMeter TS/TJ Time Measurement Report
