@@ -192,7 +192,7 @@ Alexis: android app backend/frontend
 <details> <summary>click for more</summary>
 
 ## VIDEO
-Link: 
+Link: https://drive.google.com/file/d/12HuAdzQusow_huejls7S3j4UMtxbNYP5/view?usp=sharing
   
 ## DEPLOYMENT
 1) Prepare database and tables
