@@ -74,7 +74,7 @@ public class JdbcMovieRepository implements MovieRepository {
 
     @RequestMapping (
         value = "api/log/auth",
-        method = RequestMethod.GET
+        method = RequestMethod.POST
     )
     @Override
     public @ResponseBody ResponseEntity logAuth(HttpSession session) {
