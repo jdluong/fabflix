@@ -12,7 +12,7 @@ export class EmployeeService {
   // public url = 'https://localhost:8443/fabflix_backend_war/api/employee/'
   // private url:string = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/employee/";
   private readUrl:string = ServerIP.Read+"/fabflix-backend/api/employee/";
-  private writeUrl:string = "https://"+ServerIP.Write+":8443/fabflix-backend/api/employee/";
+  private writeUrl:string = ServerIP.Write+"/fabflix-backend/api/employee/";
 
   constructor(private http: HttpClient) { }
 
