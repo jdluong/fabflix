@@ -192,7 +192,7 @@ Alexis: android app backend/frontend
 <details> <summary>click for more</summary>
 
 ## VIDEO
-Link: 
+Link: https://drive.google.com/file/d/12HuAdzQusow_huejls7S3j4UMtxbNYP5/view?usp=sharing
   
 ## DEPLOYMENT
 1) Prepare database and tables
@@ -260,17 +260,17 @@ Alexis: connection pooling and time log processing
 
 ## JMeter TS/TJ Time Logs
 Instructions of how to use the `log_processing.*` script to process the JMeter logs.
-  1. Navigate to fabflix-backend directory
-  2. Run command: python3 log_processing.py
+  1. Navigate to "test logs" folder
+  2. Run command: python3 log_processing.py "log_file_name.txt"
 
 ## JMeter TS/TJ Time Measurement Report
 
 | **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
-| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
-| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
-| Case 3: HTTPS/10 threads                       | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
-| Case 4: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 1: HTTP/1 thread                          | ![](/img/graph1.png)   | 60                       | 3.26                                  | 3.26                        | ??           |
+| Case 2: HTTP/10 threads                        | ![](/img/graph2.png)   | 52                         | 2.43                                  | 2.42                        | ??           |
+| Case 3: HTTPS/10 threads                       | ![](/img/graph3.png)   | 51                         | 1.90                                  | 1.90                        | ??           |
+| Case 4: HTTP/10 threads/No connection pooling  | ![](/img/graph4.png)   | 70                         | 1.82                                  | 1.81                        | ??           |
 
 | **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
