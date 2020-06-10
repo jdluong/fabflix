@@ -1,6 +1,11 @@
 # cs122b-spring20-team-69
 cs122b-spring20-team-69 created by GitHub Classroom
 
+## LATE-GRADING DEMO (Projects 3 and 5)
+Link: https://drive.google.com/file/d/17XvjlG4kg6QrApd71nN1rioyqUVTRfTA/view?usp=sharing
+- 0:00 - Project 3
+- 16:55 - Project 5
+
 ## PROJECT 1
 <details><summary>click for more</summary>
   
