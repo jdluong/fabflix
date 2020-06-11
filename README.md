@@ -5,6 +5,7 @@ cs122b-spring20-team-69 created by GitHub Classroom
 Link: https://drive.google.com/file/d/17XvjlG4kg6QrApd71nN1rioyqUVTRfTA/view?usp=sharing
 - 0:00 - Project 3
 - 16:55 - Project 5
+  * No HTTPS for master/slave
 
 ## PROJECT 1
 <details><summary>click for more</summary>
@@ -260,7 +261,21 @@ Alexis: connection pooling and time log processing
 ## Master/Slave
 - Path of all code/configuration files in GitHub of routing queries to Master/Slave SQL:
 
+https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/server.ts
+This file is an enum of the master/slave servers exported to all service files below.
+
+- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/auth.service.ts
+- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/browse.service.ts
+- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/employee.service.ts
+- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/movie.service.ts
+- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/search.service.ts
+- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/server-cache.service.ts
+- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/shopping.service.ts
+
 - How read/write requests were routed to Master/Slave SQL?
+In the frontend code of master/slave, the server IP's were hardcoded into each API call; read endpoints used the respective local server's API, while write endpoints used only the master server's API.
+
+In the files linked above, for example, the slave instance would have <code>read = "http://<slave_ip>:8080"</code> and <code>write = "http://<master_ip>:8080" </code>. The master instance would have <code>read = "http://<master_ip>:8080"</code> and <code>write = "http://<master_ip>:8080".
     
 
 ## JMeter TS/TJ Time Logs
