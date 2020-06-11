@@ -264,13 +264,13 @@ Alexis: connection pooling and time log processing
 https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/server.ts
 This file is an enum of the master/slave servers exported to all service files below.
 
-- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/auth.service.ts
-- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/browse.service.ts
-- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/employee.service.ts
-- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/movie.service.ts
-- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/search.service.ts
-- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/server-cache.service.ts
-- https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/shopping.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/auth.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/browse.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/employee.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/movie.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/search.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/server-cache.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/shopping.service.ts
 
 - How read/write requests were routed to Master/Slave SQL?
 In the frontend code of master/slave, the server IP's were hardcoded into each API call; read endpoints used the respective local server's API, while write endpoints used only the master server's API.
