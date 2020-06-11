@@ -43,13 +43,14 @@ export class MovieListComponent implements OnInit {
       this.route.queryParams.subscribe(
         data => {
           this.params = data;
-          if (Object.keys(this.params).length == 0) {
-            this.router.navigate(['/search']);
-          }
-          else {
+//            if (Object.keys(this.params).length == 0) {
+//            this.router.navigate(['/search']);
+//          }
+//          else {
+	    console.log(this.params);
             this.initMovies();
             this.initMaxPage();
-          }
+//          }
         });
     }
 

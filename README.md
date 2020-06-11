@@ -1,6 +1,12 @@
 # cs122b-spring20-team-69
 cs122b-spring20-team-69 created by GitHub Classroom
 
+## LATE-GRADING DEMO (Projects 3 and 5)
+Link: https://drive.google.com/file/d/17XvjlG4kg6QrApd71nN1rioyqUVTRfTA/view?usp=sharing
+- 0:00 - Project 3
+- 16:55 - Project 5
+  * No HTTPS for master/slave
+
 ## PROJECT 1
 <details><summary>click for more</summary>
   
@@ -192,7 +198,7 @@ Alexis: android app backend/frontend
 <details> <summary>click for more</summary>
 
 ## VIDEO
-Link: 
+Link: https://drive.google.com/file/d/12HuAdzQusow_huejls7S3j4UMtxbNYP5/view?usp=sharing
   
 ## DEPLOYMENT
 1) Prepare database and tables
@@ -255,26 +261,40 @@ Alexis: connection pooling and time log processing
 ## Master/Slave
 - Path of all code/configuration files in GitHub of routing queries to Master/Slave SQL:
 
+https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/server.ts
+This file is an enum of the master/slave servers exported to all service files below.
+
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/auth.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/browse.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/employee.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/movie.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/search.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/server-cache.service.ts
+ * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/shopping.service.ts
+
 - How read/write requests were routed to Master/Slave SQL?
+In the frontend code of master/slave, the server IP's were hardcoded into each API call; read endpoints used the respective local server's API, while write endpoints used only the master server's API.
+
+In the files linked above, for example, the slave instance would have <code>read = "http://<slave_ip>:8080"</code> and <code>write = "http://<master_ip>:8080" </code>. The master instance would have <code>read = "http://<master_ip>:8080"</code> and <code>write = "http://<master_ip>:8080".
     
 
 ## JMeter TS/TJ Time Logs
 Instructions of how to use the `log_processing.*` script to process the JMeter logs.
-  1. Navigate to Test Case Logs/Images folder
+  1. Navigate to "test logs" folder
   2. Run command: python3 log_processing.py "log_file_name.txt"
 
 ## JMeter TS/TJ Time Measurement Report
 
 | **Single-instance Version Test Plan**          | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
-| Case 1: HTTP/1 thread                          | ![](/img/graph1.png)   | 60                       | 3.26                                  | 3.26                        | ??           |
-| Case 2: HTTP/10 threads                        | ![](/img/graph2.png)   | 52                         | 2.43                                  | 2.42                        | ??           |
-| Case 3: HTTPS/10 threads                       | ![](/img/graph3.png)   | 51                         | 1.90                                  | 1.90                        | ??           |
-| Case 4: HTTP/10 threads/No connection pooling  | ![](/img/graph4.png)   | 70                         | 1.82                                  | 1.81                        | ??           |
+| Case 1: HTTP/1 thread                          | ![](/img/graph1.png)   | 60                       | 3.26                                  | 3.26                        | Despite number of users, TS ~= TJ. On average, single user's average query time is 60ms, but throughput is comparably lower than when multiple users are connected.          |
+| Case 2: HTTP/10 threads                        | ![](/img/graph2.png)   | 52                         | 2.43                                  | 2.42                        | Average performance slightly higher than HTTPS, most likely due to need for redirection. Improved throughput compared to one thread simulation, but TS still ~= TJ.           |
+| Case 3: HTTPS/10 threads                       | ![](/img/graph3.png)   | 51                         | 1.90                                  | 1.90                        | Best in terms of average performance for multiple users, TS ~= TJ.            |
+| Case 4: HTTP/10 threads/No connection pooling  | ![](/img/graph4.png)   | 70                         | 1.82                                  | 1.81                        | Lower performance for average query time, but average TS/TJ improved compared to all other test cases. Throughput remained virtually the same compared to previous multiple thread simulations.      |
 
 | **Scaled Version Test Plan**                   | **Graph Results Screenshot** | **Average Query Time(ms)** | **Average Search Servlet Time(ms)** | **Average JDBC Time(ms)** | **Analysis** |
 |------------------------------------------------|------------------------------|----------------------------|-------------------------------------|---------------------------|--------------|
-| Case 1: HTTP/1 thread                          | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
-| Case 2: HTTP/10 threads                        | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
-| Case 3: HTTP/10 threads/No connection pooling  | ![](path to image in img/)   | ??                         | ??                                  | ??                        | ??           |
+| Case 1: HTTP/1 thread                          | ![](/img/graph5.png)   | 50                         | 12.00                                  | 11.98                        | On average, single user's average query time is 50ms using load balancer. Improved greatly compared to no load balancing in terms of throughput and average query time. However, TS & TJ still nearly identical but much higher compared to single instance.           |
+| Case 2: HTTP/10 threads                        | ![](/img/graph6.png)   | 53                         | 15.20                                  | 15.20                        | Slightly higher in average performance overall. However, has improved throughput.           |
+| Case 3: HTTP/10 threads/No connection pooling  | ![](/img/graph7.png)   | 74                         | 13.28                                  | 13.28                        | Similar to single instance cases, average query time is much higher than other cases with connection pooling. However, TS and TJ are slightly improved to its connection-pooled counterpart with same number of threads. Throughput also dipped in terms of performance significantly.           |
 </details>

@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { NotifierModule, NotifierOptions } from "angular-notifier";
-import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { PathLocationStrategy, HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 import { AutocompleteHighlightPipe } from './pipes/autocomplete-highlight.pipe';
 
@@ -101,7 +101,7 @@ const customNotifierOptions: NotifierOptions = {
   ],
   providers: [
     {provide: LocationStrategy,
-    useClass: HashLocationStrategy}
+    useClass: PathLocationStrategy}
   ],
   bootstrap: [AppComponent]
 })

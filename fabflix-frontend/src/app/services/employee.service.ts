@@ -11,8 +11,8 @@ export class EmployeeService {
   // private url:string = "http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/fabflix-backend/api/employee/";
   // public url = 'https://localhost:8443/fabflix_backend_war/api/employee/'
   // private url:string = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/employee/";
-  private readUrl:string = "http://"+ServerIP.Read+":8080/fabflix-backend/api/employee/";
-  private writeUrl:string = "http://"+ServerIP.Write+":8080/fabflix-backend/api/employee/";
+  private readUrl:string = ServerIP.Read+"/fabflix-backend/api/employee/";
+  private writeUrl:string = ServerIP.Write+"/fabflix-backend/api/employee/";
 
   constructor(private http: HttpClient) { }
 

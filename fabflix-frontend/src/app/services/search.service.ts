@@ -13,7 +13,7 @@ export class SearchService {
   // private url:string = "http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080/fabflix-backend/api/search";
   // public url = 'https://localhost:8443/fabflix_backend_war/api/search'
   // private url:string = "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443/fabflix-backend/api/search";
-  private readUrl:string = "http://"+ServerIP.Read+":8080/fabflix-backend/api/search";
+  private readUrl:string = ServerIP.Read+"/fabflix-backend/api/search";
 
   constructor(private http: HttpClient) { }
 

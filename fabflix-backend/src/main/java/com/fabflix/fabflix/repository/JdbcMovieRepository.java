@@ -31,12 +31,12 @@ import java.util.Map;
 
 @RestController
 // @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080", "http://http://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8080"}, allowCredentials = "true")
-@CrossOrigin(origins = {"http://98.149.57.70:8080", "http://98.149.57.70:*",
-                        "http://ec2-54-201-208-32.us-west-2.compute.amazonaws.com:8080", "http://54.201.208.32:8080",
-                        "http://ec2-52-42-172-57.us-west-2.compute.amazonaws.com:8080", "http://52.42.172.57:8080",
-                        "http://ec2-54-212-3-69.us-west-2.compute.amazonaws.com", "http://54.212.3.69",
-                        "http://35.184.14.3",
-                        "https://54.68.162.171:8443", "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443"}, allowCredentials="true")
+//@CrossOrigin(origins = {"http://98.149.57.70:8080", "http://98.149.57.70:*",
+//                        "http://ec2-54-201-208-32.us-west-2.compute.amazonaws.com:8080", "http://54.201.208.32:8080",
+//                        "http://ec2-52-42-172-57.us-west-2.compute.amazonaws.com:8080", "http://52.42.172.57:8080",
+//                        "http://ec2-54-212-3-69.us-west-2.compute.amazonaws.com", "http://54.212.3.69",
+//                        "http://35.184.14.3",
+//                        "http://54.68.162.171:8080", "https://54.68.162.171:8443", "https://ec2-54-68-162-171.us-west-2.compute.amazonaws.com:8443"}, allowCredentials="true")
 // @CrossOrigin(origins = {"*"})
 @Repository
 public class JdbcMovieRepository implements MovieRepository {
@@ -52,7 +52,7 @@ public class JdbcMovieRepository implements MovieRepository {
     private static long endTJ;
     private static long elapsedTJ;
 
-    private static File log = new File("/home/ubuntu/cs122b-spring20-team-69/fabflix-backend/src/main/resources/time_log.txt");
+    private static File log = new File("/home/ubuntu/time_log.txt");
     private static FileWriter logger;
     private static boolean initialLaunch = true;
 
@@ -79,8 +79,8 @@ public class JdbcMovieRepository implements MovieRepository {
     @Override
     public @ResponseBody ResponseEntity logAuth(HttpSession session) {
         session.setAttribute("isAuth", true);
-        session.setAttribute("user", "customer");
-
+        session.setAttribute("user", "Customer");
+	
         return ResponseEntity.ok(true);
     }
 
