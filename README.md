@@ -256,6 +256,8 @@ Alexis: connection pooling and time log processing
 		Auto-commit behavior of a returned connection = true.
     
 - Explain how Connection Pooling works with two backend SQL.
+
+We are using Spring Boot, which by default uses Hikari Connection Pooling for each instance. Each request (read or write) is directed to the appropriate server, and Spring Boot will handle the Connection Pooling for that server's database.
     
 
 ## Master/Slave
@@ -273,6 +275,7 @@ This file is an enum of the master/slave servers exported to all service files b
  * https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-69/blob/master/fabflix-frontend/src/app/services/shopping.service.ts
 
 - How read/write requests were routed to Master/Slave SQL?
+
 In the frontend code of master/slave, the server IP's were hardcoded into each API call; read endpoints used the respective local server's API, while write endpoints used only the master server's API.
 
 In the files linked above, for example, the slave instance would have <code>read = "http://<slave_ip>:8080"</code> and <code>write = "http://<master_ip>:8080" </code>. The master instance would have <code>read = "http://<master_ip>:8080"</code> and <code>write = "http://<master_ip>:8080".
